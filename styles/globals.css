@@ -1,0 +1,180 @@
+/* styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   1. Variables & Base Setup
+   ========================================================================== */
+
+/* styles/globals.css */
+
+:root {
+  /* Colors */
+  --gold-color: rgb(255, 215, 0);
+  --cream-color: #f0e6d2;
+  --maroon-color: #800000;
+  --black-color: #000000;
+  --navy-blue-color: #000080;
+  --navy-blue-darker: #000050;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+
+  /* Shadows */
+  --text-shadow: 2px 2px 2px var(--shadow-color), 4px 4px 4px var(--shadow-color);
+  --bigger-shadow: 4px 4px 4px var(--shadow-color), 6px 6px 6px var(--shadow-color);
+
+  /* Font Sizes */
+  --base-font-size: 16px;
+
+  /* Animation */
+  --animation-delay-1: 0.3s;
+  --animation-delay-2: 0.6s;
+  --animation-duration: 4s;
+
+  /* Spacing (Used in _app.js via Tailwind) */
+  --base-padding: 1rem; /* Keep if used elsewhere */
+  --base-margin: 1rem; /* Keep if used elsewhere */
+
+  /* --- KEEP ONLY ONE SET - USE ACTUAL MEASURED VALUES --- */
+  --header-padding: 128.117px;    /* EXAMPLE - REPLACE with your measured DESKTOP height */
+  --header-padding-small: 126.117px; /* EXAMPLE - REPLACE with your measured MOBILE height */
+  /* --- DELETE THE DUPLICATE DEFINITIONS BELOW --- */
+  /* --header-padding: 75px; */
+  /* --header-padding-small: 65px; */
+}
+
+/* ... rest of globals.css ... */
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  color: var(--cream-color); /* Default text for entire page */
+  background-color: var(--navy-blue-color); /* Fallback background */
+  font-size: var(--base-font-size);
+  -webkit-font-smoothing: antialiased; /* Smoother fonts */
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Default Link Reset */
+a {
+  color: inherit; /* Inherit color from parent */
+  text-decoration: none; /* Remove default underline */
+}
+
+/* Universal Box Sizing */
+* {
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   2. Main Content Area Defaults (Applied via <main> in _app.js)
+   ========================================================================== */
+
+/* Styles applied to elements directly within the <main> tag */
+main {
+  /* Default text color is inherited from body (cream) */
+  /* Background color (bg-black) is applied via Tailwind in _app.js */
+
+  /* Standard Links within main */
+  a:not([class*="button"]):not([class*="nav-link"]):not([role="button"]) { /* Target links unless they look like buttons/nav */
+    color: var(--gold-color);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out, text-decoration-color 0.2s ease-in-out;
+    text-decoration-color: transparent; /* Prepare for underline transition */
+  }
+
+  a:not([class*="button"]):not([class*="nav-link"]):not([role="button"]):hover,
+  a:not([class*="button"]):not([class*="nav-link"]):not([role="button"]):focus-visible { /* Use focus-visible */
+    text-decoration: underline;
+    text-decoration-color: var(--gold-color); /* Underline with gold */
+    /* Optional: Dim color slightly on hover */
+    /* color: rgba(255, 215, 0, 0.85); */
+  }
+
+  /* Default Heading Colors within main */
+  h1, h2, h3 {
+    color: var(--gold-color);
+    /* Add margin defaults if desired - or use Tailwind spacing */
+    /* margin-bottom: 1em; */
+  }
+
+  h4, h5, h6 {
+    color: var(--cream-color); /* Or use --gold-color if preferred */
+     /* margin-bottom: 0.8em; */
+  }
+
+  /* Add other base styles for main content if needed */
+  p {
+     line-height: 1.6; /* Improve paragraph readability */
+     /* margin-bottom: 1em; */
+  }
+}
+
+/* ==========================================================================
+   3. Animations & Effects (Keep definitions, apply classes in components)
+   ========================================================================== */
+
+/* Floating Text Animation */
+@keyframes textFloat {
+  0%,
+  100% { transform: translateY(0); text-shadow: var(--text-shadow); }
+  50% { transform: translateY(-5px); text-shadow: var(--bigger-shadow); }
+}
+/* Apply .animate-float-text class in component */
+
+
+/* Slide and Fade in animation */
+@keyframes slideFadeIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+/* Apply .slide-fade-in class in component */
+.slide-fade-in {
+     animation: slideFadeIn 0.8s ease-out forwards;
+}
+
+
+/* Maroon Text Outline */
+.outline-text-maroon {
+  -webkit-text-stroke: 1px var(--maroon-color);
+  /* text-stroke is not widely supported, rely on -webkit- */
+  paint-order: stroke fill;
+}
+
+
+/* ==========================================================================
+   4. Utility Classes
+   ========================================================================== */
+
+/* Screen Reader Only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ==========================================================================
+   5. Reduced Motion Preferences (Optional but recommended)
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* .slide-fade-in, */ /* Example if applying directly */
+  /* .animate-float-text ... */ /* Example */
+}
