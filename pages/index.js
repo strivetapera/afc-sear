@@ -1,34 +1,39 @@
 // pages/index.js
 import Hero from '../components/Hero';
 import AboutSection from '../components/AboutSection';
-// Removed MinistriesSection import as it wasn't in your latest code here
 import EventsSection from '../components/EventsSection';
-import { getUpcomingEvents } from '../lib/eventUtils'; // *** IMPORT THE HELPER ***
+import { getUpcomingEvents } from '../lib/eventUtils';
 
-// *** MODIFY Home component to ACCEPT events prop ***
 export default function Home({ upcomingEvents }) {
   return (
     <>
       <Hero />
       <AboutSection />
-      {/* Remove MinistriesSection if not used on homepage */}
-      {/* <MinistriesSection /> */}
-      {/* *** PASS the events prop to EventsSection *** */}
+      {/* The EventsSection now receives its data as a prop! */}
       <EventsSection events={upcomingEvents} />
     </>
   );
 }
 
-// *** ADD getStaticProps back to fetch data at build time ***
 export async function getStaticProps() {
-  // Fetch only a limited number for the homepage section (e.g., 4)
-  const upcomingEvents = await getUpcomingEvents(4); // Limit to 4 events
+  let upcomingEvents = []; // Default to an empty array
+
+  try {
+    // Fetch only a limited number for the homepage section (e.g., 4)
+    upcomingEvents = await getUpcomingEvents(4);
+  } catch (error) {
+    // If fetching fails, log the error and the build will continue with an empty list.
+    console.error("Failed to fetch upcoming events for homepage:", error);
+  }
 
   return {
     props: {
-      // Pass events, ensuring Date objects are serialized (toISOString does this)
+      // Pass events to the page component.
+      // NOTE: Next.js automatically serializes props. If your events have
+      // Date objects, they will be converted to ISO strings. Your EventsSection
+      // component will need to parse them back into Dates if needed.
       upcomingEvents,
     },
-    // No revalidate needed for 'output: export'
+    // No `revalidate` key is needed when using `output: 'export'`.
   };
 }

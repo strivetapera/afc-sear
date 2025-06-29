@@ -1,9 +1,10 @@
 // pages/events.js
 import React from 'react';
-import { getUpcomingEvents, formatEventDate } from '../lib/eventUtils'; // Import helpers
+import { getUpcomingEvents, formatEventDate } from '../lib/eventUtils';
 
 // Receive events prop
 export default function Events({ allUpcomingEvents }) {
+  // ... (Your component code remains exactly the same, it's perfect)
   return (
     <div className="py-12 md:py-16">
       <div className="container mx-auto px-6 w-11/12 max-w-[900px]">
@@ -13,14 +14,12 @@ export default function Events({ allUpcomingEvents }) {
 
         {allUpcomingEvents.length > 0 ? (
           <ul className="list-none p-0 space-y-8">
-            {/* Map over the events passed as props */}
             {allUpcomingEvents.map((event) => (
               <li key={event.id} className="p-6 border border-gray-700 rounded-lg shadow-lg bg-gradient-to-br from-black to-gray-900">
                 <h2 className="text-xl md:text-2xl font-semibold mb-2">
                   {event.title}
                 </h2>
                 <p className="mb-3 text-sm text-gold font-medium">
-                  {/* Format the calculated date */}
                   {formatEventDate(event.calculatedNextOccurrence, event.recurrence)}
                 </p>
                 {event.description && (
@@ -46,13 +45,19 @@ export default function Events({ allUpcomingEvents }) {
 
 // Fetch data at build time
 export async function getStaticProps() {
-  // Fetch ALL upcoming events for the events page
-  const allUpcomingEvents = await getUpcomingEvents(null); // null limit gets all
+  let allUpcomingEvents = []; // Default to empty array
+
+  try {
+    // Fetch ALL upcoming events for the events page
+    allUpcomingEvents = await getUpcomingEvents(null); // null limit gets all
+  } catch (error) {
+    console.error("Failed to fetch events for the events page:", error);
+    // The build will succeed, and the page will render the "empty state" message.
+  }
 
   return {
     props: {
       allUpcomingEvents,
     },
-     // Optional: Add revalidate if NOT using output: 'export'
   };
 }
