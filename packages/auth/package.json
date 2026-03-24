@@ -1,0 +1,11 @@
+{
+  "name": "@afc-sear/auth",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Authentication and authorization scaffolding",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "jose": "^6.2.2"
+  }
+}

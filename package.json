@@ -2,17 +2,32 @@
   "name": "afc-sear",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "export": "next export",
-    "lint": "next lint"
+    "lint": "next lint",
+    "api:dev": "npm run --workspace @afc-sear/api dev",
+    "api:build": "npm run --workspace @afc-sear/api build",
+    "api:typecheck": "npm run --workspace @afc-sear/api typecheck",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:migrate": "npm run --workspace @afc-sear/db migrate:deploy",
+    "db:migrate:status": "npm run --workspace @afc-sear/db migrate:status",
+    "db:generate": "npm run --workspace @afc-sear/db generate",
+    "db:validate": "npm run --workspace @afc-sear/db validate",
+    "db:format": "npm run --workspace @afc-sear/db format",
+    "db:seed": "npm run --workspace @afc-sear/db seed"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
     "lottie-web": "^5.12.2",
-    "next": "15.1.3",
+    "next": "^15.5.14",
     "nextjs": "^0.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

@@ -1,0 +1,23 @@
+{
+  "name": "@afc-sear/db",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Database schema and Prisma client for the church platform",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "generate": "DATABASE_URL=\"${DATABASE_URL:-postgresql://postgres:postgres@localhost:5433/afc_sear_platform?schema=public}\" prisma generate",
+    "validate": "DATABASE_URL=\"${DATABASE_URL:-postgresql://postgres:postgres@localhost:5433/afc_sear_platform?schema=public}\" prisma validate",
+    "format": "prisma format",
+    "migrate:deploy": "DATABASE_URL=\"${DATABASE_URL:-postgresql://postgres:postgres@localhost:5433/afc_sear_platform?schema=public}\" prisma migrate deploy",
+    "migrate:status": "DATABASE_URL=\"${DATABASE_URL:-postgresql://postgres:postgres@localhost:5433/afc_sear_platform?schema=public}\" prisma migrate status",
+    "seed": "DATABASE_URL=\"${DATABASE_URL:-postgresql://postgres:postgres@localhost:5433/afc_sear_platform?schema=public}\" tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.5.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.5.0",
+    "tsx": "^4.20.6"
+  }
+}

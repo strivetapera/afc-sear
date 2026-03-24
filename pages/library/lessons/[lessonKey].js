@@ -63,7 +63,7 @@ export default function LessonDetailPage({ lessonDetail }) {
                         <div className="my-6 p-4 border-l-4 border-gold bg-gray-900/50 rounded">
                             <h3 className="!text-gold !mt-0 !mb-2 text-base font-semibold uppercase tracking-wider">Key Verse</h3>
                             <blockquote className="!mt-0 !border-none !pl-0 italic">
-                                "{lessonDetail.keyVerse.text}"
+                                &quot;{lessonDetail.keyVerse.text}&quot;
                                 <footer className="text-sm not-italic text-cream/80 mt-1 block">
                                     - {lessonDetail.keyVerse.reference}
                                 </footer>

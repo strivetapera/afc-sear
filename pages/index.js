@@ -3,12 +3,13 @@ import Hero from '../components/Hero';
 import AboutSection from '../components/AboutSection';
 import EventsSection from '../components/EventsSection';
 import { getUpcomingEvents } from '../lib/eventUtils';
+import { getStructuredPageContent } from '../data/structuredPagesData';
 
-export default function Home({ upcomingEvents }) {
+export default function Home({ upcomingEvents, homeContent }) {
   return (
     <>
-      <Hero />
-      <AboutSection />
+      <Hero content={homeContent.hero} />
+      <AboutSection content={homeContent.aboutSection} />
       {/* The EventsSection now receives its data as a prop! */}
       <EventsSection events={upcomingEvents} />
     </>
@@ -28,12 +29,8 @@ export async function getStaticProps() {
 
   return {
     props: {
-      // Pass events to the page component.
-      // NOTE: Next.js automatically serializes props. If your events have
-      // Date objects, they will be converted to ISO strings. Your EventsSection
-      // component will need to parse them back into Dates if needed.
       upcomingEvents,
+      homeContent: getStructuredPageContent('homePage'),
     },
-    // No `revalidate` key is needed when using `output: 'export'`.
   };
 }

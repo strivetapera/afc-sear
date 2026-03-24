@@ -1,7 +1,7 @@
 // components/Hero.js
 import Image from 'next/image';
 
-const Hero = () => {
+const Hero = ({ content }) => {
   return (
     // Add z-0 here
     <div className="relative w-full h-[500px] overflow-hidden group z-0">
@@ -12,13 +12,12 @@ const Hero = () => {
       {/* Background Image (behaves like z-auto/0 within its context) */}
       <Image
         src="/images/church-hero.jpg"
-        alt="Congregation inside the Apostolic Faith Church"
-        layout="fill"
-        objectFit="cover"
-        objectPosition="center"
+        alt={content.imageAlt}
+        fill
         quality={75}
         priority
-        className="transition-transform duration-700 group-hover:scale-105"
+        sizes="100vw"
+        className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
       />
 
       {/* Bottom Gradient */}
@@ -30,19 +29,16 @@ const Hero = () => {
       <div className="absolute inset-0 flex items-center justify-end z-30">
         {/* Text Box */}
         <div className="px-6 md:pr-12 max-w-xl lg:max-w-2xl text-right text-cream slide-fade-in">
-           {/* Using paragraph for "Welcome to" */}
            <p className="text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight mb-1 outline-text-maroon">
-             Welcome to
+             {content.eyebrow}
           </p>
 
-          {/* Using H1 for the main title */}
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold mb-2 outline-text-maroon">
-            The Apostolic Faith Church
+            {content.title}
           </h1>
 
-          {/* Using paragraph for the tagline */}
           <p className="text-base sm:text-lg lg:text-xl outline-text-maroon">
-            Southern & Eastern Africa Region
+            {content.tagline}
           </p>
         </div>
       </div>

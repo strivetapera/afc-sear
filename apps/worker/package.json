@@ -1,0 +1,10 @@
+{
+  "name": "@afc-sear/worker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Background jobs scaffold for church platform workflows",
+  "scripts": {
+    "dev": "echo \"Worker scaffold not initialized yet\"",
+    "build": "echo \"Worker scaffold not initialized yet\""
+  }
+}

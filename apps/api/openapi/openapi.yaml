@@ -1,0 +1,857 @@
+openapi: 3.1.0
+info:
+  title: Apostolic Faith Church Platform API
+  version: 0.1.0
+  summary: Initial contract for identity, organization, people, and content domains
+servers:
+  - url: https://api.example.com
+    description: Production placeholder
+  - url: http://localhost:4000
+    description: Local development placeholder
+tags:
+  - name: Identity
+  - name: Organization
+  - name: People
+  - name: Content
+paths:
+  /api/v1/auth/sign-in:
+    post:
+      tags: [Identity]
+      summary: Authenticate a user and create a session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+      responses:
+        '200':
+          description: Authenticated session payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignInResponseEnvelope'
+  /api/v1/me:
+    get:
+      tags: [Identity]
+      summary: Return the authenticated user profile and scope
+      responses:
+        '200':
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticatedUserEnvelope'
+  /api/v1/public/branches:
+    get:
+      tags: [Organization]
+      summary: List public branch directory entries
+      responses:
+        '200':
+          description: Public branches
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchListEnvelope'
+  /api/v1/public/locations-directory:
+    get:
+      tags: [Organization]
+      summary: Return the public locations directory payload shaped for the website
+      responses:
+        '200':
+          description: Public locations directory
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationsDirectoryEnvelope'
+  /api/v1/admin/people:
+    get:
+      tags: [People]
+      summary: List people records
+      responses:
+        '200':
+          description: People list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonListEnvelope'
+    post:
+      tags: [People]
+      summary: Create or update a person record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertPersonRequest'
+      responses:
+        '200':
+          description: Person record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonEnvelope'
+  /api/v1/me/household:
+    get:
+      tags: [People]
+      summary: Return the current member household
+      responses:
+        '200':
+          description: Household record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HouseholdEnvelope'
+  /api/v1/public/pages/{slug}:
+    get:
+      tags: [Content]
+      summary: Return a published public content item
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Published content item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentItemEnvelope'
+  /api/v1/public/structured-pages/{slug}:
+    get:
+      tags: [Content]
+      summary: Return a structured public page payload
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Structured public page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StructuredPageEnvelope'
+  /api/v1/public/news:
+    get:
+      tags: [Content]
+      summary: Return the public news feed payload shaped for the website
+      responses:
+        '200':
+          description: Public news feed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicNewsFeedEnvelope'
+  /api/v1/public/events:
+    get:
+      tags: [Content]
+      summary: Return the public events feed payload shaped for the website
+      responses:
+        '200':
+          description: Public events feed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicEventsFeedEnvelope'
+  /api/v1/public/live-webcast:
+    get:
+      tags: [Content]
+      summary: Return the public live webcast payload shaped for the website
+      responses:
+        '200':
+          description: Public live webcast payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicLiveWebcastEnvelope'
+  /api/v1/admin/content-items:
+    get:
+      tags: [Content]
+      summary: List content items for editorial operations
+      responses:
+        '200':
+          description: Content items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentItemListEnvelope'
+    post:
+      tags: [Content]
+      summary: Create a content item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContentItemRequest'
+      responses:
+        '200':
+          description: Content item created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentItemEnvelope'
+components:
+  schemas:
+    EnvelopeMeta:
+      type: object
+      additionalProperties: true
+    AuthenticatedUserView:
+      type: object
+      required: [id, email, status, roleKeys, branchScopeIds]
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [ACTIVE, INVITED, SUSPENDED, DEACTIVATED]
+        defaultBranchId:
+          type: string
+          nullable: true
+        roleKeys:
+          type: array
+          items:
+            type: string
+        branchScopeIds:
+          type: array
+          items:
+            type: string
+    SessionView:
+      type: object
+      required: [id, expiresAt]
+      properties:
+        id:
+          type: string
+        deviceLabel:
+          type: string
+          nullable: true
+        ipAddress:
+          type: string
+          nullable: true
+        userAgent:
+          type: string
+          nullable: true
+        expiresAt:
+          type: string
+          format: date-time
+    SignInRequest:
+      type: object
+      required: [login, password]
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+        mfaCode:
+          type: string
+    SignInResponse:
+      type: object
+      required: [user, session, requiresMfa]
+      properties:
+        user:
+          $ref: '#/components/schemas/AuthenticatedUserView'
+        session:
+          $ref: '#/components/schemas/SessionView'
+        requiresMfa:
+          type: boolean
+    BranchView:
+      type: object
+      required: [id, countryId, name, slug, type, isPublic]
+      properties:
+        id:
+          type: string
+        countryId:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        type:
+          type: string
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        isPublic:
+          type: boolean
+    PersonView:
+      type: object
+      required: [id, firstName, lastName, lifecycleStage]
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        preferredName:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        branchId:
+          type: string
+          nullable: true
+        lifecycleStage:
+          type: string
+          enum: [VISITOR, REGULAR_ATTENDEE, MEMBER, LEADER, STAFF]
+    UpsertPersonRequest:
+      type: object
+      required: [firstName, lastName]
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        preferredName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        branchId:
+          type: string
+        lifecycleStage:
+          type: string
+          enum: [VISITOR, REGULAR_ATTENDEE, MEMBER, LEADER, STAFF]
+    HouseholdMemberView:
+      type: object
+      required: [personId, fullName, relationshipType, isPrimaryContact]
+      properties:
+        personId:
+          type: string
+        fullName:
+          type: string
+        relationshipType:
+          type: string
+        isPrimaryContact:
+          type: boolean
+    HouseholdView:
+      type: object
+      required: [id, branchId, displayName, members]
+      properties:
+        id:
+          type: string
+        branchId:
+          type: string
+        displayName:
+          type: string
+        primaryContactPersonId:
+          type: string
+          nullable: true
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/HouseholdMemberView'
+    ContentVersionView:
+      type: object
+      required: [id, versionNumber, createdAt]
+      properties:
+        id:
+          type: string
+        versionNumber:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        changeNote:
+          type: string
+          nullable: true
+    ContentItemView:
+      type: object
+      required: [id, contentTypeKey, title, slug, status, visibility]
+      properties:
+        id:
+          type: string
+        contentTypeKey:
+          type: string
+        branchId:
+          type: string
+          nullable: true
+        title:
+          type: string
+        slug:
+          type: string
+        summary:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [DRAFT, IN_REVIEW, APPROVED, PUBLISHED, ARCHIVED]
+        visibility:
+          type: string
+          enum: [PUBLIC, MEMBER, BRANCH, MINISTRY, PRIVATE]
+        publishedAt:
+          type: string
+          format: date-time
+          nullable: true
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentVersionView'
+    CreateContentItemRequest:
+      type: object
+      required: [contentTypeKey, title, slug]
+      properties:
+        contentTypeKey:
+          type: string
+        branchId:
+          type: string
+        title:
+          type: string
+        slug:
+          type: string
+        summary:
+          type: string
+        visibility:
+          type: string
+          enum: [PUBLIC, MEMBER, BRANCH, MINISTRY, PRIVATE]
+    StructuredPageActionView:
+      type: object
+      required: [href, label]
+      properties:
+        href:
+          type: string
+        label:
+          type: string
+        variant:
+          type: string
+          enum: [secondary]
+    StructuredPageQuoteView:
+      type: object
+      required: [text]
+      properties:
+        text:
+          type: string
+        citation:
+          type: string
+    StructuredPageCardView:
+      type: object
+      required: [title, description]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+    StructuredPageSectionView:
+      type: object
+      properties:
+        heading:
+          type: string
+        paragraphs:
+          type: array
+          items:
+            type: string
+        list:
+          type: array
+          items:
+            type: string
+        quote:
+          $ref: '#/components/schemas/StructuredPageQuoteView'
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/StructuredPageCardView'
+    StructuredPageView:
+      type: object
+      required: [title]
+      properties:
+        eyebrow:
+          type: string
+        title:
+          type: string
+        lead:
+          type: string
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/StructuredPageActionView'
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/StructuredPageSectionView'
+    PublicNewsItemView:
+      type: object
+      required: [id, title, summary, publishedAt, category, location, status]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        summary:
+          type: string
+        publishedAt:
+          type: string
+        category:
+          type: string
+        location:
+          type: string
+        status:
+          type: string
+    PublicNewsFeedView:
+      type: object
+      required: [metadata, items]
+      properties:
+        metadata:
+          type: object
+          required: [eyebrow, title, lead]
+          properties:
+            eyebrow:
+              type: string
+            title:
+              type: string
+            lead:
+              type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicNewsItemView'
+    EventRecurrenceView:
+      type: object
+      required: [type, time]
+      properties:
+        type:
+          type: string
+          enum: [daily, weekly]
+        dayOfWeek:
+          type: integer
+        time:
+          type: string
+        durationMinutes:
+          type: integer
+    PublicEventView:
+      type: object
+      required: [id, title, calculatedNextOccurrence]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        recurrence:
+          $ref: '#/components/schemas/EventRecurrenceView'
+        startDateTime:
+          type: string
+          nullable: true
+        link:
+          type: string
+          nullable: true
+        calculatedNextOccurrence:
+          type: string
+    PublicEventsFeedView:
+      type: object
+      required: [metadata, items]
+      properties:
+        metadata:
+          type: object
+          required: [eyebrow, title, lead]
+          properties:
+            eyebrow:
+              type: string
+            title:
+              type: string
+            lead:
+              type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicEventView'
+    LiveWebcastPlatformView:
+      type: object
+      required: [id, label, name, href, detail]
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        name:
+          type: string
+        href:
+          type: string
+        detail:
+          type: string
+    LiveWebcastSupportView:
+      type: object
+      required: [id, label, value]
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
+        href:
+          type: string
+    LiveWebcastFeaturedView:
+      type: object
+      required: [title, provider, streamUrl, accessLabel, meetingId, passcode, status, note]
+      properties:
+        title:
+          type: string
+        provider:
+          type: string
+        streamUrl:
+          type: string
+        accessLabel:
+          type: string
+        meetingId:
+          type: string
+        passcode:
+          type: string
+        status:
+          type: string
+        note:
+          type: string
+    OnlineEventView:
+      type: object
+      required: [id, title, occurrenceLabel, durationLabel, joinUrl, providerLabel]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        occurrenceLabel:
+          type: string
+        durationLabel:
+          type: string
+        joinUrl:
+          type: string
+        description:
+          type: string
+          nullable: true
+        providerLabel:
+          type: string
+    PublicLiveWebcastView:
+      type: object
+      required: [metadata, featured, notes, platforms, steps, support, schedule]
+      properties:
+        metadata:
+          type: object
+          required: [eyebrow, title, lead]
+          properties:
+            eyebrow:
+              type: string
+            title:
+              type: string
+            lead:
+              type: string
+        featured:
+          $ref: '#/components/schemas/LiveWebcastFeaturedView'
+        notes:
+          type: array
+          items:
+            type: string
+        platforms:
+          type: array
+          items:
+            $ref: '#/components/schemas/LiveWebcastPlatformView'
+        steps:
+          type: array
+          items:
+            type: string
+        support:
+          type: array
+          items:
+            $ref: '#/components/schemas/LiveWebcastSupportView'
+        schedule:
+          type: array
+          items:
+            $ref: '#/components/schemas/OnlineEventView'
+    AuthenticatedUserEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AuthenticatedUserView'
+        meta:
+          $ref: '#/components/schemas/EnvelopeMeta'
+    SignInResponseEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/SignInResponse'
+        meta:
+          $ref: '#/components/schemas/EnvelopeMeta'
+    BranchListEnvelope:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BranchView'
+        meta:
+          $ref: '#/components/schemas/EnvelopeMeta'
+    LocationsDirectoryContactView:
+      type: object
+      required: [id, label, value, note]
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        value:
+          type: string
+        href:
+          type: string
+        note:
+          type: string
+    LocationsDirectoryEntryView:
+      type: object
+      required: [id, country, city, congregation, address, serviceTimes, contact, pastor, notes, livestream]
+      properties:
+        id:
+          type: string
+        country:
+          type: string
+        city:
+          type: string
+        congregation:
+          type: string
+        address:
+          type: string
+        serviceTimes:
+          type: array
+          items:
+            type: string
+        contact:
+          type: string
+        pastor:
+          type: string
+        notes:
+          type: string
+        livestream:
+          type: boolean
+    LocationsDirectoryGroupView:
+      type: object
+      required: [country, locations]
+      properties:
+        country:
+          type: string
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationsDirectoryEntryView'
+    LocationsDirectoryView:
+      type: object
+      required: [metadata, overview, contacts, groupedLocations]
+      properties:
+        metadata:
+          type: object
+          required: [eyebrow, title, lead]
+          properties:
+            eyebrow:
+              type: string
+            title:
+              type: string
+            lead:
+              type: string
+        overview:
+          type: object
+          required: [intro, contactPrompt]
+          properties:
+            intro:
+              type: string
+            contactPrompt:
+              type: string
+        contacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationsDirectoryContactView'
+        groupedLocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationsDirectoryGroupView'
+    LocationsDirectoryEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/LocationsDirectoryView'
+        meta:
+          $ref: '#/components/schemas/EnvelopeMeta'
+    PersonEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PersonView'
+        meta:
+          $ref: '#/components/schemas/EnvelopeMeta'
+    PersonListEnvelope:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonView'
+        meta:
+          $ref: '#/components/schemas/EnvelopeMeta'
+    HouseholdEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/HouseholdView'
+        meta:
+          $ref: '#/components/schemas/EnvelopeMeta'
+    StructuredPageEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/StructuredPageView'
+        meta:
+          $ref: '#/components/schemas/EnvelopeMeta'
+    PublicNewsFeedEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PublicNewsFeedView'
+        meta:
+          $ref: '#/components/schemas/EnvelopeMeta'
+    PublicEventsFeedEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PublicEventsFeedView'
+        meta:
+          $ref: '#/components/schemas/EnvelopeMeta'
+    PublicLiveWebcastEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PublicLiveWebcastView'
+        meta:
+          $ref: '#/components/schemas/EnvelopeMeta'
+    ContentItemEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ContentItemView'
+        meta:
+          $ref: '#/components/schemas/EnvelopeMeta'
+    ContentItemListEnvelope:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentItemView'
+        meta:
+          $ref: '#/components/schemas/EnvelopeMeta'

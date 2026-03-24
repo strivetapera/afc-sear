@@ -1,28 +1,45 @@
-// pages/news.js
-import React from 'react';
+import PageShell from '../components/PageShell';
+import { format, parseISO } from 'date-fns';
+import { newsItems, newsPage } from '../data/newsData';
+import { getNewsFeedFromPlatform } from '../lib/platformPublicApi';
 
-export default function News() {
+export default function News({ items, metadata }) {
   return (
-    <div className="py-8 px-4 md:py-10 md:px-8 w-11/12 max-w-[800px] mx-auto">
-      <h1 className="text-3xl text-center font-bold mb-6 text-gray-900">Latest News</h1>
-      <ul className="list-none p-0">
-        <li className="bg-gray-100 p-6 mb-4 rounded">
-          <h2 className="text-xl font-semibold mb-2 text-gray-900">New Church Building Project</h2>
-          <p className="text-base leading-relaxed  text-gray-700">We are excited to announce the commencement of our new church building project. Stay tuned for updates!</p>
-           <p className="font-italic text-gray-600 mt-2">Published: June 10, 2024</p>
-        </li>
-        <li className="bg-gray-100 p-6 mb-4 rounded">
-          <h2 className="text-xl font-semibold mb-2  text-gray-900">Successful Outreach Event</h2>
-          <p className="text-base leading-relaxed  text-gray-700">Our recent community outreach event was a great success. We thank all the volunteers for their support!</p>
-          <p className="font-italic text-gray-600 mt-2">Published: May 25, 2024</p>
-        </li>
-          <li className="bg-gray-100 p-6 mb-4 rounded">
-           <h2 className="text-xl font-semibold mb-2 text-gray-900">Upcoming Leadership Conference</h2>
-           <p className="text-base leading-relaxed text-gray-700">Register now for our leadership conference in August, aimed at developing better church leadership.</p>
-           <p className="font-italic text-gray-600 mt-2">Published: April 20, 2024</p>
-        </li>
-        {/* Add more news items here */}
+    <PageShell
+      eyebrow={metadata.eyebrow}
+      title={metadata.title}
+      lead={metadata.lead}
+    >
+      <ul className="not-prose list-none space-y-4 p-0">
+        {items.map((item) => (
+          <li key={item.id} className="rounded-2xl border border-gold/20 bg-white/5 p-6">
+            <div className="mb-3 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-gold/75">
+              <span>{item.category}</span>
+              <span className="text-cream/50">{item.location}</span>
+            </div>
+            <h2 className="mb-2 text-xl font-semibold text-gold">{item.title}</h2>
+            <p className="text-cream/85">{item.summary}</p>
+            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-cream/60">
+              <span>Published: {format(parseISO(item.publishedAt), 'MMMM d, yyyy')}</span>
+              <span>Status: {item.status}</span>
+            </div>
+          </li>
+        ))}
       </ul>
-    </div>
+    </PageShell>
   );
+}
+
+export async function getStaticProps() {
+  const fallbackItems = [...newsItems].sort(
+    (a, b) => parseISO(b.publishedAt).getTime() - parseISO(a.publishedAt).getTime()
+  );
+  const { metadata, items } = await getNewsFeedFromPlatform(newsPage, fallbackItems);
+
+  return {
+    props: {
+      items,
+      metadata,
+    },
+  };
 }

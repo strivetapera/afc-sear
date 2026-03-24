@@ -2,7 +2,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
-import OffCanvasMenu from './OffCanvasMenu'; // Import the new component
+import OffCanvasMenu from './OffCanvasMenu';
+import { topNavLinks } from '../lib/siteNavigation';
 
 // NavLink component remains the same
 const NavLink = ({ href, children, onClick }) => (
@@ -34,13 +35,15 @@ const MenuIcon = (props) => (
 
 
 const Header = () => {
-    // State for the OffCanvasMenu
     const [isOffCanvasOpen, setIsOffCanvasOpen] = useState(false);
-    const offCanvasButtonRef = useRef(null); // Ref for the trigger button
+    const offCanvasButtonRef = useRef(null);
 
-    // Function to toggle the OffCanvasMenu
     const toggleOffCanvas = () => {
         setIsOffCanvasOpen(!isOffCanvasOpen);
+    };
+
+    const closeOffCanvas = () => {
+        setIsOffCanvasOpen(false);
     };
 
     // Optional: Close OffCanvas if window resizes larger (desktop view)
@@ -78,14 +81,12 @@ const Header = () => {
                     <div className="flex items-center">
                         {/* Desktop Navigation (Hidden on mobile) */}
                         <nav className="hidden md:block mr-4"> {/* Add margin-right */}
-                            <ul className="flex flex-row gap-6 items-center"> {/* Ensure items-center if needed */}
-                                <NavLink href="/">Home</NavLink>
-                                <NavLink href="/about">About</NavLink>
-                                {/* <NavLink href="/ministries">Ministries</NavLink> <-- REMOVED */}
-                                <NavLink href="/live-webcast">Live Webcast</NavLink> {/* <-- ADDED */}
-                                <NavLink href="/news">News</NavLink>
-                                <NavLink href="/events">Events</NavLink>
-                                {/* Add other top-level links if desired */}
+                            <ul className="flex flex-row gap-6 items-center">
+                                {topNavLinks.map((link) => (
+                                  <NavLink key={link.href} href={link.href}>
+                                    {link.label}
+                                  </NavLink>
+                                ))}
                             </ul>
                         </nav>
 
@@ -96,10 +97,10 @@ const Header = () => {
                             onClick={toggleOffCanvas}
                             aria-haspopup="dialog" // Use dialog role for the target panel
                             aria-expanded={isOffCanvasOpen}
-                            aria-label="Open Menu" // Clearer label
-                            aria-controls="offcanvas-menu" // Optional: ID of the menu panel
+                            aria-label={isOffCanvasOpen ? 'Close Menu' : 'Open Menu'}
+                            aria-controls="offcanvas-menu"
                         >
-                           <MenuIcon aria-hidden="true"/> {/* Use the Menu Icon component */}
+                           <MenuIcon aria-hidden="true"/>
                         </button>
                     </div>
                 </div>
@@ -109,8 +110,8 @@ const Header = () => {
             {/* NOTE: You might also want to remove/change "Ministries" inside OffCanvasMenu.js */}
             <OffCanvasMenu
                 isOpen={isOffCanvasOpen}
-                onClose={toggleOffCanvas}
-                id="offcanvas-menu" // Added ID for aria-controls
+                onClose={closeOffCanvas}
+                triggerRef={offCanvasButtonRef}
             />
         </>
     );

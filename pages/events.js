@@ -1,16 +1,30 @@
 // pages/events.js
 import React from 'react';
 import { getUpcomingEvents, formatEventDate } from '../lib/eventUtils';
+import { getEventsFeedFromPlatform } from '../lib/platformPublicApi';
+
+const fallbackMetadata = {
+  eyebrow: 'Events',
+  title: 'Upcoming Events',
+  lead:
+    'These recurring services and public gatherings are currently drawn from the restored Zimbabwe schedule while the wider regional events system is being built out on the platform.',
+};
 
 // Receive events prop
-export default function Events({ allUpcomingEvents }) {
+export default function Events({ metadata, allUpcomingEvents }) {
   // ... (Your component code remains exactly the same, it's perfect)
   return (
     <div className="py-12 md:py-16">
       <div className="container mx-auto px-6 w-11/12 max-w-[900px]">
+        <p className="text-center text-xs font-semibold uppercase tracking-[0.24em] text-gold/75">
+          {metadata.eyebrow}
+        </p>
         <h1 className="text-3xl md:text-4xl text-center font-bold mb-8 md:mb-12">
-          Upcoming Events
+          {metadata.title}
         </h1>
+        <p className="mx-auto mb-10 max-w-3xl text-center text-base leading-7 text-cream/80">
+          {metadata.lead}
+        </p>
 
         {allUpcomingEvents.length > 0 ? (
           <ul className="list-none p-0 space-y-8">
@@ -55,9 +69,12 @@ export async function getStaticProps() {
     // The build will succeed, and the page will render the "empty state" message.
   }
 
+  const platformFeed = await getEventsFeedFromPlatform(fallbackMetadata, allUpcomingEvents);
+
   return {
     props: {
-      allUpcomingEvents,
+      metadata: platformFeed.metadata,
+      allUpcomingEvents: platformFeed.items,
     },
   };
 }

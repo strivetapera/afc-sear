@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AFC SEAR Platform
 
-## Getting Started
+The platform for the Apostolic Faith Church (AFC) Southern & East Africa Region (SEAR), providing centralized management for branches, events, and community engagement.
 
-First, run the development server:
+## Project Structure
 
+This is a monorepo powered by npm workspaces:
+
+- `apps/api`: Fastify-based REST API server.
+- `apps/web`: Next.js public-facing website.
+- `apps/admin`: Next.js admin dashboard.
+- `packages/db`: Prisma schema and database client.
+- `packages/ui`: Shared UI component library.
+
+## Prerequisites
+
+- **Node.js**: v20 or newer.
+- **npm**: v10 or newer.
+- **PostgreSQL**: Local instance or Neon.tech database.
+- **Docker**: Optional, for local database hosting.
+
+## Setup Instructions
+
+### 1. Install Dependencies
+From the root directory:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment Configuration
+Create or update `.env` files in the following locations (if not using defaults):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Root or `packages/db`**:
+```env
+DATABASE_URL="postgresql://postgres:postgres@localhost:5433/afc_sear_platform?schema=public"
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**`apps/api`**:
+```env
+KEYCLOAK_ISSUER_URL="http://localhost:8080/realms/afc"
+KEYCLOAK_CLIENT_ID="afc-api"
+```
 
-## Learn More
+**`apps/web` & `apps/admin`**:
+```env
+NEXT_PUBLIC_API_URL="http://localhost:4000"
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 3. Database Management
+If using the local Docker-based database:
+```bash
+npm run db:up
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Initialize the database schema and types:
+```bash
+npm run db:generate   # Generate Prisma client
+npm run db:push       # Push schema to database (dev)
+npm run db:seed       # Populate database with initial data
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Running the Applications
 
-## Deploy on Vercel
+To run the whole system in development mode:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Start the API Server
+```bash
+npm run api:dev
+```
+Access the API at `http://localhost:4000`. Health check: `http://localhost:4000/health`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Start the Website
+```bash
+npm run dev
+```
+Access the website at `http://localhost:3000`.
+
+### Start the Admin Dashboard
+```bash
+npm run dev --workspace=@afc-sear/admin
+```
+Access the admin panel at `http://localhost:5001`.
+
+## Key Features Integrated
+
+### Event Registration
+- **Listing**: `GET /api/v1/public/events/list`
+- **Details**: `GET /api/v1/public/events/:slug`
+- **Registration**: `POST /api/v1/public/events/:slug/register`
+
+## Troubleshooting
+
+- **Port Conflict**: If you get an `EADDRINUSE` error, check if another instance of the server is running on port 4000, 3000, or 5001.
+- **Prisma Client Issues**: Run `npm run db:generate` to synchronize TypeScript types with your database schema.
+- **Auth Initialization**: Ensure the API server is started and accessible before performing actions requiring authentication.

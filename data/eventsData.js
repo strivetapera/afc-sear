@@ -1,8 +1,10 @@
 // data/eventsData.js
+import { legacyZimbabweWebcast } from './legacyZimbabweSiteData';
 
-// Helper to add Zoom details consistently
-const zoomLink = "https://us02web.zoom.us/j/85088056383?pwd=cXBFemhLU2c0aTZ3MC9JMU0wM2laZz09";
-const zoomPasscode = "111";
+const zoomLink = legacyZimbabweWebcast.zoomUrl;
+const zoomPasscode = legacyZimbabweWebcast.zoomPasscode;
+const youtubeLink = legacyZimbabweWebcast.youtubeUrl;
+const facebookLink = legacyZimbabweWebcast.facebookUrl;
 const zoomDetails = `Join via Zoom: ${zoomLink} (Passcode: ${zoomPasscode})`;
 
 export const events = [
@@ -22,12 +24,11 @@ export const events = [
   },
   {
     id: 'tue-service',
-    title: 'Tuesday Evening Service',
-    description: 'Join us for worship and teaching.',
-    // Recurring Weekly: Tuesday at 18:00 (6:00 PM) - 19:30 local time
+    title: 'Tuesday Evangelical Service',
+    description: 'Legacy Zimbabwe weekly service schedule restored from the previous website.',
     recurrence: {
       type: 'weekly',
-      dayOfWeek: 2, // 0=Sun, 1=Mon, 2=Tue
+      dayOfWeek: 2,
       time: '18:00',
       durationMinutes: 90,
     },
@@ -36,23 +37,21 @@ export const events = [
     id: 'wed-bible-study',
     title: 'Mid-Week Bible Study (Online)',
     description: `Deepen your understanding of God's Word. ${zoomDetails}`,
-    // Recurring Weekly: Wednesday at 18:00 (6:00 PM) - 19:00 local time
     recurrence: {
       type: 'weekly',
-      dayOfWeek: 3, // Wednesday
-      time: '18:00',
+      dayOfWeek: 3,
+      time: '18:30',
       durationMinutes: 60,
     },
-    link: zoomLink, // Add link field
+    link: zoomLink,
   },
   {
     id: 'fri-service',
-    title: 'Friday Evening Service',
-    description: 'A time of fellowship and spiritual focus.',
-    // Recurring Weekly: Friday at 18:00 (6:00 PM) - 19:30 local time
+    title: 'Friday Bible Teaching',
+    description: 'Legacy Zimbabwe weekly service schedule restored from the previous website.',
     recurrence: {
       type: 'weekly',
-      dayOfWeek: 5, // Friday
+      dayOfWeek: 5,
       time: '18:00',
       durationMinutes: 90,
     },
@@ -61,54 +60,35 @@ export const events = [
     id: 'sun-school',
     title: 'Sunday School',
     description: 'Bible classes for all ages.',
-    // Recurring Weekly: Sunday at 09:00 AM - 09:45 AM local time
     recurrence: {
       type: 'weekly',
-      dayOfWeek: 0, // Sunday
+      dayOfWeek: 0,
       time: '09:00',
-      durationMinutes: 45,
+      durationMinutes: 60,
     },
   },
   {
     id: 'sun-devotional',
     title: 'Sunday Devotional Service',
-    description: 'Begin the main service with worship and devotion.',
-     // Recurring Weekly: Sunday at 10:00 AM local time
+    description: 'Watch through the restored YouTube channel when this service is streamed online.',
     recurrence: {
       type: 'weekly',
-      dayOfWeek: 0, // Sunday
-      time: '10:00',
-      // Duration implied until next service starts
+      dayOfWeek: 0,
+      time: '10:30',
+      durationMinutes: 120,
     },
+    link: youtubeLink,
   },
-   {
-    id: 'sun-evangelistic',
-    title: 'Sunday Evangelistic Service',
-    description: 'Experience uplifting worship and Gospel preaching.',
-    // Recurring Weekly: Sunday at 14:00 (2:00 PM) local time
-    recurrence: {
-      type: 'weekly',
-      dayOfWeek: 0, // Sunday
-      time: '14:00',
-      // Duration not specified
-    },
-  },
-  // Keep other one-time events if you still have them:
-  /*
   {
-    id: 'revival-july',
-    title: 'Special Revival Service',
-    description: 'Guest Speaker: Pastor John Doe.',
-    startDateTime: '2024-07-20T19:00:00',
+    id: 'sun-youth',
+    title: 'Sunday Youth Service',
+    description: 'This service was listed at 2:00 PM on the previous Zimbabwe schedule page.',
+    recurrence: {
+      type: 'weekly',
+      dayOfWeek: 0,
+      time: '14:00',
+      durationMinutes: 90,
+    },
+    link: facebookLink,
   },
-   {
-    id: 'revival-aug',
-    title: 'August Healing Crusade',
-    description: 'A special weekend focused on healing.',
-    startDateTime: '2024-08-15T18:30:00',
-  },
-  */
 ];
-
-// Ensure the export is correct if using ES Modules
-// export { events }; // Use this if you didn't use 'export const events = ...' above

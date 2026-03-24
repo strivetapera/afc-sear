@@ -5,7 +5,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        {/* Add custom meta tags or links here */}
+        <link rel="icon" href="/images/jesus-light.png" />
       </Head>
       <body>
         <Main />
