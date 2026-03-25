@@ -1,15 +1,17 @@
 export async function fetchApi(endpoint: string, options: RequestInit = {}) {
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/v1`;
   
-  const headers = {
-    'Content-Type': 'application/json',
-    ...(options.headers || {}),
-  };
+  const headers: HeadersInit = { ...options.headers };
+  const headersObj = new Headers(headers);
+
+  // Only set Content-Type if there's a body
+  if (options.body) {
+    headersObj.set('Content-Type', 'application/json');
+  }
 
   const response = await fetch(`${baseUrl}${endpoint}`, {
     ...options,
-    headers,
-    // Better Auth uses signed cookies. This ensures they are sent with every request.
+    headers: headersObj,
     credentials: options.credentials || 'include',
   });
 

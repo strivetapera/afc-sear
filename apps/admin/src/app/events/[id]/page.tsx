@@ -25,7 +25,8 @@ import {
   Globe,
   Settings,
   Shield,
-  Activity
+  Activity,
+  Edit
 } from 'lucide-react';
 import { fetchApi } from '@/lib/api-client';
 import { useRouter } from 'next/navigation';
@@ -60,8 +61,14 @@ export default function EventEditPage({ params }: PageProps) {
   const [registrants, setRegistrants] = useState<any[]>([]);
 
   // Schedule form
-  const [schedForm, setSchedForm] = useState({ startsAt: '', endsAt: '', timezone: 'UTC', virtualJoinUrl: '' });
+  const [schedForm, setSchedForm] = useState({ startsAt: '', endsAt: '', timezone: 'Africa/Harare', virtualJoinUrl: '' });
   const [ticketForm, setTicketForm] = useState({ name: '', priceMinor: '0', currencyCode: 'USD', capacity: '' });
+
+  // Convert datetime-local (YYYY-MM-DDTHH:mm) to ISO format
+  const toISO = (localDateTime: string) => {
+    if (!localDateTime) return '';
+    return new Date(localDateTime).toISOString();
+  };
 
   useEffect(() => {
     async function load() {
@@ -305,12 +312,18 @@ export default function EventEditPage({ params }: PageProps) {
                       <Input label="Timezone String" value={schedForm.timezone} onChange={(e) => setSchedForm(f => ({ ...f, timezone: e.target.value }))} placeholder="e.g. Africa/Harare" />
                       <Input label="Virtual Connection (URL)" value={schedForm.virtualJoinUrl} onChange={(e) => setSchedForm(f => ({ ...f, virtualJoinUrl: e.target.value }))} placeholder="https://zoom.us/..." />
                    </div>
-                   <Button variant="primary" onClick={async () => {
-                        if (!schedForm.startsAt || !schedForm.endsAt) return;
-                        const r = await fetchApi(`/admin/events/${id}/schedules`, { method: 'POST', body: JSON.stringify(schedForm) });
-                        setSchedules(p => [...p, r.data]);
-                        setSchedForm({ startsAt: '', endsAt: '', timezone: 'UTC', virtualJoinUrl: '' });
-                   }} className="w-full">Initialize Session</Button>
+                    <Button variant="primary" onClick={async () => {
+                         if (!schedForm.startsAt || !schedForm.endsAt) return;
+                         const payload = {
+                           startsAt: toISO(schedForm.startsAt),
+                           endsAt: toISO(schedForm.endsAt),
+                           timezone: schedForm.timezone,
+                           virtualJoinUrl: schedForm.virtualJoinUrl || undefined,
+                         };
+                         const r = await fetchApi(`/admin/events/${id}/schedules`, { method: 'POST', body: JSON.stringify(payload) });
+                         setSchedules(p => [...p, r.data]);
+                         setSchedForm({ startsAt: '', endsAt: '', timezone: 'Africa/Harare', virtualJoinUrl: '' });
+                    }} className="w-full">Initialize Session</Button>
                 </Card>
                 
                 <div className="space-y-4">

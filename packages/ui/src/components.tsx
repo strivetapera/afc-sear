@@ -40,13 +40,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     // Using motion("button") for more robust typing in strict environments
-    const MotionButton = motion("button");
+    const M = motion.button as any;
 
     return (
-      <MotionButton
+      <M
         whileHover={{ translateY: -2, scale: 1.01 }}
         whileTap={{ scale: 0.98 }}
-        ref={ref as any}
+        ref={ref}
         className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
         disabled={isLoading || disabled}
         {...props}
@@ -62,7 +62,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           ) : null}
         </AnimatePresence>
         {children}
-      </MotionButton>
+      </M>
     );
   }
 );
@@ -108,21 +108,21 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 Input.displayName = 'Input';
 
 export const Card = ({ className = '', children, hoverable = false }: { className?: string; children: React.ReactNode, hoverable?: boolean }) => {
-  const MotionDiv = motion("div");
+  const M = motion.div as any;
   return (
-    <MotionDiv 
+    <M 
       whileHover={hoverable ? { translateY: -6, shadow: 'var(--shadow-premium)' } : {}}
       className={`rounded-2xl border border-border bg-card text-card-foreground shadow-soft transition-all duration-300 ${className}`}
     >
       {children}
-    </MotionDiv>
+    </M>
   );
 };
 
 export const GlassCard = ({ className = '', children }: { className?: string; children: React.ReactNode }) => {
-  const MotionDiv = motion("div");
+  const M = motion.div as any;
   return (
-    <MotionDiv 
+    <M 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className={`premium-glass rounded-3xl p-1 ${className}`}
@@ -130,7 +130,7 @@ export const GlassCard = ({ className = '', children }: { className?: string; ch
       <div className="rounded-[calc(1.5rem-1px)] p-6 bg-background/40">
         {children}
       </div>
-    </MotionDiv>
+    </M>
   );
 };
 
@@ -177,9 +177,8 @@ export const GradientText = ({ children, className = '' }: { children: React.Rea
 );
 
 export const DynamicContainer = ({ children, className = '' }: { children: React.ReactNode, className?: string }) => {
-  const MotionDiv = motion("div");
   return (
-    <MotionDiv
+    <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -187,7 +186,7 @@ export const DynamicContainer = ({ children, className = '' }: { children: React
       className={className}
     >
       {children}
-    </MotionDiv>
+    </motion.div>
   );
 };
 

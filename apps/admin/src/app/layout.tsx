@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-
-import { SideNav } from "@/components/SideNav";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { DynamicContainer } from "@afc-sear/ui";
-import { AnimatePresence } from "framer-motion";
 import { AuthProvider } from "./providers";
 
 export const metadata: Metadata = {
@@ -20,13 +16,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body className="flex h-full overflow-hidden bg-background text-foreground transition-colors duration-500">
-        <AuthProvider>
-          <ThemeProvider>
-            <div className="flex h-full w-full">
-              {children}
-            </div>
-          </ThemeProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

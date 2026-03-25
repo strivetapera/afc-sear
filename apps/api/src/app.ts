@@ -25,7 +25,7 @@ import {
   updateContentItem,
   publishContentItem,
 } from './repositories/content-repository';
-import { assignRole, getCurrentUserProfile } from './repositories/identity-repository';
+import { assignRole, getCurrentUserProfile, listAdminUsers } from './repositories/identity-repository';
 import { createBranch, getLocationsDirectory, listMinistries, listPublicBranches } from './repositories/organization-repository';
 import { SearchRepository } from './repositories/search-repository';
 import { Queue } from 'bullmq';
@@ -246,6 +246,17 @@ export function createApp() {
           ipAddress: request.ip,
         });
         return { data: result.data, meta: { source: result.source } };
+      }
+    );
+
+    // ─── Users Management ────────────────────────────────────────────────────
+    app.get(
+      '/api/v1/admin/users',
+      { preHandler: [app.authenticate, app.requireRole(ADMIN_ROLE)] },
+      async (request) => {
+        const { page, pageSize } = getPagination(request.query);
+        const result = await listAdminUsers(page, pageSize);
+        return { data: result.data, meta: { page, pageSize, count: result.count } };
       }
     );
 

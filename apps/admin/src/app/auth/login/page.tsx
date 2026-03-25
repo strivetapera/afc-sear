@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Card, 
   CardHeader, 
@@ -10,7 +10,7 @@ import {
   Input
 } from '@afc-sear/ui';
 import { useRouter } from 'next/navigation';
-import { signIn, useSession } from '@/lib/auth-client';
+import { signIn } from '@/lib/auth-client';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -18,13 +18,6 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { data: session, isPending } = useSession();
-
-  useEffect(() => {
-    if (session && !isPending) {
-      router.push('/dashboard');
-    }
-  }, [session, isPending, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,29 +25,20 @@ export default function LoginPage() {
     setError('');
 
     try {
-      console.log('Attempting login for:', email);
-      
-      const result = await signIn.email({
+      await signIn.email({
         email,
         password,
       }, {
         onSuccess: () => {
-          console.log('Login successful');
           router.push('/dashboard');
-          router.refresh();
         },
         onError: (ctx) => {
-          console.error('Login error:', ctx);
           setError(ctx.error.message || 'Login failed. Please check your credentials.');
+          setIsLoading(false);
         },
       });
-
-      console.log('Sign in result:', result);
-
     } catch (err: any) {
-      console.error('Login exception:', err);
       setError(err.message || 'An unexpected error occurred');
-    } finally {
       setIsLoading(false);
     }
   };
@@ -101,9 +85,9 @@ export default function LoginPage() {
             <Button 
                 type="submit" 
                 className="w-full h-12 text-base font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]" 
-                disabled={isLoading || isPending}
+                disabled={isLoading}
             >
-              {isLoading ? 'Signing in...' : isPending ? 'Loading...' : 'Sign In'}
+              {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
             
             <div className="pt-2 text-center">

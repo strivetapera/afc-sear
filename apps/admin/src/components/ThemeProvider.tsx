@@ -18,7 +18,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('light');
   const [mounted, setMounted] = useState(false);
 
-  // Read theme from localStorage on mount (avoids SSR mismatch)
   useEffect(() => {
     const stored = localStorage.getItem('afc-admin-theme') as Theme | null;
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -37,14 +36,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  // Prevent flash — don't render children until mount resolves theme
-  if (!mounted) {
-    return <div style={{ visibility: 'hidden' }}>{children}</div>;
-  }
-
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
+      <div className={`flex h-full w-full ${mounted ? 'opacity-100 transition-opacity duration-500' : 'opacity-0'}`}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 }

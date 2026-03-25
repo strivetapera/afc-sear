@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from '@/components/ThemeProvider';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const M = motion.div as any;
 import {
   LayoutDashboard,
   Users,
@@ -73,7 +75,7 @@ export function SideNav() {
   };
 
   return (
-    <div className="group/sidebar flex h-full w-72 flex-col border-r border-sidebar-border bg-sidebar-bg text-sidebar-foreground shadow-2xl transition-all">
+    <div className="group/sidebar flex h-full w-72 shrink-0 flex-col border-r border-sidebar-border bg-sidebar-bg text-sidebar-foreground shadow-2xl transition-all">
       {/* Premium Logo Section */}
       <div className="relative flex h-20 items-center px-6 overflow-hidden">
         <Link href="/dashboard" className="z-10 flex items-center gap-4">
@@ -115,22 +117,22 @@ export function SideNav() {
                     }`}
                   >
                     {isActive && (
-                      <motion.div
+                      <M
                         layoutId="nav-pill"
                         className="absolute inset-0 z-0 rounded-xl bg-primary shadow-lg shadow-primary/40"
                         transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                       />
                     )}
-                    <Icon className={`relative z-10 h-4.5 w-4.5 shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-white' : ''}`} />
+                    <Icon className={`relative z-10 h-[18px] w-[18px] shrink-0 transition-transform group-hover:scale-110 ${isActive ? 'text-white' : ''}`} />
                     <span className="relative z-10 font-medium tracking-tight">{item.name}</span>
                     {isActive && (
-                      <motion.div
+                      <M
                         initial={{ opacity: 0, x: -5 }}
                         animate={{ opacity: 1, x: 0 }}
                         className="relative z-10 ml-auto"
                       >
                         <ChevronRight className="h-3.5 w-3.5 opacity-50" />
-                      </motion.div>
+                      </M>
                     )}
                   </Link>
                 );

@@ -11,7 +11,7 @@
     "build": "next build",
     "start": "next start",
     "export": "next export",
-    "lint": "next lint",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "api:dev": "npm run --workspace @afc-sear/api dev",
     "api:build": "npm run --workspace @afc-sear/api build",
     "api:typecheck": "npm run --workspace @afc-sear/api typecheck",
