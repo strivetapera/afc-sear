@@ -37,8 +37,8 @@ DATABASE_URL="postgresql://postgres:postgres@localhost:5433/afc_sear_platform?sc
 
 **`apps/api`**:
 ```env
-KEYCLOAK_ISSUER_URL="http://localhost:8080/realms/afc"
-KEYCLOAK_CLIENT_ID="afc-api"
+BETTER_AUTH_SECRET="your-secret-here"
+BETTER_AUTH_URL="http://localhost:4000" # API URL
 ```
 
 **`apps/web` & `apps/admin`**:
@@ -56,7 +56,7 @@ Initialize the database schema and types:
 ```bash
 npm run db:generate   # Generate Prisma client
 npm run db:push       # Push schema to database (dev)
-npm run db:seed       # Populate database with initial data
+npm run db:seed      - auth: Better Auth (OpenID Connect / Session-based) with MFA and RBAC
 ```
 
 ## Running the Applications

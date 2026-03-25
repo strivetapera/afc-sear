@@ -26,6 +26,7 @@ export const auth = (prisma: PrismaClient) => betterAuth({
     trustedOrigins: [
         process.env.ADMIN_URL || "http://localhost:3001",
         process.env.WEB_URL || "http://localhost:3000",
+        process.env.PORTAL_URL || "http://localhost:3002",
     ],
 });
 

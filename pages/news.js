@@ -10,22 +10,24 @@ export default function News({ items, metadata }) {
       title={metadata.title}
       lead={metadata.lead}
     >
-      <ul className="not-prose list-none space-y-4 p-0">
-        {items.map((item) => (
-          <li key={item.id} className="rounded-2xl border border-gold/20 bg-white/5 p-6">
-            <div className="mb-3 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-gold/75">
-              <span>{item.category}</span>
-              <span className="text-cream/50">{item.location}</span>
-            </div>
-            <h2 className="mb-2 text-xl font-semibold text-gold">{item.title}</h2>
-            <p className="text-cream/85">{item.summary}</p>
-            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-cream/60">
-              <span>Published: {format(parseISO(item.publishedAt), 'MMMM d, yyyy')}</span>
-              <span>Status: {item.status}</span>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <div className="not-prose max-w-4xl">
+        <ul className="list-none space-y-8 p-0">
+          {items.map((item) => (
+            <li key={item.id} className="rounded-3xl border border-foreground/5 bg-card/30 p-8 backdrop-blur-md transition-all hover:scale-[1.01] hover:bg-card/50">
+              <div className="mb-4 flex flex-wrap gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-accent">
+                <span className="bg-accent/10 py-1 px-3 rounded-full border border-accent/20">{item.category}</span>
+                <span className="py-1 px-2 text-muted-foreground/60">{item.location}</span>
+              </div>
+              <h2 className="mb-3 text-2xl md:text-3xl font-bold text-foreground italic heading-premium">{item.title}</h2>
+              <p className="text-muted-foreground text-lg leading-relaxed font-medium">{item.summary}</p>
+              <div className="mt-8 pt-6 border-t border-foreground/5 flex flex-wrap items-center justify-between gap-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40">
+                <span>{format(parseISO(item.publishedAt), 'MMMM d, yyyy')}</span>
+                <span className="italic">{item.status}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </PageShell>
   );
 }

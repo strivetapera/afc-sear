@@ -27,6 +27,9 @@ import {
 } from './repositories/content-repository';
 import { assignRole, getCurrentUserProfile } from './repositories/identity-repository';
 import { createBranch, getLocationsDirectory, listMinistries, listPublicBranches } from './repositories/organization-repository';
+import { SearchRepository } from './repositories/search-repository';
+import { Queue } from 'bullmq';
+import IORedis from 'ioredis';
 import { getCurrentHousehold, listPeopleRecords, upsertPersonRecord, updateMemberProfile, getMemberRegistrations, getMemberGiving, getMemberAnnouncements, createPrayerRequest } from './repositories/people-repository';
 import {
   getEventBySlug,
@@ -83,6 +86,13 @@ export function createApp() {
     origin: [
         process.env.ADMIN_URL || 'http://localhost:3001',
         process.env.WEB_URL || 'http://localhost:3000',
+        process.env.PORTAL_URL || 'http://localhost:3002',
+        'http://localhost:3001',
+        'http://localhost:3000',
+        'http://localhost:3002',
+        'http://127.0.0.1:3001',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:3002',
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -90,6 +100,13 @@ export function createApp() {
 
   const prisma = getPrismaClient();
   const auth = createAuth(prisma);
+  const searchRepository = new SearchRepository(prisma);
+
+  const jobQueue = new Queue('platform-job-queue', {
+    connection: new IORedis(process.env.REDIS_URL || 'redis://localhost:6379', {
+      maxRetriesPerRequest: null,
+    }) as any,
+  });
 
   app.register(authPlugin, {
     auth,
@@ -97,6 +114,11 @@ export function createApp() {
 
   app.after(() => {
     // ─── Health & OpenAPI ────────────────────────────────────────────────────
+    app.get('/api/v1/health-check', async () => ({
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+    }));
+
     app.get('/health', async () => ({
       status: 'ok',
       service: '@afc-sear/api',
@@ -810,11 +832,39 @@ export function createApp() {
           after: campaign as any,
           ipAddress: request.ip,
         });
-        // TODO: enqueue actual delivery job via worker
+        
+        // Enqueue actual delivery job via worker
+        await (jobQueue as any).add('SEND_CAMPAIGN', {
+            type: 'SEND_CAMPAIGN',
+            payload: { id: campaign.id }
+        });
+
         return { data: campaign };
       }
     );
   });
+
+  // Search
+  app.get(
+    '/api/v1/search',
+    {
+      schema: {
+        querystring: {
+          type: 'object',
+          properties: {
+            q: { type: 'string' },
+            limit: { type: 'number', default: 10 },
+          },
+          required: ['q'],
+        },
+      },
+    },
+    async (request: any, reply) => {
+      const { q, limit } = request.query;
+      const results = await searchRepository.search(q, limit);
+      return reply.send({ data: results });
+    }
+  );
 
   return app;
 }

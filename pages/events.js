@@ -1,43 +1,45 @@
 // pages/events.js
 import React from 'react';
+import PageShell from '../components/PageShell';
 import { getUpcomingEvents, formatEventDate } from '../lib/eventUtils';
 import { getEventsFeedFromPlatform } from '../lib/platformPublicApi';
+import { useState, useEffect } from 'react';
 
 const fallbackMetadata = {
   eyebrow: 'Events',
   title: 'Upcoming Events',
   lead:
-    'These recurring services and public gatherings are currently drawn from the restored Zimbabwe schedule while the wider regional events system is being built out on the platform.',
+    'Join our recurring services and regional gatherings. Worship, prayer, and unified ministry events across the South East Africa Region.',
 };
 
-// Receive events prop
 export default function Events({ metadata, allUpcomingEvents }) {
-  // ... (Your component code remains exactly the same, it's perfect)
-  return (
-    <div className="py-12 md:py-16">
-      <div className="container mx-auto px-6 w-11/12 max-w-[900px]">
-        <p className="text-center text-xs font-semibold uppercase tracking-[0.24em] text-gold/75">
-          {metadata.eyebrow}
-        </p>
-        <h1 className="text-3xl md:text-4xl text-center font-bold mb-8 md:mb-12">
-          {metadata.title}
-        </h1>
-        <p className="mx-auto mb-10 max-w-3xl text-center text-base leading-7 text-cream/80">
-          {metadata.lead}
-        </p>
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
+  return (
+    <PageShell
+      eyebrow={metadata.eyebrow}
+      title={metadata.title}
+      lead={metadata.lead}
+      actions={[
+        { href: '/calendar', label: 'View Yearly Calendar', variant: 'secondary' }
+      ]}
+    >
+      <div className="not-prose max-w-4xl">
         {allUpcomingEvents.length > 0 ? (
           <ul className="list-none p-0 space-y-8">
             {allUpcomingEvents.map((event) => (
-              <li key={event.id} className="p-6 border border-gray-700 rounded-lg shadow-lg bg-gradient-to-br from-black to-gray-900">
-                <h2 className="text-xl md:text-2xl font-semibold mb-2">
+              <li key={event.id} className="p-8 border border-foreground/5 rounded-3xl shadow-premium bg-card/50 backdrop-blur-sm transition-all hover:scale-[1.01] hover:bg-card/80">
+                <h2 className="text-2xl md:text-3xl font-bold mb-3 heading-premium italic">
                   {event.title}
                 </h2>
-                <p className="mb-3 text-sm text-gold font-medium">
+                <p className="mb-4 text-sm text-accent font-black uppercase tracking-widest">
                   {formatEventDate(event.calculatedNextOccurrence, event.recurrence)}
                 </p>
                 {event.description && (
-                  <p className="text-base leading-relaxed">
+                  <p className="text-muted-foreground text-lg leading-relaxed font-medium">
                     {event.description}
                   </p>
                 )}
@@ -45,28 +47,27 @@ export default function Events({ metadata, allUpcomingEvents }) {
             ))}
           </ul>
         ) : (
-          <p className="text-center text-lg">
-            No upcoming events scheduled at this time. Please check back later.
-          </p>
+          <div className="text-center py-20 bg-foreground/5 rounded-3xl border border-dotted border-foreground/20">
+            <p className="text-xl text-muted-foreground font-medium italic">
+              No upcoming events scheduled at this time.
+            </p>
+          </div>
         )}
-        <p className="text-center text-sm text-gray-400 mt-8">
-          Event list generated at build time.
+        <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground/40 mt-12 pb-10">
+          Sync Time: {mounted ? new Date().toLocaleDateString() : 'Loading...'}
         </p>
       </div>
-    </div>
+    </PageShell>
   );
 }
 
-// Fetch data at build time
 export async function getStaticProps() {
-  let allUpcomingEvents = []; // Default to empty array
+  let allUpcomingEvents = [];
 
   try {
-    // Fetch ALL upcoming events for the events page
-    allUpcomingEvents = await getUpcomingEvents(null); // null limit gets all
+    allUpcomingEvents = await getUpcomingEvents(null);
   } catch (error) {
     console.error("Failed to fetch events for the events page:", error);
-    // The build will succeed, and the page will render the "empty state" message.
   }
 
   const platformFeed = await getEventsFeedFromPlatform(fallbackMetadata, allUpcomingEvents);
@@ -75,6 +76,6 @@ export async function getStaticProps() {
     props: {
       metadata: platformFeed.metadata,
       allUpcomingEvents: platformFeed.items,
-    },
+    }
   };
 }

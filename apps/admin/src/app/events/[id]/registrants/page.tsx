@@ -21,9 +21,10 @@ async function getEvent(eventId: string) {
   return json.data?.find((e: any) => e.id === eventId);
 }
 
-export default async function RegistrantsPage({ params }: { params: { id: string } }) {
-  const registrations = await getRegistrations(params.id);
-  const event = await getEvent(params.id);
+export default async function RegistrantsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const registrations = await getRegistrations(id);
+  const event = await getEvent(id);
 
   // Flatten registrations to attendees for the table
   const attendees = registrations.flatMap((reg: any) => 
@@ -66,7 +67,7 @@ export default async function RegistrantsPage({ params }: { params: { id: string
       </div>
 
       <Card className="overflow-hidden">
-        <RegistrantsTable initialAttendees={attendees} eventId={params.id} />
+        <RegistrantsTable initialAttendees={attendees} eventId={id} />
       </Card>
     </div>
   );

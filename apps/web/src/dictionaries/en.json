@@ -1,0 +1,18 @@
+{
+  "common": {
+    "welcome": "Welcome to Apostolic Faith Church",
+    "search": "Search...",
+    "loading": "Loading...",
+    "error": "An error occurred"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "events": "Events",
+    "contact": "Contact"
+  },
+  "home": {
+    "hero_title": "Faith, Community, and Purpose",
+    "hero_subtitle": "Join our global assembly in worship and service."
+  }
+}

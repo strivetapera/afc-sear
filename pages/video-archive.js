@@ -1,91 +1,114 @@
+import React, { useState } from 'react';
 import PageShell from '../components/PageShell';
 import {
   legacyCampMeetingRecordings,
   legacyVideoArchive,
   legacyZimbabweWebcast,
 } from '../data/legacyZimbabweSiteData';
+import MediaCinema from '../components/MediaCinema';
 
 export default function VideoArchivePage({ campRecordings, sermonVideos }) {
+  const [selectedMedia, setSelectedMedia] = useState(null);
+  const [isCinemaOpen, setIsCinemaOpen] = useState(false);
+
+  const openCinema = (media, type = 'video') => {
+    setSelectedMedia({ ...media, type });
+    setIsCinemaOpen(true);
+  };
+
+  const closeCinema = () => {
+    setIsCinemaOpen(false);
+    setSelectedMedia(null);
+  };
+
   return (
     <PageShell
-      eyebrow="Media"
+      eyebrow="Sanctuary Media"
       title="Media Center"
-      lead="The old Zimbabwe website included sermon videos and a substantial 2023 camp meeting archive. That media has now been carried into the new site so the archive is useful again instead of empty."
+      lead="Our unified regional archive of cinematic sermons and spiritual summations. We have fully integrated the preserved history from the previous Zimbabwe website alongside our current live ministry streams."
       actions={[
-        { href: legacyZimbabweWebcast.youtubeUrl, label: 'Open YouTube Archive' },
-        { href: '/live-webcast', label: 'Go To Live Webcast', variant: 'secondary' },
+        { href: legacyZimbabweWebcast.youtubeUrl, label: 'YouTube Archive' },
+        { href: '/live-webcast', label: 'Join Live Feed', variant: 'secondary' },
       ]}
     >
-      <h2>Legacy sermon videos</h2>
-      <p>
-        These sermon links came directly from the previous website&apos;s media dataset and are
-        preserved here as the first restored replay library.
-      </p>
-      <div className="not-prose mt-4 grid gap-4 md:grid-cols-2">
-        {sermonVideos.map((video) => (
-          <article key={video.id} className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              {video.type}
-            </p>
-            <h3 className="mt-2 text-xl font-semibold text-cream">{video.title}</h3>
-            <p className="mt-3 text-sm text-cream/80">{video.date}</p>
-            <p className="mt-2 text-sm text-cream/75">{video.speaker}</p>
-            <p className="mt-4">
-              <a
-                href={video.videoUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="text-sm font-semibold text-gold no-underline hover:underline"
+      <div className="max-w-5xl space-y-24">
+        <section>
+          <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Restored Ministry Replays</h2>
+          <p className="text-muted-foreground text-lg font-medium leading-relaxed mb-10 max-w-3xl">
+            Legacy sermon archives recovered directly from the prior ministry site, preserved for teaching and historical edification.
+          </p>
+          <div className="not-prose grid gap-8 md:grid-cols-2">
+            {sermonVideos.map((video) => (
+              <article key={video.id} className="group rounded-3xl border border-foreground/5 bg-card/30 p-8 backdrop-blur-md transition-all hover:bg-card/50">
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-4 block">
+                  {video.type}
+                </span>
+                <h3 className="text-2xl font-bold text-foreground mb-3">{video.title}</h3>
+                <div className="flex flex-col gap-1 mb-8">
+                    <span className="text-muted-foreground font-semibold text-sm">{video.date}</span>
+                    <span className="text-muted-foreground/40 text-[10px] font-bold uppercase tracking-widest italic border-l-2 border-accent/20 pl-3">{video.speaker}</span>
+                </div>
+                <button
+                  onClick={() => openCinema(video)}
+                  className="inline-flex text-[10px] font-black uppercase tracking-widest text-accent hover:tracking-[0.2em] transition-all cursor-pointer"
+                >
+                  Stream via Cinema Hub →
+                </button>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Regional Summits (2023)</h2>
+          <p className="text-muted-foreground text-lg font-medium leading-relaxed mb-10 max-w-3xl">
+            A comprehensive preservation of the December 2023 Camp Meetings, featuring unified regional ministry and sanctuary services.
+          </p>
+          <div className="not-prose grid gap-8 md:grid-cols-2">
+            {campRecordings.map((recording) => (
+              <article
+                key={recording.id}
+                className="rounded-3xl border border-foreground/5 bg-card/30 p-8 backdrop-blur-md transition-all hover:bg-card/50"
               >
-                Watch on YouTube
-              </a>
-            </p>
-          </article>
-        ))}
+                <div className="flex justify-between items-start mb-6">
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">
+                        {recording.sessionName}
+                    </span>
+                    <span className="text-[10px] font-bold text-muted-foreground/30 italic uppercase">
+                        {recording.date}
+                    </span>
+                </div>
+                <h3 className="text-2xl font-bold text-foreground mb-3 heading-premium">
+                  {recording.title ?? 'Session recording'}
+                </h3>
+                {recording.speaker && (
+                  <p className="text-muted-foreground font-medium italic mb-8 border-l-2 border-accent/20 pl-4">{recording.speaker}</p>
+                )}
+                <div className="flex flex-wrap gap-8 items-center pt-6 border-t border-foreground/5">
+                  <button
+                    onClick={() => openCinema(recording)}
+                    className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-accent hover:tracking-[0.2em] transition-all cursor-pointer"
+                  >
+                    Watch Cinema →
+                  </button>
+                  <button
+                    onClick={() => openCinema(recording, 'audio')}
+                    className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all cursor-pointer"
+                  >
+                    Listen Audio
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
       </div>
 
-      <h2>2023 Camp Meeting archive</h2>
-      <p>
-        The legacy archive also included 30 audio and video entries from December 2023 Camp
-        Meeting services. Those recordings now live here and on the Camp Meeting page.
-      </p>
-      <div className="not-prose mt-4 grid gap-4 md:grid-cols-2">
-        {campRecordings.map((recording) => (
-          <article
-            key={recording.id}
-            className="rounded-2xl border border-gold/20 bg-white/5 p-5"
-          >
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              {recording.sessionName}
-            </p>
-            <h3 className="mt-2 text-xl font-semibold text-cream">
-              {recording.title ?? 'Session recording'}
-            </h3>
-            <p className="mt-3 text-sm text-cream/80">{recording.date}</p>
-            {recording.speaker ? (
-              <p className="mt-2 text-sm text-cream/75">{recording.speaker}</p>
-            ) : null}
-            <div className="mt-4 flex flex-wrap gap-4 text-sm font-semibold">
-              <a
-                href={recording.videoUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="text-gold no-underline hover:underline"
-              >
-                Watch video
-              </a>
-              <a
-                href={recording.audioUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="text-gold no-underline hover:underline"
-              >
-                Play audio
-              </a>
-            </div>
-          </article>
-        ))}
-      </div>
+      <MediaCinema 
+        isOpen={isCinemaOpen} 
+        onClose={closeCinema} 
+        media={selectedMedia} 
+      />
     </PageShell>
   );
 }

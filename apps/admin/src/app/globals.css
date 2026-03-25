@@ -4,88 +4,96 @@
    Design Tokens — Light Mode (default)
    ========================================================================== */
 :root {
-  /* Core surfaces */
-  --background: 0 0% 100%;
-  --foreground: 222 47% 11%;
-
-  /* Card */
+  /* Core surfaces - Warm & Sophisticated */
+  --background: 210 20% 98%;
+  --foreground: 224 71% 4%;
+ 
+  /* Card - Deep & Clean */
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-
+  --card-foreground: 224 71% 4%;
+ 
   /* Popover */
   --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
-
-  /* Brand / Primary */
-  --primary: 221 83% 53%;
-  --primary-foreground: 0 0% 100%;
-
-  /* Secondary */
-  --secondary: 210 40% 96%;
-  --secondary-foreground: 222 47% 11%;
-
-  /* Muted (used by tabs, placeholders) */
-  --muted: 210 40% 93%;
-  --muted-foreground: 215 16% 47%;
-
-  /* Accent */
-  --accent: 210 40% 90%;
-  --accent-foreground: 222 47% 11%;
-
+  --popover-foreground: 224 71% 4%;
+ 
+  /* Brand / Primary - Deep Indigo Hub */
+  --primary: 243 75% 59%;
+  --primary-foreground: 210 20% 98%;
+ 
+  /* Secondary - Soft Neutral */
+  --secondary: 220 14% 90%;
+  --secondary-foreground: 224 71% 4%;
+ 
+  /* Muted */
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 9% 46%;
+ 
+  /* Accent - Sacred Gold */
+  --accent: 38 92% 50%;
+  --accent-foreground: 224 71% 4%;
+ 
   /* Destructive */
   --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 100%;
-
+  --destructive-foreground: 210 20% 98%;
+ 
   /* Border & Input */
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
-  --ring: 221 83% 53%;
-
-  /* Sidebar */
-  --sidebar-bg: 210 40% 98%;
-  --sidebar-border: 214 32% 91%;
-  --sidebar-hover: 210 40% 93%;
-  --sidebar-active-bg: 221 90% 93%;
-  --sidebar-active-text: 221 83% 53%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 243 75% 59%;
+ 
+  /* Premium Sidebar */
+  --sidebar-bg: 224 71% 4%;
+  --sidebar-foreground: 210 20% 98%;
+  --sidebar-border: 224 71% 10%;
+  --sidebar-hover: 243 75% 59% / 0.1;
+  --sidebar-active-bg: 243 75% 59%;
+  --sidebar-active-text: 210 20% 98%;
+ 
+  /* Premium WOW Tokens */
+  --glass-bg: 0 0% 100% / 0.6;
+  --glass-border: 220 13% 91% / 0.5;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  --shadow-premium: 0 30px 60px -12px rgba(0, 0, 0, 0.15), 0 18px 36px -18px rgba(0, 0, 0, 0.1);
 }
 
 /* ==========================================================================
    Design Tokens — Dark Mode (applied via .dark on <html>)
    ========================================================================== */
 .dark {
-  --background: 222 47% 6%;
-  --foreground: 210 40% 95%;
-
-  --card: 222 47% 10%;
-  --card-foreground: 210 40% 95%;
-
-  --popover: 222 47% 10%;
-  --popover-foreground: 210 40% 95%;
-
-  --primary: 217 91% 60%;
-  --primary-foreground: 0 0% 100%;
-
-  --secondary: 217 33% 17%;
-  --secondary-foreground: 210 40% 95%;
-
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
-
-  --accent: 217 33% 20%;
-  --accent-foreground: 210 40% 95%;
-
-  --destructive: 0 62% 50%;
+  --background: 224 71% 2%;
+  --foreground: 210 20% 98%;
+ 
+  --card: 224 71% 4%;
+  --card-foreground: 210 20% 98%;
+ 
+  --popover: 224 71% 4%;
+  --popover-foreground: 210 20% 98%;
+ 
+  --primary: 243 75% 70%;
+  --primary-foreground: 224 71% 4%;
+ 
+  --secondary: 224 71% 10%;
+  --secondary-foreground: 210 20% 98%;
+ 
+  --muted: 224 71% 10%;
+  --muted-foreground: 224 10% 60%;
+ 
+  --accent: 38 92% 50%;
+  --accent-foreground: 224 71% 4%;
+ 
+  --destructive: 0 62% 40%;
   --destructive-foreground: 0 0% 100%;
-
-  --border: 217 33% 20%;
-  --input: 217 33% 20%;
-  --ring: 217 91% 60%;
-
-  --sidebar-bg: 222 47% 8%;
-  --sidebar-border: 217 33% 17%;
-  --sidebar-hover: 217 33% 14%;
-  --sidebar-active-bg: 221 50% 18%;
-  --sidebar-active-text: 217 91% 65%;
+ 
+  --border: 224 71% 10%;
+  --input: 224 71% 10%;
+  --ring: 243 75% 70%;
+ 
+  /* Premium WOW Tokens (Dark) */
+  --glass-bg: 224 71% 4% / 0.8;
+  --glass-border: 243 75% 70% / 0.1;
+  --shadow-premium: 0 30px 60px -12px rgba(0, 0, 0, 0.4), 0 18px 36px -18px rgba(0, 0, 0, 0.3);
 }
 
 /* ==========================================================================
@@ -108,40 +116,56 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
+  
   --color-sidebar-bg: hsl(var(--sidebar-bg));
-  --color-sidebar-hover: hsl(var(--sidebar-hover));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
   --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-hover: hsl(var(--sidebar-hover));
   --color-sidebar-active-bg: hsl(var(--sidebar-active-bg));
   --color-sidebar-active-text: hsl(var(--sidebar-active-text));
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  
+  /* Premium Theme Extension */
+  --color-glass: hsl(var(--glass-bg));
+  --color-glass-border: hsl(var(--glass-border));
+  --shadow-premium: var(--shadow-premium);
+  --shadow-soft: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  --font-sans: "Inter", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 /* ==========================================================================
-   Base styles
+   Premium Layout & Component Helpers
    ========================================================================== */
-*, *::before, *::after {
-  border-color: hsl(var(--border));
+.premium-glass {
+  background: hsl(var(--glass-bg));
+  backdrop-filter: blur(12px);
+  border: 1px solid hsl(var(--glass-border));
+  box-shadow: var(--shadow-premium);
 }
 
-body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-family: var(--font-sans, Arial, Helvetica, sans-serif);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.gradient-bg {
+  background: linear-gradient(135deg, hsl(var(--primary) / 0.05) 0%, hsl(var(--background)) 100%);
 }
 
-/* Smooth theme transitions */
-body,
-.theme-transition {
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+.heading-premium {
+  font-family: var(--font-serif);
+  letter-spacing: -0.02em;
 }
 
-/* Prevent flash of wrong theme */
-html {
-  color-scheme: light;
+/* Custom Scrollbar for Premium Feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
-html.dark {
-  color-scheme: dark;
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
 }

@@ -1,92 +1,60 @@
-// pages/library/this-weeks-lessons.js
 import React from 'react';
+import PageShell from '../../components/PageShell';
 import Link from 'next/link';
-// Import the necessary functions from your utils file
 import { getThisWeeksLessonsStructured, formatLessonHeader } from '../../lib/eventUtils';
 
-// This page component receives the array of all current lessons as a prop
 export default function ThisWeeksLessons({ structuredLessons }) {
-
-  // Handle cases where data fetching might have failed or returned an empty array
   if (!structuredLessons || structuredLessons.length === 0) {
     return (
-       <div className="py-12 md:py-16">
-         <div className="container mx-auto px-6 w-11/12 max-w-[900px] text-center">
-           {/* Page Title */}
-           <h1 className="text-3xl md:text-4xl font-bold mb-8 md:mb-12 text-gold"> {/* Ensure title uses theme color */}
-             This Week&apos;s Lessons
-           </h1>
-           {/* Message shown when no lessons are available */}
-           <div className="prose prose-invert max-w-none mx-auto text-lg">
-              <p className="text-cream"> {/* Ensure text uses theme color */}
-                 Lesson details are currently unavailable or could not be loaded. Please check back soon.
-              </p>
-           </div>
-         </div>
-       </div>
+      <PageShell
+        eyebrow="Library"
+        title="Weekly Lessons"
+        lead="Our structured teaching materials are temporarily unavailable. Please check back soon as we synchronize our regional curriculum."
+      >
+        <div className="py-24 text-center">
+            <p className="text-muted-foreground font-medium">Lesson details are currently being synchronized.</p>
+        </div>
+      </PageShell>
     );
   }
 
-  // Define the base path for the individual lesson detail pages we will create later
   const lessonBasePath = "/library/lessons";
 
   return (
-    // Main page container with vertical padding
-    <div className="py-12 md:py-16">
-      {/* Consistent content container */}
-      <div className="container mx-auto px-6 w-11/12 max-w-[1000px]"> {/* Slightly wider container */}
-
-        {/* Page Title */}
-        <h1 className="text-3xl md:text-4xl text-center font-bold mb-10 md:mb-14 text-gold"> {/* Ensure title uses theme color */}
-          This Week&apos;s Lessons
-        </h1>
-
-        {/* Grid layout for lesson summary cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-
-          {/* Map over the array of lessons passed via props */}
-          {structuredLessons.map((lesson) => (
-            // Each grid item is a Link component acting as a clickable card
-            <Link
-                // Create the destination URL, e.g., /library/lessons/discovery
-                href={`${lessonBasePath}/${lesson.categoryKey}`}
-                key={lesson.id} // Use the unique lesson ID as the key
-                // Styling for the card appearance and hover effects
-                className="flex flex-col block p-6 border border-gray-700 rounded-lg shadow-lg bg-gradient-to-br from-black to-gray-900 hover:border-gold hover:shadow-md hover:shadow-gold/30 transition-all duration-200 ease-in-out group" // Added group for potential inner hover states
-            >
-              {/* Lesson Category Title (e.g., "Discovery Lesson (Wed)") */}
-              <h2 className="text-gold mt-0 mb-3 text-xl md:text-2xl font-semibold">
-                {lesson.title}
-              </h2>
-
-              {/* Lesson Topic and Effective Date (using the formatter) */}
-              <p className="mb-4 text-sm text-cream font-medium">
-                 {formatLessonHeader(lesson)}
-              </p>
-
-              {/* Optional: Display a very short snippet or key verse */}
-              {lesson.keyVerse && (
-                 <p className="text-xs italic text-cream/70 mb-2 line-clamp-2 flex-grow"> {/* Use flex-grow to push indicator down */}
-                   Key Verse: &quot;{lesson.keyVerse.text}&quot; - {lesson.keyVerse.reference}
-                 </p>
-              )}
-
-              {/* "View Lesson" indicator - pushed to the bottom */}
-              <div className="mt-auto pt-3 text-right text-xs text-gold opacity-80 group-hover:opacity-100 transition-opacity"> {/* Use group-hover */}
-                 View Lesson →
-               </div>
-
-            </Link> // End Link wrapper
-          ))}
-        </div> {/* End grid */}
-
-        {/* Footer note about build time */}
-        <p className="text-center text-xs text-gray-500 pt-10 mt-8">
-          Lesson content reflects schedule at time of last website update.
-        </p>
-
-      </div> {/* End standard container */}
-    </div> // End page wrapper
+    <PageShell
+      eyebrow="Unified Teaching"
+      title="Weekly Lessons"
+      lead="Our regional curriculum for personal study and sanctuary teaching. These lessons provide a consistent biblical foundation across all our regional branches."
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {structuredLessons.map((lesson) => (
+          <Link
+            href={`${lessonBasePath}/${lesson.categoryKey}`}
+            key={lesson.id}
+            className="group flex flex-col p-8 rounded-3xl border border-foreground/5 bg-card/30 backdrop-blur-md transition-all hover:bg-card/50 hover:border-accent/20"
+          >
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-4 block">
+              {lesson.title}
+            </span>
+            <h3 className="text-2xl font-bold text-foreground mb-4 heading-premium">{lesson.topic}</h3>
+            <p className="text-muted-foreground text-sm font-semibold mb-6 flex-grow">
+               {formatLessonHeader(lesson)}
+            </p>
+            {lesson.keyVerse && (
+               <p className="text-[10px] italic text-muted-foreground/50 mb-8 border-l-2 border-accent/20 pl-4 leading-relaxed line-clamp-3">
+                 &quot;{lesson.keyVerse.text}&quot; — {lesson.keyVerse.reference}
+               </p>
+            )}
+            <div className="mt-auto pt-6 border-t border-foreground/5 text-[10px] font-black uppercase tracking-widest text-accent group-hover:tracking-[0.2em] transition-all">
+               Open Curriculum →
+             </div>
+          </Link>
+        ))}
+      </div>
+      <p className="text-center text-[10px] font-bold text-muted-foreground/30 uppercase tracking-[0.2em] mt-24 italic">
+        Curriculum reflects regional synchronization at time of last update.
+      </p>
+    </PageShell>
   );
 }
 

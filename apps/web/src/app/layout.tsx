@@ -1,20 +1,26 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Apostolic Faith Church",
-  description: "Official platform of the Apostolic Faith Church. Search for services, learn our history, and join our community.",
+  title: "APOSTOLIC FAITH MISSION | Southern & Eastern Africa Region",
+  description: "Official platform of the Apostolic Faith Mission. Experience spiritual growth, divine community, and the legacy of the Apostles in a modern digital sanctuary.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "APM SEAR",
+  },
 };
 
 export default function RootLayout({
@@ -25,9 +31,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${playfair.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col font-sans bg-background text-foreground selection:bg-primary/20">
+        {children}
+      </body>
     </html>
   );
 }

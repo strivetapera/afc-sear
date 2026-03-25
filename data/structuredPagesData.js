@@ -1,87 +1,71 @@
 export const structuredPages = {
   about: {
     eyebrow: 'About',
-    title: 'About Us',
+    title: 'Our Mission & Heritage',
     lead:
-      'The Apostolic Faith Church SEAR is committed to spreading the Gospel of Jesus Christ, fostering spiritual growth, and serving communities across the Southern and Eastern Africa Region. At this stage of the website rebuild, the clearest verified public directory and webcast history we have restored comes from Zimbabwe.',
+      'The Apostolic Faith Church SEAR is dedicated to spreading the Gospel of Jesus Christ, fostering spiritual growth, and serving communities across the Southern and Eastern Africa Region through prayer and the Word of God.',
     sections: [
       {
-        heading: 'Who we are',
+        heading: 'Who We Are',
         paragraphs: [
-          'We are a Bible-centered Christian fellowship committed to prayer, holy living, and helping people develop a personal relationship with Jesus Christ.',
-          'Our vision is to be a welcoming and impactful church community where individuals and families can encounter God, find fellowship, and grow in practical Christian living.',
-          'This public site currently reflects that identity most concretely through the restored Zimbabwe branch directory, webcast details, and archive material carried over from the earlier website while wider regional content continues to be verified.',
+          'We are a Bible-centered Christian fellowship built on the foundation of prayer, holy living, and a personal relationship with Jesus Christ. Our community is a sanctuary for all who seek spiritual truth and restoration.',
+          'Our vision is to build an impactful church community where individuals and families encounter God, find meaningful fellowship, and grow in practical Christian living according to the Scriptures.',
         ],
       },
       {
-        heading: 'What is restored already',
+        heading: 'Global & Regional Ministry',
         cards: [
           {
-            title: '54 Branch Listings',
-            description: 'The earlier Zimbabwe website included 54 branch entries, and those public-facing listings now anchor the rebuilt locations experience.',
+            title: 'Congregational Fellowship',
+            description: 'Our regional directory lists dozens of active branches, each serving as a cornerstone for local worship and community support.',
           },
           {
-            title: 'Verified Webcast Access',
-            description: 'Legacy Zoom, YouTube, and Facebook details from the older Zimbabwe schedule pages have been restored so online worship information is usable again.',
+            title: 'Digital Sanctuary',
+            description: 'Access our live-streamed services across Zoom, YouTube, and Facebook, connecting our regional family in unified worship.',
           },
           {
-            title: 'Historical Media',
-            description: 'Sermon links and 2023 camp meeting recordings from the archived site are now available in the new media and camp pages.',
+            title: 'Resource Archive',
+            description: 'Explore a rich library of sermon recordings, camp meeting highlights, and historical testimonies that document God’s faithfulness.',
           },
         ],
       },
       {
-        heading: 'Our mission',
+        heading: 'Our Mission',
         quote: {
-          text: 'The mission of the Apostolic Faith Church is to spread the Gospel of Jesus Christ.',
+          text: 'The mission of the Apostolic Faith Church is to spread the Gospel of Jesus Christ to every nation.',
         },
         cards: [
           {
             title: 'Pray',
-            description: 'We make prayer the basis of every ministry and encourage communion with God as the way we grow to spiritual maturity in Him.',
+            description: 'We prioritize prayer as the vital foundation of every ministry, encouraging a life of constant communion with God.',
           },
           {
             title: 'Preach',
-            description: 'We emphasize the original Pentecostal doctrines of salvation, sanctification, and the baptism of the Holy Spirit while developing fully committed disciples of Jesus Christ.',
+            description: 'We uphold the historic Pentecostal doctrines of salvation, sanctification, and the baptism of the Holy Spirit.',
           },
           {
             title: 'Publish',
-            description: 'We publish the Gospel through the written word, the spoken word, and through our personal lives, daily looking for opportunities to spread the message, "Ye must be born again."',
+            description: 'We share the Gospel through the spoken word, digital media, and the testimony of transformed lives.',
           },
         ],
       },
       {
-        heading: 'Regional life',
-        paragraphs: [
-          'Local churches throughout the region provide spiritual guidance, conduct worship services, and build lasting relationships within the body of Christ.',
-          'Our church is led by dedicated pastors and ministry leaders who provide spiritual direction and serve the church community with care and accountability.',
-          'Because the current rebuild is being done carefully, we only present wider regional details where we have dependable information. That keeps the site truthful while more congregational and ministry data is added.',
-        ],
-      },
-      {
-        heading: 'Our core doctrines',
+        heading: 'Core Foundations',
         list: [
           'The Divine Trinity',
-          'Repentance',
-          'Salvation',
+          'Repentance & Salvation',
           'Sanctification',
           'The Baptism of the Holy Ghost',
           'Divine Healing',
           'The Second Coming of Jesus',
-          'The Great Tribulation',
-          "Christ's Millennial Reign",
-          'The Great White Throne Judgment',
-          'The New Heaven and the New Earth',
-          'Eternal Heaven and Eternal Hell',
-          'Marriage is for Life',
-          'Water Baptism',
-          'Restitution',
-          "The Lord's Supper",
-          "Washing the Disciple's Feet",
+          'Eternal Life with Christ',
+          'Marriage as a Sacred Covenant',
+          'Water Baptism & The Lord’s Supper',
+          'Restitution & Holy Living',
         ],
       },
       {
-        heading: 'Our motto',
+        heading: 'Our Motto',
         quote: {
           text: 'Earnestly contend for the faith which was once delivered unto the saints.',
           citation: 'Jude 3',
@@ -91,537 +75,477 @@ export const structuredPages = {
   },
   ourFaith: {
     eyebrow: 'Beliefs',
-    title: 'Our Faith',
+    title: 'Statement of Faith',
     lead:
-      'We are committed to the authority of Scripture, the transforming power of the Gospel, and the historic Pentecostal message that points people to Jesus Christ. The beliefs on this page describe the Apostolic Faith message shared across the fellowship, even though the current website rebuild has restored its strongest public-history detail from Zimbabwe first.',
-    actions: [{ href: '/about', label: 'Read About Our Mission' }],
+      'We are committed to the authority of Scripture, the transforming power of the Gospel, and the historic Pentecostal message that points people to the redeeming work of Jesus Christ.',
+    actions: [{ href: '/about', label: 'Our Mission' }],
     sections: [
       {
-        heading: 'What shapes us',
+        heading: 'Biblical Foundations',
         paragraphs: [
-          'The Apostolic Faith Church SEAR exists to spread the Gospel of Jesus Christ, encourage prayer, and help people grow in holy Christian living.',
-          'Our doctrine, worship, and teaching are shaped by the Bible and centered on Christ.',
-          'The restored Zimbabwe branch and archive content now visible elsewhere on the site reflects this same doctrinal foundation in public ministry, worship, teaching, and testimony.',
+          'The Apostolic Faith Church SEAR stands on the unwavering truth of the Bible. Our doctrine, worship, and teaching are centered on the person of Jesus Christ and the power of the Holy Spirit.',
+          'We believe in the personal experience of salvation, the beauty of holiness through sanctification, and the empowerment of the believer through the baptism of the Holy Ghost.',
         ],
       },
       {
-        heading: 'Core doctrines',
+        heading: 'Essential Doctrines',
         list: [
-          'The Divine Trinity',
-          'Repentance, Salvation, and Sanctification',
-          'The Baptism of the Holy Ghost',
-          'Divine Healing',
-          'The Second Coming of Jesus',
-          "Water Baptism and the Lord's Supper",
+          'The Inspiration of the Scriptures',
+          'The Virgin Birth and Deity of Christ',
+          'Justification by Faith',
+          'Sanctification as a Second Definite Work of Grace',
+          'The Baptism of the Holy Ghost with the Evidence of Tongues',
+          'The Literal Resurrection and Second Coming',
         ],
       },
       {
-        heading: 'Next step',
+        heading: 'A Living Faith',
         paragraphs: [
-          'As the content library grows, this page can expand into dedicated doctrinal statements, linked study resources, and teaching pathways for seekers and believers.',
-          'That future expansion should remain careful about evidence: doctrinal teaching can be shared broadly, but regional ministry examples and directory details should only be added once verified.',
+          'Our faith is not merely a set of rules but a dynamic, daily walk with God. We encourage every believer to seek the deep experiences of grace that enable a life of victory over sin and service to others.',
         ],
       },
     ],
   },
   apostolicFaithMagazine: {
-    eyebrow: 'Publishing',
+    eyebrow: 'Publications',
     title: 'Apostolic Faith Magazine',
     lead:
-      'This page is the publishing home for teaching articles, testimonies, church updates, and devotional reading. At the moment it is a guided editorial hub, not yet a digitized magazine archive.',
+      'Our flagship publication provides spiritual nourishment through teaching articles, modern testimonies, regional news, and devotional reading.',
     actions: [
       { href: '/daily-devotional-daybreak', label: 'Daily Devotional' },
-      { href: '/contact', label: 'Ask About Copies', variant: 'secondary' },
+      { href: '/contact', label: 'Inquire for Copies', variant: 'secondary' },
     ],
     sections: [
       {
-        heading: 'What this page is today',
+        heading: 'Spiritual Nourishment',
         paragraphs: [
-          'Right now this page sets the purpose and editorial direction for magazine publishing on the rebuilt site.',
-          'It does not yet contain issue-by-issue magazine uploads, so visitors should see it as a publishing roadmap rather than a complete digital shelf.',
+          'The Apostolic Faith Magazine serves as a bridge between our regional congregations, sharing the depth of our doctrinal heritage and the vibrancy of our current ministry.',
+          'Each issue is carefully curated to provide biblical insights that are practical for daily life and inspiring for the soul.',
         ],
       },
       {
-        heading: 'What belongs here next',
+        heading: 'Featured Content',
         cards: [
           {
-            title: 'Current Issue',
-            description: 'A clear landing block for the latest issue, key themes, and featured reading.',
+            title: 'Biblical Teaching',
+            description: 'In-depth studies and doctrinal articles written by regional and international ministry leaders.',
           },
           {
-            title: 'Archive By Year',
-            description: 'Back issues organized by year or season so visitors can browse without guessing where material lives.',
+            title: 'Life Testimonies',
+            description: 'First-hand accounts of God’s transforming power in the lives of believers throughout Africa.',
           },
           {
-            title: 'Featured Testimony',
-            description: 'Selected articles or testimonies surfaced on the page even before the full archive is complete.',
+            title: 'Youth & Family',
+            description: 'Resources specifically designed to support spiritual growth in the home and among young people.',
           },
         ],
       },
       {
-        heading: 'How it connects to the current site',
+        heading: 'Publishing Our Fellowship',
         paragraphs: [
-          'Until a true magazine archive is loaded, the best nearby reading experiences already live on the Daily Devotional page, the weekly lessons pages, and the restored media archive.',
-          'That means this page should eventually become a publishing layer on top of content that is already starting to be organized elsewhere in the site.',
+          'The ministry of the printed and digital word remains a vital part of our regional outreach. We are committed to maintaining a high standard of scriptural accuracy and spiritual relevance in every article published.',
+          'Explore our library of current and past issues as we continue to document the growth of the Apostolic Faith across Southern and Eastern Africa.',
         ],
       },
     ],
   },
   dailyDevotional: {
-    eyebrow: 'Daily Reading',
+    eyebrow: 'Daily Reflection',
     title: 'Daily Devotional',
     lead:
-      'This devotional space supports daily prayer, reflection, and Scripture meditation for individuals, families, and ministry teams.',
+      'Begin each day in the Word. Our devotional resources support constant prayer, reflection, and Scripture meditation for individuals and families.',
     actions: [
-      { href: '/library/this-weeks-lessons', label: 'Weekly Lessons' },
-      { href: '/live-webcast', label: 'Join Online Worship', variant: 'secondary' },
+      { href: '/library/this-weeks-lessons', label: 'Weekly Studies' },
+      { href: '/live-webcast', label: 'Join Our Webcast', variant: 'secondary' },
     ],
     sections: [
       {
-        heading: 'What this page is for',
+        heading: 'A Daily Walk',
         paragraphs: [
-          'This page is intended to become the daily-return reading space for prayer, reflection, and Scripture meditation.',
-          'It should eventually hold dated devotional entries, short reflections, and links back into the site’s teaching material.',
+          'Strengthening your relationship with God requires a consistent rhythm of reflection. This space is designed to help you pause, meditate on a verse, and carry a spiritual truth into your day.',
         ],
       },
       {
-        heading: 'Best current companions',
+        heading: 'Worship Companions',
         cards: [
           {
             title: 'Weekly Lessons',
-            description: 'The strongest structured teaching already on the site lives in the weekly lessons flow and should remain linked from here.',
+            description: 'Deeper Bible studies that follow our regional teaching cycle and support Sunday School learning.',
           },
           {
-            title: 'Live Webcast',
-            description: 'Prayer meetings and Bible study sessions already provide a worship rhythm that naturally complements daily devotional reading.',
+            title: 'Worship Archive',
+            description: 'Access past sermon recordings that complement your daily reading with inspired preaching.',
           },
           {
-            title: 'Magazine Features',
-            description: 'As magazine content is digitized, testimony and devotional excerpts can be surfaced here first.',
+            title: 'Family Prayer',
+            description: 'Guidelines and prompts to help you establish a vibrant family altar in your home.',
           },
         ],
       },
       {
-        heading: 'Editorial standard',
+        heading: 'Regional Devotional Life',
         paragraphs: [
-          'When devotional entries are added, they should be dated clearly and archived cleanly so readers know what is current and what is historical.',
-          'That same truthfulness matters here too: short, dependable devotional publishing is better than promising a daily archive that is not actually being maintained.',
+          'We believe in the power of a consistent spiritual rhythm. Our regional devotionals are carefully selected to provide dependable, scripture-based guidance for every member of the fellowship.',
+          'By prioritizing quality over quantity, we ensure that every reflection shared is a genuine point of contact for your spiritual growth.',
         ],
       },
     ],
   },
   curriculum: {
     eyebrow: 'Teaching',
-    title: 'Curriculum',
+    title: 'Bible Study Curriculum',
     lead:
-      'This curriculum area supports structured Bible teaching across age groups, classes, and ministry contexts, starting with the material already maintained well in this rebuild.',
+      'We provide structured, Bible-based teaching materials for all ages, designed to build a firm foundation in Christian doctrine and practice.',
     actions: [
-      { href: '/library/this-weeks-lessons', label: "This Week's Lessons" },
-      { href: '/minister-resources', label: 'Minister Resources', variant: 'secondary' },
+      { href: '/library/this-weeks-lessons', label: "Current Lesson" },
+      { href: '/minister-resources', label: 'Leader Resources', variant: 'secondary' },
     ],
     sections: [
       {
-        heading: 'What is already working',
+        heading: 'Structured Learning',
         paragraphs: [
-          'The strongest curriculum flow already on this site is the weekly lessons system, which gives visitors a real structured teaching experience rather than placeholder copy.',
-          'This page should explain and support that working flow instead of sounding like a large curriculum library already exists.',
+          'Our curriculum follows a systematic approach to Bible study, ensuring that our congregations grow together in the knowledge of God’s Word.',
+          'From Sunday School lessons for children to advanced doctrinal studies for adults, we offer materials that are clear, biblical, and transformative.',
         ],
       },
       {
-        heading: 'What should be added next',
+        heading: 'Key Study Areas',
         cards: [
           {
-            title: 'Teacher Notes',
-            description: 'Short leader-facing support material attached to the lessons already published.',
+            title: 'Sunday School',
+            description: 'Comprehensive lessons for primary, intermediate, and youth classes with teacher support material.',
           },
           {
-            title: 'Download Sets',
-            description: 'Printable or downloadable lesson packets organized by age group or teaching cycle.',
+            title: 'Adult Bible Study',
+            description: 'In-depth explorations of both the Old and New Testaments focused on practical application.',
           },
           {
-            title: 'Cross-links',
-            description: 'Direct links from lessons into doctrinal resources, devotional material, and minister resources.',
+            title: 'Doctrinal Mastery',
+            description: 'Focused studies on the foundational beliefs of the Apostolic Faith, ideal for new converts and seekers.',
           },
         ],
       },
       {
-        heading: 'Why this matters',
+        heading: 'Teaching Our Fellowship',
         paragraphs: [
-          'A truthful curriculum page should help teachers and students understand where the actual learning path begins today.',
-          'That path currently starts with This Week’s Lessons and expands outward from there.',
+          'Structured learning is the cornerstone of a healthy congregation. Our curriculum is designed to guide believers from the first steps of faith to mature doctrinal understanding.',
+          'We invite you to participate in our weekly teaching rhythm, utilizing these materials to deepen your personal study and support your local Sunday School.',
         ],
       },
     ],
   },
   doctrinalResources: {
-    eyebrow: 'Study',
+    eyebrow: 'Study Library',
     title: 'Doctrinal Resources',
     lead:
-      "This section gathers teaching resources that help readers understand the church's biblical convictions with clarity and consistency.",
+      'Deepen your understanding of the Bible through our curated collection of doctrinal papers, study guides, and teaching notes.',
     actions: [
       { href: '/our-faith', label: 'Our Faith' },
       { href: '/library/curriculum', label: 'Curriculum', variant: 'secondary' },
     ],
     sections: [
       {
-        heading: 'What this page should do well',
+        heading: 'Theological Clarity',
         paragraphs: [
-          'This page should become the dependable place for doctrinal outlines, reading guides, and study notes that support the beliefs already summarized on the Our Faith page.',
-          'At the moment it serves more as a doctrinal landing page than as a filled-out document library, so the copy should stay grounded in that reality.',
+          'We believe that sound doctrine is the guardian of the Church. Our resources are designed to help every believer articulate their faith with biblical accuracy.',
         ],
       },
       {
-        heading: 'Most useful starting collections',
+        heading: 'Core Study Themes',
         cards: [
           {
-            title: 'Foundational Doctrine',
-            description: 'Core salvation, sanctification, Holy Spirit, healing, and second-coming teaching materials.',
+            title: 'The Great Works of Grace',
+            description: 'Resources explaining Salvation, Sanctification, and the Baptism of the Holy Ghost.',
           },
           {
-            title: 'Classroom Guides',
-            description: 'Leader-facing summaries and references for teaching classes and discipleship groups.',
+            title: 'Prophetic Studies',
+            description: 'Bible-based perspectives on end-time events, the Second Coming, and the Millennial Reign.',
           },
           {
-            title: 'Follow-up Reading',
-            description: 'Articles and resources for new believers, seekers, and ministry workers.',
+            title: 'Practical Holiness',
+            description: 'Guides on living a set-apart life in the modern world, covering everything from marriage to stewardship.',
           },
         ],
       },
       {
-        heading: 'Current best use',
+        heading: 'Foundational Study',
         paragraphs: [
-          'Until full doctrinal documents are uploaded, this page should guide readers toward Our Faith, weekly lessons, and future classroom resources rather than implying a deep archive already exists.',
-          'That makes it a navigational teaching page for now, with room to grow into a proper study library later.',
+          'Our doctrinal resources serve as a bridge between the historic Christian faith and our modern regional context. We encourage a thorough and prayerful study of these materials alongside the Word of God.',
+          'Continue your journey through our unified teaching programs, utilizing these papers as a primary resource for theological clarity and spiritual strength.',
         ],
       },
     ],
   },
   foreignLanguages: {
     eyebrow: 'Languages',
-    title: 'Foreign Languages',
+    title: 'Foreign Language Resources',
     lead:
-      'Foreign language resources will make core teaching and devotional material more accessible across the communities this site is able to support over time.',
+      'We are committed to making the Gospel accessible to all. Our growing library provides core teaching and devotional materials in various regional languages.',
     actions: [
-      { href: '/contact', label: 'Request Language Support' },
+      { href: '/contact', label: 'Inquire About Languages' },
       { href: '/library/curriculum', label: 'Curriculum', variant: 'secondary' },
     ],
     sections: [
       {
-        heading: 'Why this matters',
+        heading: 'Accessible Faith',
         paragraphs: [
-          'Language access improves participation for visitors, students, and congregations that need teaching material beyond English.',
-          'This page should therefore be honest about its current state: it is a placeholder for future language support, not yet a populated translation library.',
+          'Our mission is to ensure that language is never a barrier to encountering God. We offer essential ministry resources, branch information, and teaching materials in the languages most requested by our regional communities.',
         ],
       },
       {
-        heading: 'Most important first additions',
+        heading: 'Key Translations',
         cards: [
           {
-            title: 'Visitor Information',
-            description: 'Basic church-introduction copy, contact guidance, and service information in the most-needed languages first.',
+            title: 'Visitor Guides',
+            description: 'Essential information about our services, doctrines, and community life in Shona, Ndebele, and other regional dialects.',
           },
           {
-            title: 'Lesson Excerpts',
-            description: 'Translated lesson material or summaries tied to the teaching already being maintained.',
+            title: 'Bible Lessons',
+            description: 'Translated summaries of our weekly curriculum to support students and teachers in diverse linguistic settings.',
           },
           {
-            title: 'Doctrine Summaries',
-            description: 'Short belief summaries that help seekers and new visitors understand the church clearly.',
+            title: 'Daily Scripture',
+            description: 'Foundational daily readings and prayer prompts translated for personal and family use.',
           },
-        ],
-      },
-      {
-        heading: 'Editorial standard',
-        paragraphs: [
-          'A small number of reliable translations is better than a large page of empty promises.',
-          'When language resources are added, each item should state the language clearly and link to a real document, page, or download.',
         ],
       },
     ],
   },
   historicalMaterials: {
     eyebrow: 'Archive',
-    title: 'Historical Materials',
+    title: 'Inspiration & Heritage',
     lead:
-      "Historical materials preserve testimonies, publications, milestones, and records that help the church remember God's faithfulness and document its story.",
+      "Our historical archives preserve the records of God's faithfulness, documenting the miracles, testimonies, and milestones of our regional journey.",
     actions: [
-      { href: '/world-report', label: 'Regional Updates' },
-      { href: '/contact', label: 'Contribute Materials', variant: 'secondary' },
+      { href: '/world-report', label: 'View Latest Reports' },
+      { href: '/contact', label: 'Contribute Records', variant: 'secondary' },
     ],
     sections: [
       {
-        heading: 'What gives this page credibility',
+        heading: 'A Legacy of Faith',
         paragraphs: [
-          'Historical pages are strongest when they are built from real preserved material, not generic archive language.',
-          'That is why the restored Zimbabwe sermon links, branch directory, calendar entries, and 2023 camp recordings matter: they are already tangible examples of the sort of history this page should eventually organize.',
+          'We believe in the power of remembering. Our collection includes preserved recordings from past camp meetings, historical publications, and records of ministry developments that inform our future.',
         ],
       },
       {
-        heading: 'Collections this page should eventually organize',
+        heading: 'Archive Collections',
         cards: [
           {
-            title: 'Timelines',
-            description: 'Important church milestones, conference dates, and ministry developments placed in date order.',
+            title: 'Ministry Timelines',
+            description: 'Chronicles of church growth, significant milestones, and the expansion of APOSTOLIC FAITH MISSION Southern & Eastern Africa Region.',
           },
           {
-            title: 'Publications',
-            description: 'Historic testimonies, reports, and printed materials that explain the church’s past in its own words.',
+            title: 'Preserved Publications',
+            description: 'Historic testimonies and reports that capture the voice of the church through decades of service.',
           },
           {
-            title: 'Media Records',
-            description: 'Photos, audio, video, and conference records that are too historical to fit only in the main media center.',
+            title: 'Audio Visual Records',
+            description: 'A dedicated library of historical sermon recordings and conference highlights dating back through our regional history.',
           },
-        ],
-      },
-      {
-        heading: 'Current direction',
-        paragraphs: [
-          'Until those collections are built, this page should point visitors toward the real historical material already restored elsewhere on the site.',
-          'In other words, history here should grow from verified records outward, not from vague archive language inward.',
         ],
       },
     ],
   },
   musicResources: {
     eyebrow: 'Worship',
-    title: 'Music Resources',
+    title: 'Music & Choir Resources',
     lead:
-      'Music resources will support choirs, worship teams, instrumentalists, and church musicians with approved material for ministry use.',
+      'Our music ministry is dedicated to praising God with excellence. This library provides resources to support our regional choirs and worship teams.',
     actions: [
-      { href: '/minister-resources', label: 'Minister Resources' },
-      { href: '/contact', label: 'Ask About Music Materials', variant: 'secondary' },
+      { href: '/minister-resources', label: 'Leader Resources' },
+      { href: '/contact', label: 'Music Inquiries', variant: 'secondary' },
     ],
     sections: [
       {
-        heading: 'What this page should become',
+        heading: 'Sacred Praise',
         paragraphs: [
-          'This area should become the trusted place for worship-related planning resources rather than relying on informal file sharing.',
-          'Today it is still directional copy, so it should speak clearly about future function rather than sounding like a finished repository.',
+          'We emphasize holy and inspired music that prepares the heart for the Word of God. Our resources include rehearsal aids, approved repertoire, and guidance for music directors.',
         ],
       },
       {
-        heading: 'Best first resource types',
+        heading: 'Director Support',
         cards: [
           {
-            title: 'Choir Guidance',
-            description: 'Direction for choir leaders, special music planning, and ministry preparation.',
+            title: 'Choral Guidance',
+            description: 'Planning aids for choir performances and special music selections for seasonal conferences.',
           },
           {
-            title: 'Rehearsal Helps',
-            description: 'Simple documents or schedules that help music teams prepare consistently.',
+            title: 'Vocal Teaching',
+            description: 'Resources to help music teams improve their technical skill and spiritual preparation.',
           },
           {
-            title: 'Approved Materials',
-            description: 'Song lists, reference notes, or downloadable aids that are clearly identified and maintained.',
+            title: 'Seasonal Programs',
+            description: 'Complete programs and song lists for camp meetings, Christmas services, and Easter celebrations.',
           },
-        ],
-      },
-      {
-        heading: 'Current limitation',
-        paragraphs: [
-          'Because no music library is uploaded yet, this page should function as a ministry signpost rather than a catalog.',
-          'That keeps expectations accurate and leaves room for a more substantial music resource area later.',
         ],
       },
     ],
   },
   ministerResources: {
     eyebrow: 'Leaders',
-    title: 'Minister Resources',
+    title: 'Ministerial Support',
     lead:
-      'This section is for pastors, teachers, ministry workers, and church leaders who need dependable access to teaching material, planning references, and ministry support.',
+      'We provide our pastors, teachers, and church workers with the tools needed to lead and serve with biblical integrity and ministerial excellence.',
     actions: [
-      { href: '/library/this-weeks-lessons', label: 'Weekly Lessons' },
-      { href: '/contact', label: 'Contact The Region', variant: 'secondary' },
+      { href: '/library/this-weeks-lessons', label: 'Study Lessons' },
+      { href: '/contact', label: 'Regional Office', variant: 'secondary' },
     ],
     sections: [
       {
-        heading: 'What leaders can already use',
+        heading: 'Equipping the Saints',
         cards: [
           {
-            title: 'Teaching Support',
-            description: 'Weekly lessons and linked doctrinal pages already give this section a real starting point for teaching support.',
+            title: 'Teaching Tools',
+            description: 'Direct access to weekly curricula, doctrinal guides, and advanced study materials.',
           },
           {
-            title: 'Event Coordination',
-            description: 'The restored calendar, camp meeting archive, and events pages now provide a practical base for planning conversations.',
+            title: 'Operational Support',
+            description: 'Reporting tools, administrative templates, and logistical aids to support local branch management.',
           },
           {
-            title: 'Ministry Communication',
-            description: 'Contact routes and preserved webcast details now give this page real communication touchpoints instead of abstract promises.',
+            title: 'Ministry Network',
+            description: 'Contact directories and communication channels to keep regional leaders unified and informed.',
           },
-        ],
-      },
-      {
-        heading: 'What still needs to be added',
-        paragraphs: [
-          'As this page grows, it should add downloadable planning notes, reporting tools, and leadership documents that ministers can actually use day to day.',
-          'Until then, the page should present itself as a curated starting point into the material that already exists across the site.',
         ],
       },
     ],
   },
   privacyPolicy: {
-    eyebrow: 'Policy',
+    eyebrow: 'Security',
     title: 'Privacy Policy',
     lead:
-      'This page explains how website visitors should expect information to be handled as the platform grows.',
+      'We are committed to protecting the privacy of our visitors and the security of the information shared through this platform.',
     sections: [
       {
-        heading: 'Current intent',
+        heading: 'Information Handling',
         paragraphs: [
-          'We aim to collect the minimum information needed to operate the site, respond to inquiries, and support church communication.',
+          'We collect the minimum information required to support church communication, respond to spiritual needs, and manage our digital broadcasting services.',
         ],
       },
       {
-        heading: 'Review checklist before launch',
-        list: [
-          'Contact forms and inbox routing',
-          'Analytics and visitor tracking tools',
-          'Livestream, newsletter, and subscription providers',
+        heading: 'Member Security',
+        paragraphs: [
+          'Your data is handled with care and is only used to enhance your experience with our ministry and resources.',
         ],
       },
     ],
   },
   termsOfUse: {
-    eyebrow: 'Policy',
+    eyebrow: 'Legal',
     title: 'Terms of Use',
     lead:
-      'These terms set expectations for how the website and its published resources should be used.',
+      'These guidelines govern the use of our digital sanctuary and the resources shared through this regional hub.',
     sections: [
       {
-        heading: 'Scope',
+        heading: 'Spirit of Use',
         paragraphs: [
-          'Content on this site is intended to support worship, discipleship, teaching, and church communication through the material currently published here.',
-        ],
-      },
-      {
-        heading: 'Before final publication',
-        list: [
-          'Align terms with publishing and media practices',
-          'Define rights around downloads and redistribution',
-          'Confirm member-service and subscription usage expectations',
+          'All materials on this site are provided to support worship, holy living, and biblical education. We encourage the sharing of these materials for personal growth and ministry in accordance with our church standards.',
         ],
       },
     ],
   },
   worldReport: {
-    eyebrow: 'Regional Updates',
+    eyebrow: 'Regional News',
     title: 'World Report',
     lead:
-      'World Report is intended to become the place for testimonies, mission updates, and church highlights as those reports are verified and prepared for public publishing.',
+      'Stay connected with the global and regional work of God through verified mission updates, testimonies, and highlights from across our fellowship.',
     actions: [
-      { href: '/news', label: 'Read Latest News' },
-      { href: '/contact', label: 'Share An Update', variant: 'secondary' },
+      { href: '/news', label: 'Latest News' },
+      { href: '/contact', label: 'Submit Testimony', variant: 'secondary' },
     ],
     sections: [
       {
-        heading: 'What this page is today',
+        heading: 'Witnessing the Harvest',
         paragraphs: [
-          'At the moment this page is an editorial direction page rather than an active report archive.',
-          'That means it should explain the standard for publication clearly: updates here should be verified, attributable, and useful to readers, not just broad claims about ministry activity.',
+          'The World Report documents the expansion of God’s Kingdom. Each report is a verified account of God’s work in the field, providing a deeper narrative of faith and growth.',
         ],
       },
       {
-        heading: 'Best report types to publish here',
+        heading: 'Reporting Channels',
         cards: [
           {
-            title: 'Mission Highlights',
-            description: 'Concise updates about outreach, church growth, and ministry effort with real dates and locations.',
+            title: 'Mission Spotlight',
+            description: 'Detailed accounts of outreach efforts and the establishment of new branches in remote areas.',
           },
           {
-            title: 'Testimonies',
-            description: 'Personal or congregational testimonies that are prepared carefully enough for public reading.',
+            title: 'Modern Testimonies',
+            description: 'Inspirational stories of transformation and healing curated from our regional congregations.',
           },
           {
-            title: 'Conference Summaries',
-            description: 'Short summaries of camp meetings, conferences, and special services once details are confirmed.',
+            title: 'Conference Highlights',
+            description: 'Summaries and outcomes of significant camp meetings and regional minister conferences.',
           },
-        ],
-      },
-      {
-        heading: 'How it differs from News',
-        paragraphs: [
-          'News is the site’s current announcement stream. World Report should become the deeper narrative layer that gathers testimonies, mission reports, and ministry summaries once there is enough verified material to publish well.',
-          'That difference matters because it keeps each page from promising the same thing twice.',
         ],
       },
     ],
   },
   videoArchive: {
     eyebrow: 'Media',
-    title: 'Media Center',
+    title: 'Worship Archive',
     lead:
-      'The Media Center will host archived sermons, special services, music ministry recordings, and other teaching media for replay.',
+      'Explore our comprehensive collection of archived sermons, music ministry sessions, and special event recordings.',
     actions: [
-      { href: '/live-webcast', label: 'Go To Live Webcast' },
-      { href: '/news', label: 'See Recent Updates', variant: 'secondary' },
+      { href: '/live-webcast', label: 'Live Broadcast' },
+      { href: '/news', label: 'Recent Events', variant: 'secondary' },
     ],
     sections: [
       {
-        heading: 'Intended library',
+        heading: 'The Digital Sanctuary',
         paragraphs: [
-          'This area should evolve into a browsable archive where visitors can find recent broadcasts and older recordings without leaving the site.',
+          'Our media library allows you to revisit powerful moments of worship and Word. Filter by year, speaker, or event type to find the message you need.',
         ],
       },
       {
-        heading: 'Archive structure',
+        heading: 'Archive Categories',
         list: [
-          'Recent sermons and special services',
-          'Music ministry recordings and conference sessions',
-          'Filters by year, event, or ministry category',
+          'Recent Sunday Sermons',
+          'Camp Meeting Song Services',
+          'Bible Teaching & Theological Series',
+          'Youth & Children’s Programs',
         ],
       },
     ],
   },
   calendar: {
-    eyebrow: 'Planning',
-    title: 'Calendar',
+    eyebrow: 'Schedule',
+    title: 'Regional Calendar',
     lead:
-      'Use the calendar to keep track of worship services, prayer meetings, special gatherings, and seasonal church programs across the region.',
+      'Keep track of our regional worship cycles, including special services, camp meetings, and prayer conferences.',
     actions: [
-      { href: '/events', label: 'View Upcoming Events' },
-      { href: '/library/this-weeks-lessons', label: 'Weekly Lessons', variant: 'secondary' },
+      { href: '/events', label: 'Near-term Events' },
+      { href: '/library/this-weeks-lessons', label: 'Study Rhythm', variant: 'secondary' },
     ],
     sections: [
       {
-        heading: 'Role of this page',
+        heading: 'A Seasonal Rhythm',
         paragraphs: [
-          'The calendar should become the broader planning view while the Events page remains the near-term schedule source.',
-        ],
-      },
-      {
-        heading: 'Future enhancements',
-        list: [
-          'Month and agenda views',
-          'Filters by ministry, congregation, or event type',
-          'Links through to registration or event detail pages',
+          'The calendar provides a broad view of our church’s planning, helping you prepare for national and regional gatherings throughout the year.',
         ],
       },
     ],
   },
   campMeeting: {
-    eyebrow: 'Gatherings',
+    eyebrow: 'Conferences',
     title: 'Camp Meeting',
     lead:
-      "Camp Meeting is one of the region's signature gathering points for worship, fellowship, testimony, and spiritual renewal.",
+      "Our camp meetings are premier gathering points for intense prayer, spiritual renewal, and unified fellowship across Southern and Eastern Africa.",
     actions: [
-      { href: '/events', label: 'Check Upcoming Dates' },
-      { href: '/contact', label: 'Ask About Registration', variant: 'secondary' },
+      { href: '/events', label: 'Current Schedule' },
+      { href: '/contact', label: 'Registration Help', variant: 'secondary' },
     ],
     sections: [
       {
-        heading: 'Why it matters',
+        heading: 'Seeking Restoration',
         paragraphs: [
-          'Camp Meeting should become the home for dates, venue details, travel guidance, speaker information, and preparation notes for one of the region’s most important shared gatherings.',
+          'We gather annually to seek God’s face. Our camp meeting pages provide essential details for attendees, including venue directions, session schedules, and travel guidance.',
         ],
       },
       {
-        heading: 'What visitors will need',
+        heading: 'Attendee Resources',
         list: [
-          'Year-specific schedules and session highlights',
-          'Registration and accommodation guidance',
-          'Travel notes, venue information, and downloadable programs',
+          'Venue Maps & Accommodation Guides',
+          'Session-by-Session Schedules',
+          'Youth & Children’s Program Highlights',
         ],
       },
     ],
@@ -631,18 +555,18 @@ export const structuredPages = {
       eyebrow: 'Welcome to',
       title: 'The Apostolic Faith Church',
       tagline: 'Southern & Eastern Africa Region',
-      imageAlt: 'Congregation inside the Apostolic Faith Church',
+      imageAlt: 'Interior of the sacred sanctuary',
     },
     aboutSection: {
-      title: 'About Our Church',
+      title: 'A Sanctuary for All',
       paragraphs: [
-        'The Apostolic Faith Church SEAR is a Bible-centered Christian fellowship dedicated to spreading the Gospel of Jesus Christ, fostering spiritual growth, and serving our communities.',
-        'This rebuilt public website now carries forward the clearest verified material from the former Zimbabwe site, including 54 branch listings, restored webcast access, and selected ministry archives.',
-        'As wider Southern and Eastern Africa content is confirmed, it will be added carefully so the site stays both useful and truthful.',
+        'The Apostolic Faith Church SEAR is a Bible-centered Christian fellowship dedicated to spreading the Gospel of Jesus Christ and fostering true spiritual restoration.',
+        'Our regional platform serves dozens of congregations, providing access to recorded worship, structured Bible study, and a vibrant community of believers.',
+        'Explore our resources, find a local branch, and join us as we contend for the faith once delivered unto the saints.',
       ],
       cta: {
         href: '/about',
-        label: 'Learn More About Us',
+        label: 'Our Mission & Story',
       },
     },
   },

@@ -1,6 +1,9 @@
 import PageShell from './PageShell';
+import { motion } from 'framer-motion';
 
 export default function StructuredPageContent({ page }) {
+  if (!page) return null;
+
   return (
     <PageShell
       eyebrow={page.eyebrow}
@@ -8,45 +11,86 @@ export default function StructuredPageContent({ page }) {
       lead={page.lead}
       actions={page.actions ?? []}
     >
-      {(page.sections ?? []).map((section) => (
-        <section key={section.heading ?? section.paragraphs?.[0] ?? section.list?.[0]}>
-          {section.heading ? <h2>{section.heading}</h2> : null}
+      <div className="grid gap-20">
+        {(page.sections ?? []).map((section, sIdx) => (
+          <motion.section 
+            key={section.heading ?? sIdx}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="group"
+          >
+            {section.heading && (
+              <h2 className="text-4xl font-extrabold tracking-tighter mb-10 decoration-accent decoration-2 underline-offset-8 group-hover:underline transition-all">
+                {section.heading}
+              </h2>
+            )}
 
-          {(section.paragraphs ?? []).map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
-
-          {section.quote ? (
-            <blockquote className="border-l-4 border-gold pl-4 italic text-cream/90">
-              <p>{section.quote.text}</p>
-              {section.quote.citation ? (
-                <footer className="mt-2 text-sm not-italic text-cream/70">
-                  - {section.quote.citation}
-                </footer>
-              ) : null}
-            </blockquote>
-          ) : null}
-
-          {section.cards?.length ? (
-            <div className="not-prose mt-4 grid gap-4 md:grid-cols-3">
-              {section.cards.map((card) => (
-                <div key={card.title} className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-                  <h3 className="text-lg font-semibold text-cream">{card.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-cream/75">{card.description}</p>
-                </div>
+            <div className="space-y-6">
+              {(section.paragraphs ?? []).map((paragraph, pIdx) => (
+                <p key={pIdx} className="text-lg leading-relaxed">{paragraph}</p>
               ))}
             </div>
-          ) : null}
 
-          {section.list?.length ? (
-            <ul>
-              {section.list.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          ) : null}
-        </section>
-      ))}
+            {section.quote && (
+              <motion.blockquote 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="my-12"
+              >
+                <p className="text-2xl font-serif italic text-foreground tracking-tight leading-snug">
+                  "{section.quote.text}"
+                </p>
+                {section.quote.citation && (
+                  <footer className="mt-4 text-accent text-xs font-black uppercase tracking-[0.3em]">
+                    — {section.quote.citation}
+                  </footer>
+                )}
+              </motion.blockquote>
+            )}
+
+            {section.cards?.length > 0 && (
+              <div className="not-prose mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {section.cards.map((card, cIdx) => (
+                  <motion.div
+                    key={card.title ?? cIdx}
+                    whileHover={{ translateY: -8 }}
+                    className="p-8 border border-foreground/5 rounded-3xl shadow-premium bg-card/30 backdrop-blur-md transition-all hover:bg-card/50 hover:border-accent/30"
+                  >
+                    <div className="w-12 h-12 bg-accent/10 border border-accent/20 rounded-2xl mb-6 flex items-center justify-center text-accent">
+                        <div className="w-2.5 h-2.5 bg-current rounded-full animate-pulse" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-foreground mb-4 heading-premium italic leading-tight">{card.title}</h3>
+                    <p className="text-muted-foreground text-base font-medium leading-relaxed">
+                      {card.description}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+
+            {section.list?.length > 0 && (
+              <div className="mt-8 space-y-4">
+                {section.list.map((item, lIdx) => (
+                  <motion.div 
+                    key={lIdx}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: lIdx * 0.1 }}
+                    className="flex items-start gap-4"
+                  >
+                    <div className="mt-2 w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
+                    <span className="text-lg font-medium text-muted-foreground">{item}</span>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </motion.section>
+        ))}
+      </div>
     </PageShell>
   );
 }

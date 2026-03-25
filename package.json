@@ -32,7 +32,10 @@
     "next": "^15.5.14",
     "nextjs": "^0.0.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-player": "^3.4.0",
+    "react-youtube": "^10.1.0",
+    "video.js": "^8.23.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -46,5 +49,8 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
+  },
+  "overrides": {
+    "framer-motion": "11.11.17"
   }
 }

@@ -1,4 +1,6 @@
 import { PrismaClient, ContentStatus, MinistryVisibility, UserStatus, VisibilityScope } from '@prisma/client';
+import { randomBytes, createHash } from 'crypto';
+import bcrypt from 'bcryptjs';
 import { events } from '../../../data/eventsData.js';
 import {
   featuredStream,
@@ -249,6 +251,7 @@ async function main() {
       isActive: true,
       defaultBranchId: branch.id,
       personId: adminPerson.id,
+      name: 'Platform Admin',
     },
     create: {
       email: 'admin@apostolicfaith.example',
@@ -256,6 +259,29 @@ async function main() {
       isActive: true,
       defaultBranchId: branch.id,
       personId: adminPerson.id,
+      name: 'Platform Admin',
+    },
+  });
+
+  const adminPasswordHash = await hashPassword('changeme-admin');
+
+  await prisma.account.upsert({
+    where: {
+      providerId_accountId: {
+        providerId: 'credential',
+        accountId: `credential-${adminUser.id}`,
+      },
+    },
+    update: {
+      password: adminPasswordHash,
+      userId: adminUser.id,
+    },
+    create: {
+      id: `acc-${randomBytes(16).toString('hex')}`,
+      accountId: `credential-${adminUser.id}`,
+      providerId: 'credential',
+      userId: adminUser.id,
+      password: adminPasswordHash,
     },
   });
 
@@ -327,6 +353,45 @@ async function main() {
     },
   });
 
+  const adminUser2 = await prisma.user.upsert({
+    where: { email: 'admin@afc-sear.org' },
+    update: {
+      status: UserStatus.ACTIVE,
+      isActive: true,
+      defaultBranchId: branch.id,
+      name: 'Admin User',
+    },
+    create: {
+      email: 'admin@afc-sear.org',
+      status: UserStatus.ACTIVE,
+      isActive: true,
+      defaultBranchId: branch.id,
+      name: 'Admin User',
+    },
+  });
+
+  const admin2PasswordHash = await hashPassword('changeme-admin');
+
+  await prisma.account.upsert({
+    where: {
+      providerId_accountId: {
+        providerId: 'credential',
+        accountId: `credential-${adminUser2.id}`,
+      },
+    },
+    update: {
+      password: admin2PasswordHash,
+      userId: adminUser2.id,
+    },
+    create: {
+      id: `acc-${randomBytes(16).toString('hex')}`,
+      accountId: `credential-${adminUser2.id}`,
+      providerId: 'credential',
+      userId: adminUser2.id,
+      password: admin2PasswordHash,
+    },
+  });
+
   const superAdminRole = await prisma.role.findUniqueOrThrow({
     where: { key: 'super_admin' },
   });
@@ -344,6 +409,25 @@ async function main() {
     await prisma.userRole.create({
       data: {
         userId: adminUser.id,
+        roleId: superAdminRole.id,
+        branchId: branch.id,
+      },
+    });
+  }
+
+  const existingUserRole2 = await prisma.userRole.findFirst({
+    where: {
+      userId: adminUser2.id,
+      roleId: superAdminRole.id,
+      branchId: branch.id,
+      ministryId: null,
+    },
+  });
+
+  if (!existingUserRole2) {
+    await prisma.userRole.create({
+      data: {
+        userId: adminUser2.id,
         roleId: superAdminRole.id,
         branchId: branch.id,
       },
@@ -707,4 +791,8 @@ main()
 
 function slugify(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, 10);
 }

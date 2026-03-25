@@ -14,7 +14,8 @@ export const legacyPrayerContacts = [
 ];
 
 export const legacyZimbabweWebcast = {
-  youtubeUrl: 'https://www.youtube.com/channel/UCVurrGprkJIr7lTQH6zT1hg',
+  youtubeUrl: 'https://www.youtube.com/channel/UCviS_jCvkDzAGZK0lqntbVA',
+  currentLiveVideoId: null, // Set this to a Video ID (e.g., '_QdsZiL8f68') to force onsite live display
   youtubeLabel: 'Apostolic Faith Church YouTube',
   facebookUrl: 'https://www.facebook.com/ApostolicFaithPortlandZW',
   facebookLabel: 'Apostolic Faith Church Zimbabwe Facebook',
@@ -39,7 +40,7 @@ export const legacyZimbabweBranches = [
   { id: 8, name: 'Nyamakate', address: 'TBC', pastor: 'Mugubana-Sithole' },
   { id: 9, name: 'Norton', address: 'TBC', pastor: 'O Mahambayedzwa' },
   { id: 10, name: 'Khandisern', address: 'TBC', pastor: 'T Tsunga' },
-  { id: 11, name: 'Mariga', address: 'TBC', pastor: 'B Tapera' },
+  { id: 11, name: 'Mabvuku', address: 'Next to Tafara 1 High School due south', pastor: 'B Tapera' },
   { id: 12, name: 'Nyamweda/Mhondoro', address: 'TBC', pastor: 'M Luckmore' },
   { id: 13, name: 'Mhangura', address: 'TBC', pastor: 'P Holosa' },
   { id: 14, name: 'Halfway', address: 'TBC', pastor: 'F Mwendamberi' },
@@ -154,7 +155,7 @@ export const legacyVideoArchive = [
   {
     id: 'video-4',
     date: '22.05.22',
-    title: 'Jesus is still the ri',
+    title: 'Jesus is still the...',
     speaker: 'Rev. N. Jaravani',
     videoUrl: 'https://www.youtube.com/watch?v=qr8OQk5NTL0',
     type: 'Sermon Video',
@@ -185,7 +186,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Seeking Jesus',
     speaker: 'Rev Darrel Lee',
     audioUrl:
-      'https://dropbox.com/scl/fi/gslmfg6acm9w33833gzt9/3Dec2023_OpeningDevotional.mp3?rlkey=6llpf8ay0f9ahbx34msqbpymw&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/gslmfg6acm9w33833gzt9/3Dec2023_OpeningDevotional.mp3?rlkey=6llpf8ay0f9ahbx34msqbpymw',
     videoUrl: 'https://youtube.com/watch?v=ltwP2_1xWcs',
   },
   {
@@ -195,7 +196,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Godly Youths',
     speaker: 'Rev Assah Chimeri',
     audioUrl:
-      'https://dropbox.com/scl/fi/whjkvuc7k0ie1t60qfwc8/3Dec2023-Youth-Service.mp3?rlkey=67tdcn0n5z4e38e3c7xk95lla&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/whjkvuc7k0ie1t60qfwc8/3Dec2023-Youth-Service.mp3?rlkey=67tdcn0n5z4e38e3c7xk95lla',
     videoUrl: 'https://youtube.com/watch?v=QdmqkrZzDZk',
   },
   {
@@ -205,7 +206,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Seeing Jesus',
     speaker: 'Rev John Musgrave',
     audioUrl:
-      'https://dropbox.com/scl/fi/17umuxc44jklf9y5wng8c/3Dec2023_OpeningEvangelistic.mp3?rlkey=f6ddg5w5qzbujq98p4a9yv9qx&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/17umuxc44jklf9y5wng8c/3Dec2023_OpeningEvangelistic.mp3?rlkey=f6ddg5w5qzbujq98p4a9yv9qx',
     videoUrl: 'https://youtube.com/watch?v=lIdt4LGhuJ0',
   },
   {
@@ -215,7 +216,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Repentance',
     speaker: 'Rev John Musgrave',
     audioUrl:
-      'https://dropbox.com/scl/fi/z58yydieykzaykbcsrlcj/5Dec2023-Bible-Teaching.mp3?rlkey=6dhdtm54g4iqf5lo8ftr8oyvx&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/z58yydieykzaykbcsrlcj/5Dec2023-Bible-Teaching.mp3?rlkey=6dhdtm54g4iqf5lo8ftr8oyvx',
     videoUrl: 'https://youtube.com/watch?v=oalw-Nr8zLk',
   },
   {
@@ -225,7 +226,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Love of God',
     speaker: 'Sister Rusere',
     audioUrl:
-      'https://dropbox.com/scl/fi/g3n8cotq5yq17jc8ovrc4/5Dec2023-Children-Service.mp3?rlkey=zfa44yhoi1w9yv8o8db3t3cit&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/g3n8cotq5yq17jc8ovrc4/5Dec2023-Children-Service.mp3?rlkey=zfa44yhoi1w9yv8o8db3t3cit',
     videoUrl: 'https://youtube.com/watch?v=yRHd_iGS4mU',
   },
   {
@@ -235,7 +236,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Complete Victory',
     speaker: 'Rev Isaac Adigun',
     audioUrl:
-      'https://dropbox.com/scl/fi/no2cgfgmhs51xjl9jgb7m/5Dec2023_Evangelistic.mp3?rlkey=3b7gfi4ahrpi2vip1b3d06uw8&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/no2cgfgmhs51xjl9jgb7m/5Dec2023_Evangelistic.mp3?rlkey=3b7gfi4ahrpi2vip1b3d06uw8',
     videoUrl: 'https://youtube.com/watch?v=zuppD551wp4',
   },
   {
@@ -245,7 +246,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Ye Must Be Born Again',
     speaker: 'Rev Darrel Lee',
     audioUrl:
-      'https://dropbox.com/scl/fi/62lgqwev53khkbwxozb1t/6Dec2023-Bible-Teaching.mp3?rlkey=iw0s7re0z3hor0y7db9jd8vci&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/62lgqwev53khkbwxozb1t/6Dec2023-Bible-Teaching.mp3?rlkey=iw0s7re0z3hor0y7db9jd8vci',
     videoUrl: 'https://youtube.com/watch?v=3uWNRcbUDg8',
   },
   {
@@ -255,7 +256,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Young Person Do You Believe?',
     speaker: 'Rev Kabelo Bogashu',
     audioUrl:
-      'https://dropbox.com/scl/fi/p84cm4tur0avfc9xg70ll/6Dec2023_Youth_Service.mp3?rlkey=j7in9wufqh07pf5p9i6y4trt3&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/p84cm4tur0avfc9xg70ll/6Dec2023_Youth_Service.mp3?rlkey=j7in9wufqh07pf5p9i6y4trt3',
     videoUrl: 'https://youtube.com/watch?v=xM-eubqB06E',
   },
   {
@@ -265,7 +266,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Open Door',
     speaker: 'Rev Edmond Makwiramiti',
     audioUrl:
-      'https://dropbox.com/scl/fi/btu2zea19pkxgpw42rxs1/6Dec2023_Evangelistic.mp3?rlkey=bk9q2px13b7a7nxm6xtkk4ygp&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/btu2zea19pkxgpw42rxs1/6Dec2023_Evangelistic.mp3?rlkey=bk9q2px13b7a7nxm6xtkk4ygp',
     videoUrl: 'https://youtube.com/watch?v=adAUPmBDSRg',
   },
   {
@@ -275,7 +276,7 @@ export const legacyCampMeetingRecordings = [
     title: "Seeking For God's Guidance",
     speaker: 'Rev Lordick Motshidisi',
     audioUrl:
-      'https://dropbox.com/scl/fi/vvxkfd4z521694c55pjzw/7Dec2023-Bible-Teaching.mp3?rlkey=85mzv075as8dkj3mf28klqyk7&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/vvxkfd4z521694c55pjzw/7Dec2023-Bible-Teaching.mp3?rlkey=85mzv075as8dkj3mf28klqyk7',
     videoUrl: 'https://youtube.com/watch?v=VmPAEA_rOoc',
   },
   {
@@ -285,7 +286,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Call of God',
     speaker: 'Rev Ben Bhuka',
     audioUrl:
-      'https://dropbox.com/scl/fi/wzt0rhmo4amlwzwj8gzxa/7Dec2023_Evangelistic.mp3?rlkey=kyrjy8zuvnenmsdwpbm83p7qp&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/wzt0rhmo4amlwzwj8gzxa/7Dec2023_Evangelistic.mp3?rlkey=kyrjy8zuvnenmsdwpbm83p7qp',
     videoUrl: 'https://youtube.com/watch?v=Nzg9bvyfIg0',
   },
   {
@@ -295,7 +296,7 @@ export const legacyCampMeetingRecordings = [
     title: 'The Will of God',
     speaker: 'Rev Mark Mfandarabwa',
     audioUrl:
-      'https://dropbox.com/scl/fi/g6oplye06izacb4dl77b3/8Dec2023-Bible-Teaching.mp3?rlkey=j6pzsyxvwc9gkyz01zv1qk5la&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/g6oplye06izacb4dl77b3/8Dec2023-Bible-Teaching.mp3?rlkey=j6pzsyxvwc9gkyz01zv1qk5la',
     videoUrl: 'https://youtube.com/watch?v=qbcCcDmMlhc',
   },
   {
@@ -305,7 +306,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Standing On The Promises of God',
     speaker: 'Rev Sydney Kaseke',
     audioUrl:
-      'https://dropbox.com/scl/fi/yefkf4z9ohe25tk61ncro/8Dec2023-Youth-Service.mp3?rlkey=lfbsw99dg0fkyt11w10l7we5l&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/yefkf4z9ohe25tk61ncro/8Dec2023-Youth-Service.mp3?rlkey=lfbsw99dg0fkyt11w10l7we5l',
     videoUrl: 'https://youtube.com/watch?v=-o1TTbirv3w',
   },
   {
@@ -315,7 +316,7 @@ export const legacyCampMeetingRecordings = [
     title: 'What is to Be Done For Thee?',
     speaker: 'Rev Edwin Mashau',
     audioUrl:
-      'https://dropbox.com/scl/fi/bnvktqbdv6w1z2unh8o2g/8Dec2023_Evangelistic.mp3?rlkey=w69vcb25tufzsmvw9t1sffzra&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/bnvktqbdv6w1z2unh8o2g/8Dec2023_Evangelistic.mp3?rlkey=w69vcb25tufzsmvw9t1sffzra',
     videoUrl: 'https://youtube.com/watch?v=mzzK6KQ88tE',
   },
   {
@@ -325,7 +326,7 @@ export const legacyCampMeetingRecordings = [
     title: 'The Strait Gate and Narrow Way',
     speaker: 'Rev Killian Nyamuona',
     audioUrl:
-      'https://dropbox.com/scl/fi/mgq05rf242ihel84xashe/10Dec-Youth-Service.mp3?rlkey=vullqziwh8f6oqybcu827boo0&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/mgq05rf242ihel84xashe/10Dec-Youth-Service.mp3?rlkey=vullqziwh8f6oqybcu827boo0',
     videoUrl: 'https://youtube.com/watch?v=xnuij5qUvMo',
   },
   {
@@ -335,7 +336,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Is Your Name Written',
     speaker: 'Rev Christopher Nkhata',
     audioUrl:
-      'https://dropbox.com/scl/fi/ul853pp9vhzv1sv6g6aly/10Dec-Evangelistic.mp3?rlkey=4285i4gbzfio8yrf8rx46ddol&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/ul853pp9vhzv1sv6g6aly/10Dec-Evangelistic.mp3?rlkey=4285i4gbzfio8yrf8rx46ddol',
     videoUrl: 'https://youtube.com/watch?v=ApXKfQRnwOk',
   },
   {
@@ -345,7 +346,7 @@ export const legacyCampMeetingRecordings = [
     title: "Remember Lot's wife",
     speaker: 'Rev Boniface Banda',
     audioUrl:
-      'https://dropbox.com/scl/fi/jt7tl3stduerzg6339rit/11Dec2023-Bible-Teaching.mp3?rlkey=dr3ugz9k86o666w27pc5e8m1w&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/jt7tl3stduerzg6339rit/11Dec2023-Bible-Teaching.mp3?rlkey=dr3ugz9k86o666w27pc5e8m1w',
     videoUrl: 'https://youtube.com/watch?v=_QdsZiL8f68',
   },
   {
@@ -355,7 +356,7 @@ export const legacyCampMeetingRecordings = [
     title: 'In The Kingdom For Such A Time Like This',
     speaker: 'Rev Zacchaeus Oyedokun',
     audioUrl:
-      'https://dropbox.com/scl/fi/3hsfjnhwmygteieb9h3o2/12Dec-Bible-Teaching.mp3?rlkey=jnlwivkbbym1nieai74b5zt43&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/3hsfjnhwmygteieb9h3o2/12Dec-Bible-Teaching.mp3?rlkey=jnlwivkbbym1nieai74b5zt43',
     videoUrl: 'https://youtube.com/watch?v=FMNeKY8OqDo',
   },
   {
@@ -365,7 +366,7 @@ export const legacyCampMeetingRecordings = [
     title: null,
     speaker: 'Sister Machisa',
     audioUrl:
-      'https://dropbox.com/scl/fi/qpch7f9wjmmp0kyq0lqeh/12Dec-Children-s-Service.mp3?rlkey=jwmn8pll20wg8spq4s4zxmu6y&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/qpch7f9wjmmp0kyq0lqeh/12Dec-Children-s-Service.mp3?rlkey=jwmn8pll20wg8spq4s4zxmu6y',
     videoUrl: 'https://youtube.com/watch?v=fu-E1c1DioU',
   },
   {
@@ -375,7 +376,7 @@ export const legacyCampMeetingRecordings = [
     title: 'The Heart of Man',
     speaker: 'Rev John Mapepuka',
     audioUrl:
-      'https://dropbox.com/scl/fi/ixgbsqjy7cmsitu36jwm4/12Dec-Evangelistic-Service.mp3?rlkey=mrgaqg0sb5uky11fk3lj7c5yb&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/ixgbsqjy7cmsitu36jwm4/12Dec-Evangelistic-Service.mp3?rlkey=mrgaqg0sb5uky11fk3lj7c5yb',
     videoUrl: 'https://youtube.com/watch?v=oNbjhf92teY',
   },
   {
@@ -385,7 +386,7 @@ export const legacyCampMeetingRecordings = [
     title: 'The Call of God',
     speaker: 'Rev Confidence Nemaungani',
     audioUrl:
-      'https://dropbox.com/scl/fi/hddiok9x0rr7ii0788kkz/13Dec_Bible-Teaching.mp3?rlkey=h23z44lib14lbwudi5p04hg6f&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/hddiok9x0rr7ii0788kkz/13Dec_Bible-Teaching.mp3?rlkey=h23z44lib14lbwudi5p04hg6f',
     videoUrl: 'https://youtube.com/watch?v=ZwKHsSGgU4A',
   },
   {
@@ -395,7 +396,7 @@ export const legacyCampMeetingRecordings = [
     title: 'The Power of Choices',
     speaker: 'Rev Onias Chitanda',
     audioUrl:
-      'https://dropbox.com/scl/fi/l8ux4n1rmrqe4p5ruwf5v/13Dec_Youth-Service.mp3?rlkey=326k26iqyw6xu8nx4aymsquhr&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/l8ux4n1rmrqe4p5ruwf5v/13Dec_Youth-Service.mp3?rlkey=326k26iqyw6xu8nx4aymsquhr',
     videoUrl: 'https://youtube.com/watch?v=lkKzy2fHlqQ',
   },
   {
@@ -405,7 +406,7 @@ export const legacyCampMeetingRecordings = [
     title: "Noah's Escape",
     speaker: 'Rev Edson Mutsambwa',
     audioUrl:
-      'https://dropbox.com/scl/fi/0zv4mp3f8ia0pmqdney1i/14Dec_Bible-Teaching.mp3?rlkey=lai5y9alysezwifzwzjiqpyjt&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/0zv4mp3f8ia0pmqdney1i/14Dec_Bible-Teaching.mp3?rlkey=lai5y9alysezwifzwzjiqpyjt',
     videoUrl: 'https://youtube.com/watch?v=Yx7yMNbaKhw',
   },
   {
@@ -415,7 +416,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Music Concert',
     speaker: null,
     audioUrl:
-      'https://dropbox.com/scl/fi/q271xpufvae2xq14d73co/14Dec_Children-Service.mp3?rlkey=67zo860pyislr1z9317tmxbcn&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/q271xpufvae2xq14d73co/14Dec_Children-Service.mp3?rlkey=67zo860pyislr1z9317tmxbcn',
     videoUrl: 'https://youtube.com/watch?v=eszcrSE9eGE',
   },
   {
@@ -425,7 +426,7 @@ export const legacyCampMeetingRecordings = [
     title: 'The Gospel',
     speaker: 'Rev Patrick Maposa',
     audioUrl:
-      'https://dropbox.com/scl/fi/11kb5wywhjxj350sfkpaw/14Dec_Evangelistic-Service.mp3?rlkey=hgb4if5admtie8xfg4jw9ctym&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/11kb5wywhjxj350sfkpaw/14Dec_Evangelistic-Service.mp3?rlkey=hgb4if5admtie8xfg4jw9ctym',
     videoUrl: 'https://youtube.com/watch?v=s5QEhSyf7f0',
   },
   {
@@ -435,7 +436,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Brotherly Love',
     speaker: 'Rev Kwaziso Bhosha',
     audioUrl:
-      'https://dropbox.com/scl/fi/reryq37mgo5pnfxtmroc0/15Dec_Bible-Teaching.mp3?rlkey=k5kdx3pryhduditgabfygzxui&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/reryq37mgo5pnfxtmroc0/15Dec_Bible-Teaching.mp3?rlkey=k5kdx3pryhduditgabfygzxui',
     videoUrl: 'https://youtube.com/watch?v=aAmmlo4dvAI',
   },
   {
@@ -445,7 +446,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Youth Without Compromise',
     speaker: 'Rev Munyaradzi Magate',
     audioUrl:
-      'https://dropbox.com/scl/fi/0sjermtisrjrlyjmzyos8/15Dec_Youth-Service.mp3?rlkey=fcr3krmwe7xai6jev0cm9xq14&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/0sjermtisrjrlyjmzyos8/15Dec_Youth-Service.mp3?rlkey=fcr3krmwe7xai6jev0cm9xq14',
     videoUrl: 'https://youtube.com/watch?v=JnmgE88NHYQ',
   },
   {
@@ -455,7 +456,7 @@ export const legacyCampMeetingRecordings = [
     title: 'Jesus The Light Of The World',
     speaker: 'Rev Socks Zulu',
     audioUrl:
-      'https://dropbox.com/scl/fi/iq241uxqyo7eiyyw1279g/15Dec_Evangelistic-Service.mp3?rlkey=u4pjr95kwu6e90d1ifa8ro51e&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/iq241uxqyo7eiyyw1279g/15Dec_Evangelistic-Service.mp3?rlkey=u4pjr95kwu6e90d1ifa8ro51e',
     videoUrl: 'https://youtube.com/watch?v=JKPt4WQj8V4',
   },
   {
@@ -465,7 +466,7 @@ export const legacyCampMeetingRecordings = [
     title: null,
     speaker: null,
     audioUrl:
-      'https://dropbox.com/scl/fi/vwkx6bcpp8o549l2vj03h/16Dec_Music-Night.mp3?rlkey=8ke2lvh7wjzlmyhravcbcprks&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/vwkx6bcpp8o549l2vj03h/16Dec_Music-Night.mp3?rlkey=8ke2lvh7wjzlmyhravcbcprks',
     videoUrl: 'https://youtube.com/watch?v=M_t4iYpRYKY',
   },
   {
@@ -475,7 +476,7 @@ export const legacyCampMeetingRecordings = [
     title: 'The freedom of Jesus Christ.',
     speaker: 'Rev O.Z. Gumbo',
     audioUrl:
-      'https://dropbox.com/scl/fi/0pieiyy19la16nbz4vtkr/17Dec-Devotional-Service.mp3?rlkey=1evnxvbawgq5mg1r7bqdnlx41&dl=0',
+      'https://dl.dropboxusercontent.com/scl/fi/0pieiyy19la16nbz4vtkr/17Dec-Devotional-Service.mp3?rlkey=1evnxvbawgq5mg1r7bqdnlx41',
     videoUrl: 'https://youtube.com/watch?v=LZIDczobJXk',
   },
 ];

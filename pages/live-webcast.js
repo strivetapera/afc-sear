@@ -9,6 +9,8 @@ import {
 } from '../data/liveWebcastData';
 import { getOnlineEventsStructured } from '../lib/eventUtils';
 import { getLiveWebcastFromPlatform } from '../lib/platformPublicApi';
+import YouTubeLiveStatus from '../components/YouTubeLiveStatus';
+import { legacyZimbabweWebcast } from '../data/legacyZimbabweSiteData';
 
 export default function LiveWebcastPage({
   metadata,
@@ -26,126 +28,97 @@ export default function LiveWebcastPage({
       lead={metadata.lead}
       actions={[
         { href: featured.streamUrl, label: featured.accessLabel },
-        { href: '/contact', label: 'Get Help Joining', variant: 'secondary' },
+        { href: '/contact', label: 'Spiritual Support', variant: 'secondary' },
       ]}
     >
-      <div className="not-prose rounded-3xl border border-gold/25 bg-white/5 p-6 md:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold/75">
-          {featured.provider}
-        </p>
-        <h2 className="mt-3 text-2xl font-semibold text-cream">{featured.title}</h2>
-        <p className="mt-3 max-w-3xl text-base leading-7 text-cream/85">{featured.note}</p>
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
-          <div className="rounded-2xl border border-gold/15 bg-black/30 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              Meeting ID
-            </p>
-            <p className="mt-2 text-lg font-semibold text-cream">{featured.meetingId}</p>
-          </div>
-          <div className="rounded-2xl border border-gold/15 bg-black/30 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              Passcode
-            </p>
-            <p className="mt-2 text-lg font-semibold text-cream">{featured.passcode}</p>
-          </div>
-          <div className="rounded-2xl border border-gold/15 bg-black/30 p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              Status
-            </p>
-            <p className="mt-2 text-lg font-semibold text-cream">{featured.status}</p>
-          </div>
-        </div>
-        <p className="mt-6">
-          <a
-            href={featured.streamUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex rounded-full bg-gold px-5 py-3 text-sm font-semibold text-black no-underline transition hover:bg-[#f2cc00]"
-          >
-            {featured.accessLabel}
-          </a>
-        </p>
-      </div>
+      <YouTubeLiveStatus 
+        scheduledEvents={schedule} 
+        zoomDetails={legacyZimbabweWebcast} 
+      />
 
-      <h2>Where to watch</h2>
-      <div className="not-prose mt-4 grid gap-4 md:grid-cols-3">
-        {platforms.map((platform) => (
-          <article key={platform.id} className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              {platform.label}
-            </p>
-            <h3 className="mt-2 text-xl font-semibold text-cream">{platform.name}</h3>
-            <p className="mt-3 text-sm leading-6 text-cream/75">{platform.detail}</p>
-            <p className="mt-4">
-              <a
-                href={platform.href}
-                target="_blank"
-                rel="noreferrer"
-                className="text-sm font-semibold text-gold no-underline hover:underline"
-              >
-                Open {platform.label}
-              </a>
-            </p>
-          </article>
-        ))}
-      </div>
-
-      <h2>Regular online schedule</h2>
-      <p>{notes[0]}</p>
-      <div className="not-prose mt-4 grid gap-4 md:grid-cols-3">
-        {schedule.map((item) => (
-          <article key={item.id} className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              {item.providerLabel}
-            </p>
-            <h3 className="mt-2 text-xl font-semibold text-cream">{item.title}</h3>
-            <p className="mt-3 text-sm text-cream/80">{item.occurrenceLabel}</p>
-            <p className="mt-2 text-sm text-cream/80">Duration: {item.durationLabel}</p>
-            <p className="mt-2 text-sm text-cream/70">{item.description}</p>
-            <p className="mt-4">
-              <a
-                href={item.joinUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="text-sm font-semibold text-gold no-underline hover:underline"
-              >
-                Join this service
-              </a>
-            </p>
-          </article>
-        ))}
-      </div>
-      <p className="mt-5">{notes[1]}</p>
-
-      <h2>How to join smoothly</h2>
-      <ol>
-        {steps.map((step) => (
-          <li key={step}>{step}</li>
-        ))}
-      </ol>
-
-      <h2>Support</h2>
-      <div className="not-prose mt-4 grid gap-4 md:grid-cols-2">
-        {support.map((item) => (
-          <div key={item.id} className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              {item.label}
-            </p>
-            <p className="mt-2 text-lg font-semibold text-cream">
-              {item.href ? (
+      <div className="grid lg:grid-cols-2 gap-20">
+        <section>
+          <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Where to watch</h2>
+          <div className="grid gap-6">
+            {platforms.map((platform) => (
+              <article key={platform.id} className="rounded-3xl border border-foreground/5 bg-card/30 p-8 backdrop-blur-md hover:bg-card/50 transition-all border-l-4 border-l-accent">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3">
+                  {platform.label}
+                </p>
+                <h3 className="text-2xl font-bold text-foreground mb-3">{platform.name}</h3>
+                <p className="text-muted-foreground font-medium leading-relaxed mb-6">{platform.detail}</p>
                 <a
-                  href={item.href}
-                  target={item.href.startsWith('http') ? '_blank' : undefined}
-                  rel={item.href.startsWith('http') ? 'noreferrer' : undefined}
+                  href={platform.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex text-[10px] font-black uppercase tracking-widest text-accent hover:tracking-[0.2em] transition-all"
                 >
-                  {item.value}
+                  Open {platform.label} Channel →
                 </a>
-              ) : (
-                item.value
-              )}
-            </p>
+              </article>
+            ))}
           </div>
-        ))}
+        </section>
+
+        <section>
+          <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Synchronized Schedule</h2>
+          <div className="space-y-6">
+            {schedule.map((item) => (
+              <article key={item.id} className="rounded-3xl border border-foreground/5 bg-card/30 p-8 backdrop-blur-md hover:bg-card/50 transition-all">
+                <div className="flex justify-between items-start mb-4">
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent">
+                        {item.providerLabel}
+                    </span>
+                    <span className="text-[10px] font-bold text-muted-foreground/40 italic">
+                        {item.occurrenceLabel}
+                    </span>
+                </div>
+                <h3 className="text-2xl font-bold text-foreground mb-4">{item.title}</h3>
+                <p className="text-muted-foreground text-sm font-medium leading-relaxed mb-8">{item.description}</p>
+                <a
+                  href={item.joinUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block w-full text-center py-4 bg-foreground/5 border border-foreground/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all"
+                >
+                  Enter Online Sanctuary
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <div className="mt-24 p-12 rounded-3xl border border-foreground/5 bg-foreground/5 backdrop-blur-sm">
+        <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Support & Onboarding</h2>
+        <div className="grid md:grid-cols-2 gap-12">
+            <div className="space-y-6">
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-accent">Instructions</p>
+                <ol className="space-y-4">
+                    {steps.map((step, i) => (
+                        <li key={step} className="flex gap-4 text-muted-foreground font-medium">
+                            <span className="text-accent font-black">0{i+1}</span>
+                            {step}
+                        </li>
+                    ))}
+                </ol>
+            </div>
+            <div className="space-y-6">
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-accent">Contact</p>
+                <div className="grid gap-4">
+                    {support.map((item) => (
+                        <div key={item.id} className="flex flex-col">
+                            <span className="text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest">{item.label}</span>
+                            <span className="text-xl font-bold text-foreground tracking-tight mt-1">
+                                {item.href ? (
+                                    <a href={item.href} className="hover:text-accent transition-colors">{item.value}</a>
+                                ) : item.value}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
       </div>
     </PageShell>
   );

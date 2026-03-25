@@ -57,7 +57,7 @@ Recommended infrastructure:
 - cache and queues: Redis
 - file storage: S3-compatible object storage
 - search: Meilisearch first, OpenSearch later if needed
-- auth: Keycloak, Auth0, or Clerk with MFA and RBAC
+- auth: Better Auth (OpenID Connect / Session-based) with MFA and RBAC
 - observability: Sentry, logs, metrics, uptime checks
 - messaging: email, SMS, WhatsApp integrations
 - payments: PSP integrations only, not self-managed card processing

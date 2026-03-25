@@ -1,26 +1,105 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Core surfaces - Warm & Sophisticated */
+  --background: 210 20% 98%;
+  --foreground: 224 71% 4%;
+ 
+  /* Card - Deep & Clean */
+  --card: 0 0% 100%;
+  --card-foreground: 224 71% 4%;
+ 
+  /* Brand / Primary - Deep Indigo Hub */
+  --primary: 243 75% 59%;
+  --primary-foreground: 210 20% 98%;
+ 
+  /* Secondary - Soft Neutral */
+  --secondary: 220 14% 90%;
+  --secondary-foreground: 224 71% 4%;
+ 
+  /* Muted */
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 9% 46%;
+ 
+  /* Accent - Sacred Gold */
+  --accent: 38 92% 50%;
+  --accent-foreground: 224 71% 4%;
+ 
+  /* Border & Input */
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 243 75% 59%;
+ 
+  /* Premium WOW Tokens */
+  --glass-bg: 0 0% 100% / 0.6;
+  --glass-border: 220 13% 91% / 0.5;
+  --shadow-premium: 0 30px 60px -12px rgba(0, 0, 0, 0.15), 0 18px 36px -18px rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+  --background: 224 71% 2%;
+  --foreground: 210 20% 98%;
+ 
+  --card: 224 71% 4%;
+  --card-foreground: 210 20% 98%;
+ 
+  --primary: 243 75% 70%;
+  --primary-foreground: 224 71% 4%;
+ 
+  --secondary: 224 71% 10%;
+  --secondary-foreground: 210 20% 98%;
+ 
+  --muted: 224 71% 10%;
+  --muted-foreground: 224 10% 60%;
+ 
+  --accent: 38 92% 50%;
+  --accent-foreground: 224 71% 4%;
+ 
+  --border: 224 71% 10%;
+  --input: 224 71% 10%;
+  --ring: 243 75% 70%;
+ 
+  /* Premium WOW Tokens (Dark) */
+  --glass-bg: 224 71% 4% / 0.8;
+  --glass-border: 243 75% 70% / 0.1;
+  --shadow-premium: 0 30px 60px -12px rgba(0, 0, 0, 0.4), 0 18px 36px -18px rgba(0, 0, 0, 0.3);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  
+  --color-glass: hsl(var(--glass-bg));
+  --color-glass-border: hsl(var(--glass-border));
+  --shadow-premium: var(--shadow-premium);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: "Inter", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.heading-premium {
+  font-family: var(--font-serif);
+  letter-spacing: -0.02em;
 }

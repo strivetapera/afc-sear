@@ -2,11 +2,12 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { portalApi, setStoredToken } from '@/lib/api';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ login: '', password: '' });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -15,18 +16,22 @@ export default function LoginPage() {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await portalApi('/auth/sign-in', {
+      const response = await fetch(`${API_URL}/auth/sign-in/email-password`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
+        credentials: 'include',
       });
-      if (res.data?.session?.token) {
-        setStoredToken(res.data.session.token);
-      } else if (res.data?.token) {
-        setStoredToken(res.data.token);
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || 'Sign-in failed. Check your credentials.');
       }
+
       router.push('/dashboard');
+      router.refresh();
     } catch (err: any) {
-      setError(err.message ?? 'Sign-in failed. Check your credentials.');
+      setError(err.message ?? 'An unexpected error occurred.');
     } finally {
       setIsLoading(false);
     }
@@ -43,7 +48,11 @@ export default function LoginPage() {
         boxShadow: '0 20px 60px rgba(79,70,229,0.2)',
       }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{ width: 48, height: 48, borderRadius: 12, background: 'linear-gradient(135deg, #4f46e5, #818cf8)', margin: '0 auto 12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ 
+            width: 48, height: 48, borderRadius: 12, 
+            background: 'linear-gradient(135deg, #4f46e5, #818cf8)', 
+            margin: '0 auto 12px', display: 'flex', alignItems: 'center', justifyContent: 'center' 
+          }}>
             <span style={{ color: '#fff', fontWeight: 700, fontSize: 20 }}>A</span>
           </div>
           <h1 style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Welcome Back</h1>
@@ -52,32 +61,45 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {error && (
-            <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '10px 14px', color: '#dc2626', fontSize: 13 }}>
+            <div style={{ 
+              background: '#fef2f2', border: '1px solid #fecaca', 
+              borderRadius: 8, padding: '10px 14px', color: '#dc2626', fontSize: 13 
+            }}>
               {error}
             </div>
           )}
           <div>
-            <label style={{ fontSize: 13, fontWeight: 500, color: '#374151', display: 'block', marginBottom: 6 }}>Email or Phone</label>
+            <label style={{ fontSize: 13, fontWeight: 500, color: '#374151', display: 'block', marginBottom: 6 }}>
+              Email Address
+            </label>
             <input
-              type="text"
-              value={form.login}
-              onChange={(e) => setForm((f) => ({ ...f, login: e.target.value }))}
+              type="email"
+              value={form.email}
+              onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
               placeholder="you@example.com"
               required
-              style={{ width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none', transition: 'border-color 0.15s' }}
+              style={{ 
+                width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', 
+                borderRadius: 8, fontSize: 14, outline: 'none', transition: 'border-color 0.15s' 
+              }}
               onFocus={(e) => e.target.style.borderColor = '#6366f1'}
               onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
             />
           </div>
           <div>
-            <label style={{ fontSize: 13, fontWeight: 500, color: '#374151', display: 'block', marginBottom: 6 }}>Password</label>
+            <label style={{ fontSize: 13, fontWeight: 500, color: '#374151', display: 'block', marginBottom: 6 }}>
+              Password
+            </label>
             <input
               type="password"
               value={form.password}
               onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
               placeholder="••••••••"
               required
-              style={{ width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: 8, fontSize: 14, outline: 'none' }}
+              style={{ 
+                width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', 
+                borderRadius: 8, fontSize: 14, outline: 'none' 
+              }}
               onFocus={(e) => e.target.style.borderColor = '#6366f1'}
               onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
             />

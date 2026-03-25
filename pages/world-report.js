@@ -17,57 +17,61 @@ function formatPublishedAt(value) {
 export default function WorldReportPage({ latestReports, restoredRecords }) {
   return (
     <PageShell
-      eyebrow="Reports"
+      eyebrow="Global Ministry"
       title="World Report"
-      lead="World Report now carries actual site-ready material instead of only editorial guidance. It brings together current verified updates and the strongest historical public records restored from the former Zimbabwe website."
+      lead="Unified updates from our regional sanctuaries and historical field records. We have synchronized our current verified reporting with the preserved public records from our regional archives."
       actions={[
-        { href: '/news', label: 'Read Latest News' },
-        { href: '/video-archive', label: 'Open Media Archive', variant: 'secondary' },
+        { href: '/news', label: 'Latest Intelligence' },
+        { href: '/video-archive', label: 'Media Highlights', variant: 'secondary' },
       ]}
     >
-      <h2>Latest verified reports</h2>
-      <p>
-        These are the current public updates already maintained on the site and suitable for report
-        reading today.
-      </p>
-      <div className="not-prose mt-4 space-y-4">
-        {latestReports.map((item) => (
-          <article key={item.id} className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-            <div className="flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              <span>{item.category}</span>
-              <span>{item.location}</span>
-              <span>{formatPublishedAt(item.publishedAt)}</span>
-            </div>
-            <h3 className="mt-3 text-xl font-semibold text-cream">{item.title}</h3>
-            <p className="mt-3 text-sm leading-6 text-cream/75">{item.summary}</p>
-            <p className="mt-3 text-sm text-cream/65">Status: {item.status}</p>
-          </article>
-        ))}
-      </div>
+      <div className="max-w-5xl space-y-24">
+        <section>
+          <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Verified Sanctuary Updates</h2>
+          <div className="not-prose space-y-6">
+            {latestReports.map((item) => (
+              <article key={item.id} className="rounded-3xl border border-foreground/5 bg-card/30 p-8 backdrop-blur-md hover:bg-card/50 transition-all">
+                <div className="flex flex-wrap gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">
+                  <span className="bg-accent/10 px-3 py-1 rounded-full border border-accent/20">{item.category}</span>
+                  <span className="py-1">{item.location}</span>
+                  <span className="py-1 text-muted-foreground/40">{formatPublishedAt(item.publishedAt)}</span>
+                </div>
+                <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4 heading-premium italic leading-tight">{item.title}</h3>
+                <p className="text-muted-foreground text-lg leading-relaxed font-medium mb-6">
+                    {item.summary}
+                </p>
+                <div className="pt-6 border-t border-foreground/5 flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-muted-foreground/30 uppercase tracking-widest italic">{item.status}</span>
+                    <Link href={`/news`} className="text-[10px] font-black uppercase tracking-widest text-accent hover:tracking-[0.2em] transition-all">Read Full Report →</Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
 
-      <h2>Restored public record</h2>
-      <p>
-        The archived Zimbabwe website contained public records that now give this page some real
-        historical depth instead of abstract reporting language.
-      </p>
-      <div className="not-prose mt-4 grid gap-4 md:grid-cols-3">
-        {restoredRecords.map((record) => (
-          <article key={record.title} className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              {record.label}
-            </p>
-            <h3 className="mt-2 text-xl font-semibold text-cream">{record.title}</h3>
-            <p className="mt-3 text-sm leading-6 text-cream/75">{record.description}</p>
-            <p className="mt-4">
-              <a
-                href={record.href}
-                className="text-sm font-semibold text-gold no-underline hover:underline"
-              >
-                Open record
-              </a>
-            </p>
-          </article>
-        ))}
+        <section>
+          <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Archival Foundations</h2>
+          <p className="text-muted-foreground text-lg font-medium leading-relaxed mb-10 max-w-3xl">
+            These preserved records provide historical depth to our regional reporting, documenting the growth and unification of our ministry.
+          </p>
+          <div className="not-prose grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {restoredRecords.map((record) => (
+              <article key={record.title} className="rounded-3xl border border-foreground/5 bg-card/30 p-8 backdrop-blur-md flex flex-col hover:bg-card/50 transition-all">
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-4">
+                  {record.label}
+                </span>
+                <h3 className="text-xl font-bold text-foreground mb-4 leading-tight">{record.title}</h3>
+                <p className="text-muted-foreground text-sm font-medium leading-relaxed mb-8 flex-grow">{record.description}</p>
+                <a
+                  href={record.href}
+                  className="inline-flex text-[10px] font-black uppercase tracking-widest text-accent hover:tracking-[0.2em] transition-all"
+                >
+                  Inspect Archive →
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
       </div>
     </PageShell>
   );

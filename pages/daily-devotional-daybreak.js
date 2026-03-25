@@ -15,123 +15,131 @@ export default function DailyDevotionalPage({
 }) {
   return (
     <PageShell
-      eyebrow="Daily Reading"
+      eyebrow="Spiritual Nourishment"
       title="Daily Devotional"
-      lead="This page now gives readers a real devotional path through the rebuilt site. It pairs a restored Bible study guide from the older website with the current weekly lessons and online worship rhythm already maintained in this webapp."
+      lead="A path of daily reflection and biblical depth. We have integrated our historical study archives with the current weekly lessons and the live worship rhythm of our regional ministry."
       actions={[
-        { href: featuredGuide.href, label: 'Open Bible Study Guide' },
-        { href: '/library/this-weeks-lessons', label: 'Browse Weekly Lessons', variant: 'secondary' },
+        { href: featuredGuide.href, label: 'Open Study Guide' },
+        { href: '/library/this-weeks-lessons', label: 'Weekly Lessons', variant: 'secondary' },
       ]}
     >
-      <h2>Restored study companion</h2>
-      <div className="not-prose mt-4 grid gap-6 overflow-hidden rounded-3xl border border-gold/20 bg-white/5 md:grid-cols-[1.15fr_0.85fr]">
-        <div className="p-6 md:p-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-            Restored archive download
-          </p>
-          <h3 className="mt-3 text-2xl font-semibold text-cream">{featuredGuide.title}</h3>
-          <p className="mt-4 text-sm leading-6 text-cream/80">{featuredGuide.description}</p>
-          <p className="mt-4 text-sm text-cream/65">{featuredGuide.meta}</p>
-          <div className="mt-6 flex flex-wrap gap-4">
-            <a
-              href={featuredGuide.href}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex rounded-full bg-gold px-5 py-3 text-sm font-semibold text-black no-underline transition hover:bg-[#f2cc00]"
-            >
-              Read the PDF
-            </a>
-            <Link
-              href="/apostolic-faith-magazine"
-              className="inline-flex rounded-full border border-gold/40 px-5 py-3 text-sm font-semibold text-gold no-underline transition hover:border-gold hover:bg-gold/10"
-            >
-              Open reading hub
-            </Link>
-          </div>
-        </div>
-        <div className="relative min-h-[260px]">
-          <Image
-            src={featuredGuide.imageSrc}
-            alt={featuredGuide.imageAlt}
-            fill
-            priority
-            sizes="(min-width: 768px) 40vw, 100vw"
-            className="object-cover"
-          />
-        </div>
-      </div>
-
-      <h2>This week&apos;s devotional companions</h2>
-      <p>
-        These current lessons give homes, teachers, and ministry teams something real to read with
-        this week instead of waiting for a future devotional archive.
-      </p>
-      <div className="not-prose mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {devotionalLessons.map((lesson) => (
-          <article key={lesson.id} className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              {lesson.title}
+      <section className="mb-24">
+        <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Archival Companion</h2>
+        <div className="not-prose grid gap-0 overflow-hidden rounded-3xl border border-foreground/5 bg-card/30 backdrop-blur-md shadow-premium md:grid-cols-[1.2fr_0.8fr]">
+          <div className="p-8 md:p-12 flex flex-col justify-center">
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-accent mb-6">
+              Restored Ministry Tool
+            </span>
+            <h3 className="text-3xl md:text-4xl font-extrabold tracking-tighter text-foreground italic heading-premium mb-6">
+                {featuredGuide.title}
+            </h3>
+            <p className="text-muted-foreground text-lg leading-relaxed font-medium mb-4">
+                {featuredGuide.description}
             </p>
-            <h3 className="mt-3 text-xl font-semibold text-cream">{lesson.topic}</h3>
-            {lesson.keyVerse ? (
-              <p className="mt-3 text-sm italic leading-6 text-cream/75">
-                &quot;{lesson.keyVerse.text}&quot; - {lesson.keyVerse.reference}
-              </p>
-            ) : null}
-            {lesson.sourceReference ? (
-              <p className="mt-3 text-sm text-cream/65">Reading: {lesson.sourceReference}</p>
-            ) : null}
-            <p className="mt-4">
-              <Link
-                href={`/library/lessons/${lesson.categoryKey}`}
-                className="text-sm font-semibold text-gold no-underline hover:underline"
-              >
-                Open lesson
-              </Link>
+            <p className="text-muted-foreground/40 text-[10px] font-bold uppercase tracking-widest italic mb-10">
+                {featuredGuide.meta}
             </p>
-          </article>
-        ))}
-      </div>
-
-      <h2>Prayer and worship rhythm</h2>
-      <p>
-        Online services already give this devotional page a real weekly rhythm. Readers can pair
-        personal study with the live prayer, Bible study, and worship schedule shown here.
-      </p>
-      <div className="not-prose mt-4 grid gap-4 md:grid-cols-3">
-        {worshipRhythm.map((event) => (
-          <article key={event.id} className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              {event.providerLabel}
-            </p>
-            <h3 className="mt-3 text-xl font-semibold text-cream">{event.title}</h3>
-            <p className="mt-3 text-sm leading-6 text-cream/80">{event.occurrenceLabel}</p>
-            <p className="mt-2 text-sm text-cream/65">{event.durationLabel}</p>
-            {event.description ? (
-              <p className="mt-3 text-sm leading-6 text-cream/75">{event.description}</p>
-            ) : null}
-            <p className="mt-4">
+            <div className="flex flex-wrap gap-6">
               <a
-                href={event.joinUrl}
+                href={featuredGuide.href}
                 target="_blank"
                 rel="noreferrer"
-                className="text-sm font-semibold text-gold no-underline hover:underline"
+                className="inline-flex items-center justify-center rounded-full bg-accent text-accent-foreground px-8 py-4 text-sm font-black uppercase tracking-widest transition-all hover:scale-[1.05]"
               >
-                Join online
+                Read Document
               </a>
-            </p>
-          </article>
-        ))}
-      </div>
+              <Link
+                href="/apostolic-faith-magazine"
+                className="inline-flex items-center justify-center rounded-full border border-foreground/10 bg-foreground/5 px-8 py-4 text-sm font-black uppercase tracking-widest text-foreground transition-all hover:bg-foreground hover:text-background"
+              >
+                Library Hub
+              </Link>
+            </div>
+          </div>
+          <div className="relative min-h-[350px] md:min-h[full] border-l border-foreground/5">
+            <Image
+              src={featuredGuide.imageSrc}
+              alt={featuredGuide.imageAlt}
+              fill
+              priority
+              sizes="(min-width: 768px) 40vw, 100vw"
+              className="object-cover opacity-80"
+            />
+          </div>
+        </div>
+      </section>
 
-      <h2>Suggested devotional rhythm</h2>
-      <div className="not-prose mt-4 grid gap-4 md:grid-cols-3">
-        {practiceWindows.map((item) => (
-          <article key={item.title} className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-            <h3 className="text-xl font-semibold text-cream">{item.title}</h3>
-            <p className="mt-3 text-sm leading-6 text-cream/75">{item.description}</p>
-          </article>
-        ))}
+      <section className="mb-24">
+        <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">This Week&apos;s Lessons</h2>
+        <p className="text-muted-foreground text-lg font-medium leading-relaxed mb-10 max-w-3xl">
+          Current study materials for unified church teaching and personal growth.
+        </p>
+        <div className="not-prose grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {devotionalLessons.map((lesson) => (
+            <article key={lesson.id} className="rounded-3xl border border-foreground/5 bg-card/30 p-8 backdrop-blur-md transition-all hover:bg-card/50">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-4 block">
+                {lesson.title}
+              </span>
+              <h3 className="text-2xl font-bold text-foreground mb-4">{lesson.topic}</h3>
+              {lesson.keyVerse && (
+                <p className="text-muted-foreground text-sm italic leading-relaxed mb-4 border-l-2 border-accent/20 pl-4">
+                  &quot;{lesson.keyVerse.text}&quot; — {lesson.keyVerse.reference}
+                </p>
+              )}
+              {lesson.sourceReference && (
+                <p className="text-muted-foreground/50 text-[10px] font-bold uppercase tracking-widest mb-8">
+                    Reading: {lesson.sourceReference}
+                </p>
+              )}
+              <Link
+                href={`/library/lessons/${lesson.categoryKey}`}
+                className="inline-flex text-[10px] font-black uppercase tracking-widest text-accent hover:tracking-[0.2em] transition-all"
+              >
+                Open Lesson →
+              </Link>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <div className="grid lg:grid-cols-2 gap-20">
+        <section>
+          <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Worship Rhythm</h2>
+          <div className="space-y-6">
+            {worshipRhythm.map((event) => (
+              <article key={event.id} className="rounded-3xl border border-foreground/5 bg-card/30 p-8 backdrop-blur-md transition-all hover:bg-card/50">
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-3 block">
+                  {event.providerLabel}
+                </span>
+                <h3 className="text-2xl font-bold text-foreground mb-4">{event.title}</h3>
+                <div className="flex flex-col gap-1 mb-8">
+                    <span className="text-muted-foreground font-semibold text-sm">{event.occurrenceLabel}</span>
+                    <span className="text-muted-foreground/40 text-[10px] font-bold uppercase tracking-widest">{event.durationLabel}</span>
+                </div>
+                <a
+                  href={event.joinUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block w-full text-center py-4 bg-foreground/5 border border-foreground/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-accent hover:text-accent-foreground transition-all"
+                >
+                  Enter Sanctuary
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Suggested Rhythm</h2>
+          <div className="space-y-6">
+            {practiceWindows.map((item) => (
+              <article key={item.title} className="rounded-3xl border border-foreground/5 bg-foreground/5 p-8 backdrop-blur-sm">
+                <h3 className="text-2xl font-bold text-foreground mb-4 italic">{item.title}</h3>
+                <p className="text-muted-foreground font-medium leading-relaxed">{item.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
       </div>
     </PageShell>
   );

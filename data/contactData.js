@@ -7,65 +7,58 @@ export const contactPage = {
   eyebrow: 'Contact',
   title: 'Contact The Apostolic Faith Church SEAR',
   lead:
-    'Use this page for local church connections, prayer requests, and webcast support. The strongest verified contacts we have today come from the legacy Zimbabwe site, and they are preserved here while broader regional channels are still being finalized.',
+    'We are here to support your spiritual journey. Connect with our regional ministry team for prayer requests, local church information, and worship resources.',
 };
 
 export const contactChannels = [
   {
     id: 'regional-email',
-    label: 'Regional Email',
+    label: 'Regional Office',
     value: 'contact@apostolicfaith-sear.org',
     href: 'mailto:contact@apostolicfaith-sear.org',
-    note: 'Best for general questions, visitor follow-up, and ministry inquiries.',
+    note: 'Primary channel for general inquiries and regional administration.',
   },
-  {
-    id: legacyPrayerContacts[0].id,
-    label: 'Prayer Requests WhatsApp',
-    value: legacyPrayerContacts[0].value,
-    href: legacyPrayerContacts[0].href,
-    note: 'Legacy Zimbabwe WhatsApp prayer-request line carried into the new website.',
-  },
-  {
-    id: legacyPrayerContacts[1].id,
-    label: 'Visitor Support WhatsApp',
-    value: legacyPrayerContacts[1].value,
-    href: legacyPrayerContacts[1].href,
-    note: 'Use this for follow-up help locating a branch or joining a service.',
-  },
+  ...legacyPrayerContacts.map((contact) => ({
+    id: contact.id,
+    label: 'WhatsApp Support',
+    value: contact.value,
+    href: contact.href,
+    note: 'Direct link for sharing prayer requests and branch introductions on WhatsApp.',
+  })),
   {
     id: 'harare-address',
-    label: 'Harare Assembly',
-    value: 'Stand 10466, Lusaka, Highfields',
-    note: 'This physical address comes directly from the legacy Zimbabwe branch directory.',
+    label: 'Main Office Address',
+    value: 'Stand 10466, Lusaka, Highfields, Harare',
+    note: 'Apostolic Faith Church Southern & Eastern Africa Headquarters.',
   },
 ];
 
 export const ministryContacts = [
   {
     id: 'webcast-help',
-    title: 'Live Webcast Support',
+    title: 'Worship Support',
     description:
-      'The previous Zimbabwe site routed online viewers through Zoom, YouTube, and Facebook. Those preserved links remain the clearest verified webcast channels today.',
+      'Access our live and archived services through our verified digital channels including Zoom, YouTube, and Facebook.',
     destination: legacyZimbabweWebcast.zoomMeetingId,
   },
   {
     id: 'locations-help',
-    title: 'Local Church Connections',
+    title: 'Congregational Life',
     description:
-      'The restored branch directory currently covers Zimbabwe most completely. Use the contact options above if you need help being introduced to a listed assembly.',
-    destination: '54 preserved Zimbabwe branch listings',
+      'Explore our fellowship locations across the region. Our team can help introduce you to a local branch or pastor in your community.',
+    destination: 'Find your nearest assembly',
   },
   {
     id: 'resource-help',
-    title: 'Streaming Channels',
+    title: 'Media Ministry',
     description:
-      'The archived YouTube and Facebook channels were used for live and replay ministry access on the old site and are now linked again from the webcast page.',
+      'Watch and listen to recent sermons, choir recordings, and special conference sessions from our regional media archive.',
     destination: legacyZimbabweWebcast.youtubeLabel,
   },
 ];
 
 export const contactNextSteps = [
-  'If you are looking for a Zimbabwe assembly, start with the restored locations page and mention the branch or pastor name when you contact us.',
-  'If you need help joining an online service, say whether you are using Zoom, YouTube, or Facebook so the team can guide you quickly.',
-  'If you are contacting us from outside Zimbabwe, mention your country and nearest city so the regional team can route you while the broader directory is still being rebuilt.',
+  'Visit our Locations page to find the assembly nearest to you.',
+  'Mention your city or region when contacting us so we can route your inquiry to the right local team.',
+  'Join our live webcast sessions for weekly prayer meetings and Bible study.',
 ];

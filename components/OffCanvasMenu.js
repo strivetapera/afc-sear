@@ -1,162 +1,115 @@
-// components/OffCanvasMenu.js
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { offCanvasSections } from '../lib/siteNavigation';
-
-// Basic focusable elements selector
-const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])';
 
 const OffCanvasMenu = ({ isOpen, onClose, triggerRef }) => {
     const menuRef = useRef(null);
     const closeButtonRef = useRef(null);
-    const previousIsOpen = useRef(false);
 
-    // Close on Escape key
     useEffect(() => {
-        const handleEsc = (event) => {
-            if (event.key === 'Escape' && isOpen) {
-                onClose();
-            }
-        };
+        const handleEsc = (e) => (e.key === 'Escape' && isOpen) && onClose();
         document.addEventListener('keydown', handleEsc);
-        return () => {
-            document.removeEventListener('keydown', handleEsc);
-        };
+        return () => document.removeEventListener('keydown', handleEsc);
     }, [isOpen, onClose]);
 
     useEffect(() => {
-        if (previousIsOpen.current && !isOpen) {
-            triggerRef?.current?.focus();
-        }
-
-        previousIsOpen.current = isOpen;
-    }, [isOpen, triggerRef]);
-
-    // Focus Trapping
-    useEffect(() => {
-        if (isOpen && menuRef.current && closeButtonRef.current) {
-            const focusableElements = menuRef.current.querySelectorAll(FOCUSABLE_SELECTOR);
-            // Ensure elements exist before accessing them
-            if (focusableElements.length === 0) return;
-
-            const firstElement = focusableElements[0];
-            const lastElement = focusableElements[focusableElements.length - 1];
-
-            // Focus the close button initially when opening
-            closeButtonRef.current.focus();
-
-            const handleTabKeyPress = (event) => {
-                if (event.key !== 'Tab') {
-                    return;
-                }
-
-                // Check if focusableElements still has items (might change if content loads async)
-                if (focusableElements.length === 0) return;
-
-                if (event.shiftKey) { // Shift + Tab
-                    if (document.activeElement === firstElement) {
-                        lastElement.focus();
-                        event.preventDefault();
-                    }
-                } else { // Tab
-                    if (document.activeElement === lastElement) {
-                        firstElement.focus();
-                        event.preventDefault();
-                    }
-                }
-            };
-
-            const menuElement = menuRef.current; // Capture current ref value
-            menuElement.addEventListener('keydown', handleTabKeyPress);
-
-            return () => {
-                // Use the captured value for removal
-                menuElement?.removeEventListener('keydown', handleTabKeyPress);
-            };
-        }
-    }, [isOpen]); // Rerun when isOpen changes
-
-    // Prevent body scroll when menu is open
-    useEffect(() => {
-        const originalOverflow = document.body.style.overflow;
-        if (isOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = originalOverflow; // Restore original on close
-        }
-        // Cleanup function to restore original overflow when component unmounts
-        return () => {
-             document.body.style.overflow = originalOverflow;
-        };
+        if (isOpen) document.body.style.overflow = 'hidden';
+        else document.body.style.overflow = 'unset';
+        return () => (document.body.style.overflow = 'unset');
     }, [isOpen]);
 
     return (
-        <>
-            {/* Overlay */}
-            <div
-                className={`fixed inset-0 bg-black transition-opacity duration-300 ease-in-out z-40 ${
-                    isOpen ? 'visible opacity-60' : 'invisible opacity-0 pointer-events-none'
-                }`}
-                onClick={onClose}
-                aria-hidden="true"
-            />
-
-            {/* Menu Panel */}
-            <div
-                ref={menuRef}
-                className={`fixed top-0 left-0 h-full w-80 max-w-[90%] bg-black text-cream shadow-xl transition-all duration-300 ease-in-out z-50 transform ${
-                    isOpen
-                      ? 'visible translate-x-0'
-                      : 'invisible -translate-x-full pointer-events-none'
-                }`}
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="offcanvas-title"
-                aria-hidden={!isOpen}
-                id="offcanvas-menu"
-                inert={isOpen ? undefined : ''}
-            >
-                <div className="flex justify-between items-center p-4 border-b border-gray-700">
-                    <h2 id="offcanvas-title" className="text-xl font-semibold text-gold">
-                        Menu
-                    </h2>
-                    <button
-                        ref={closeButtonRef}
+        <AnimatePresence>
+            {isOpen && (
+                <div className="fixed inset-0 z-[100] flex justify-end">
+                    {/* Premium Gaussian Blur Overlay */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="text-cream hover:text-gold text-3xl p-1 -mr-1 leading-none focus:outline-none focus:ring-2 focus:ring-gold rounded"
-                        aria-label="Close Menu"
-                    >
-                        ×
-                    </button>
-                </div>
+                        className="fixed inset-0 bg-background/95 backdrop-blur-sm cursor-pointer"
+                    />
 
-                <nav className="p-4 overflow-y-auto h-[calc(100%-70px)]" role="navigation" aria-label="Main menu">
-                    {offCanvasSections.map((section, index) => (
-                      <div key={section.id}>
-                        {index > 0 ? <hr className="border-gray-700 my-4" /> : null}
-                        <div className="mb-6">
-                          <h3 className="font-bold text-gold mb-2 text-lg" id={`nav-section-${section.id}`}>
-                            {section.title}
-                          </h3>
-                          <ul className="space-y-3 ml-2" aria-labelledby={`nav-section-${section.id}`}>
-                            {section.links.map((link) => (
-                              <li key={link.href}>
-                                <Link
-                                  href={link.href}
-                                  className="block rounded px-1 -mx-1 hover:underline focus:outline-none focus:ring-1 focus:ring-gold"
-                                  onClick={onClose}
-                                >
-                                  {link.label}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
+                    {/* Glassmorphic Menu Panel */}
+                    <motion.div
+                        initial={{ x: '100%' }}
+                        animate={{ x: 0 }}
+                        exit={{ x: '100%' }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                        className="relative w-full max-w-sm h-full bg-background border-l border-foreground/5 shadow-premium flex flex-col"
+                    >
+                        {/* Header Space */}
+                        <div className="p-8 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="w-16 h-16 transition-transform duration-500 overflow-hidden flex items-center justify-center">
+                                    <img 
+                                        src="/images/jesus-light.png" 
+                                        alt="Logo" 
+                                        className="w-full h-full object-contain" 
+                                    />
+                                </div>
+                                <span className="text-lg font-black tracking-tighter uppercase text-foreground">Menu</span>
+                            </div>
+                            <motion.button
+                                whileHover={{ scale: 1.1, rotate: 90 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={onClose}
+                                className="w-10 h-10 flex items-center justify-center rounded-xl bg-foreground/5 border border-foreground/10 text-foreground"
+                            >
+                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </motion.button>
                         </div>
-                      </div>
-                    ))}
-                </nav>
-            </div>
-        </>
+
+                        {/* Navigation Content */}
+                        <nav className="flex-1 overflow-y-auto p-8 pt-0">
+                            {offCanvasSections.map((section, idx) => (
+                                <motion.div 
+                                    key={section.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.1 * idx }}
+                                    className="mb-12"
+                                >
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-accent mb-6">
+                                        {section.title}
+                                    </h3>
+                                    <ul className="space-y-4">
+                                        {section.links.map((link) => (
+                                            <li key={link.href}>
+                                                <Link
+                                                    href={link.href}
+                                                    onClick={onClose}
+                                                    className="group flex items-center justify-between text-2xl font-bold tracking-tight text-foreground/60 hover:text-foreground transition-all"
+                                                >
+                                                    <span>{link.label}</span>
+                                                    <motion.span 
+                                                        initial={{ opacity: 0, x: -10 }}
+                                                        whileHover={{ opacity: 1, x: 0 }}
+                                                        className="text-accent text-sm italic font-medium"
+                                                    >
+                                                        Visit →
+                                                    </motion.span>
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </motion.div>
+                            ))}
+                        </nav>
+
+                        {/* Footer Branding */}
+                        <div className="p-8 border-t border-border/50 bg-muted/20">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-1">APOSTOLIC FAITH MISSION</p>
+                            <p className="text-[10px] font-black italic text-accent uppercase tracking-widest">Graceful Modernism v3.0</p>
+                        </div>
+                    </motion.div>
+                </div>
+            )}
+        </AnimatePresence>
     );
 };
 

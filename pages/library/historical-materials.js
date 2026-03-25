@@ -27,93 +27,102 @@ export default function HistoricalMaterialsPage({
         { href: '/our-churches-map-of-locations', label: 'View Branch Directory', variant: 'secondary' },
       ]}
     >
-      <h2>Restored public record</h2>
-      <div className="not-prose mt-4 grid gap-4 md:grid-cols-3">
-        {restoredRecords.map((record) => (
-          <article key={record.title} className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              {record.label}
-            </p>
-            <h3 className="mt-3 text-xl font-semibold text-cream">{record.title}</h3>
-            <p className="mt-3 text-sm leading-6 text-cream/75">{record.description}</p>
-            <p className="mt-4">
-              <Link href={record.href} className="text-sm font-semibold text-gold no-underline hover:underline">
-                Open record
-              </Link>
-            </p>
-          </article>
-        ))}
-      </div>
+      <div className="max-w-5xl space-y-24">
+        <section>
+          <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Restored Regional Records</h2>
+          <div className="not-prose grid gap-8 md:grid-cols-3">
+            {restoredRecords.map((record) => (
+              <article key={record.title} className="flex flex-col rounded-3xl border border-foreground/5 bg-card/30 p-8 backdrop-blur-md transition-all hover:bg-card/50">
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6">
+                  {record.label}
+                </span>
+                <h3 className="text-xl font-bold text-foreground mb-4 heading-premium">{record.title}</h3>
+                <p className="text-muted-foreground text-sm font-medium leading-relaxed mb-10 flex-grow">{record.description}</p>
+                <Link href={record.href} className="inline-flex text-[10px] font-black uppercase tracking-widest text-accent hover:tracking-[0.2em] transition-all">
+                  Inspect Record →
+                </Link>
+              </article>
+            ))}
+          </div>
+        </section>
 
-      <h2>Dated archive moments</h2>
-      <p>
-        These sample entries show how the restored archive now carries real dated material instead
-        of vague references to a history section that has not been built yet.
-      </p>
-      <div className="not-prose mt-4 grid gap-4 md:grid-cols-3">
-        {sampleMoments.map((item) => (
-          <article key={item.id} className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              {item.date}
-            </p>
-            <h3 className="mt-3 text-xl font-semibold text-cream">{item.title}</h3>
-            <p className="mt-3 text-sm text-cream/75">{item.speaker}</p>
-            <p className="mt-2 text-sm leading-6 text-cream/70">{item.sessionName}</p>
-            <div className="mt-4 flex flex-wrap gap-4 text-sm font-semibold">
-              <a
-                href={item.videoUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="text-gold no-underline hover:underline"
+        <section>
+          <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Dated Archive Snapshots</h2>
+          <p className="text-muted-foreground text-lg font-medium leading-relaxed mb-10 max-w-3xl">
+            Real historical moments preserved from our regional archives, providing a dated public record of ministerial growth.
+          </p>
+          <div className="not-prose grid gap-8 md:grid-cols-3">
+            {sampleMoments.map((item) => (
+              <article key={item.id} className="rounded-3xl border border-foreground/5 bg-card/30 p-8 backdrop-blur-md transition-all hover:bg-card/50 hover:shadow-premium border-b-4 border-b-accent/20">
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent mb-6 block">
+                  {item.date}
+                </span>
+                <h3 className="text-xl font-bold text-foreground mb-4 heading-premium leading-tight">{item.title}</h3>
+                <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest italic mb-2">{item.speaker}</p>
+                <p className="text-muted-foreground/40 text-[10px] font-bold uppercase tracking-widest mb-10">{item.sessionName}</p>
+                <div className="flex flex-col gap-4 pt-6 border-t border-foreground/5">
+                  <a
+                    href={item.videoUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[10px] font-black uppercase tracking-widest text-accent hover:tracking-[0.2em] transition-all"
+                  >
+                    View Cinema Hub
+                  </a>
+                  <a
+                    href={item.audioUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 hover:text-foreground transition-all"
+                  >
+                    Listen Audio Record
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Regional Visual Memory</h2>
+          <p className="text-muted-foreground text-lg font-medium leading-relaxed mb-10 max-w-3xl">
+            Recovered legacy imagery from our regional sanctuaries, surfacing the visual history behind our unified fellowship.
+          </p>
+          <div className="not-prose grid gap-8 md:grid-cols-3">
+            {gallery.map((image) => (
+              <figure
+                key={image.src}
+                className="group overflow-hidden rounded-3xl border border-foreground/5 bg-card/30 backdrop-blur-md shadow-premium transition-all hover:scale-[1.02]"
               >
-                Watch video
-              </a>
-              <a
-                href={item.audioUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="text-gold no-underline hover:underline"
-              >
-                Play audio
-              </a>
-            </div>
-          </article>
-        ))}
-      </div>
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                    className="object-cover transition-all group-hover:scale-110 opacity-80"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all" />
+                </div>
+                <figcaption className="p-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground leading-relaxed italic border-t border-foreground/5">
+                    {image.caption}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
 
-      <h2>Recovered visual memory</h2>
-      <p>
-        These restored legacy images are kept here as part of the public historical layer of the
-        rebuilt site, not as claims of a complete archive.
-      </p>
-      <div className="not-prose mt-4 grid gap-4 md:grid-cols-3">
-        {gallery.map((image) => (
-          <figure
-            key={image.src}
-            className="overflow-hidden rounded-2xl border border-gold/20 bg-white/5"
-          >
-            <div className="relative aspect-[4/3]">
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                sizes="(min-width: 768px) 33vw, 100vw"
-                className="object-cover"
-              />
-            </div>
-            <figcaption className="p-4 text-sm leading-6 text-cream/75">{image.caption}</figcaption>
-          </figure>
-        ))}
-      </div>
-
-      <h2>Read the archive carefully</h2>
-      <div className="not-prose mt-4 grid gap-4 md:grid-cols-3">
-        {readingPrompts.map((item) => (
-          <article key={item.title} className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-            <h3 className="text-xl font-semibold text-cream">{item.title}</h3>
-            <p className="mt-3 text-sm leading-6 text-cream/75">{item.description}</p>
-          </article>
-        ))}
+        <section className="pt-24 border-t border-foreground/5">
+          <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Archive Protocols</h2>
+          <div className="not-prose grid gap-8 md:grid-cols-3">
+            {readingPrompts.map((item) => (
+              <article key={item.title} className="rounded-3xl border border-foreground/5 bg-foreground/5 p-8 backdrop-blur-sm">
+                <h3 className="text-xl font-bold text-foreground mb-4 italic heading-premium">{item.title}</h3>
+                <p className="text-muted-foreground text-sm font-medium leading-relaxed leading-relaxed">{item.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
       </div>
     </PageShell>
   );

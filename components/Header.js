@@ -1,119 +1,131 @@
-// components/Header.js
 import Link from 'next/link';
-import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import OffCanvasMenu from './OffCanvasMenu';
 import { topNavLinks } from '../lib/siteNavigation';
-
-// NavLink component remains the same
-const NavLink = ({ href, children, onClick }) => (
-    <li>
-        <Link
-            href={href}
-            className="text-gold text-lg relative transition-all hover:text-[rgba(255,215,0,0.8)] hover:border-b-[2px] hover:border-b-gold pb-[0.4rem]  before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-[-3px] before:h-[2px] before:bg-[rgba(255,215,0,0.5)]"
-            onClick={onClick}
-        >
-            {children}
-        </Link>
-    </li>
-);
-
-// Simple Menu Icon SVG (Example)
-const MenuIcon = (props) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        className="w-8 h-8" // Adjust size as needed
-        {...props}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-    </svg>
-);
-
+import { useTheme } from './ThemeProvider';
 
 const Header = () => {
     const [isOffCanvasOpen, setIsOffCanvasOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+    const { theme, toggleTheme } = useTheme();
     const offCanvasButtonRef = useRef(null);
 
-    const toggleOffCanvas = () => {
-        setIsOffCanvasOpen(!isOffCanvasOpen);
-    };
-
-    const closeOffCanvas = () => {
-        setIsOffCanvasOpen(false);
-    };
-
-    // Optional: Close OffCanvas if window resizes larger (desktop view)
     useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth >= 768 && isOffCanvasOpen) { // 768px is Tailwind's default 'md' breakpoint
-                setIsOffCanvasOpen(false);
-            }
-        };
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, [isOffCanvasOpen]);
+        const handleScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
+    const toggleOffCanvas = () => setIsOffCanvasOpen(!isOffCanvasOpen);
+    const closeOffCanvas = () => setIsOffCanvasOpen(false);
 
     return (
-        <> {/* Use Fragment to render Header and OffCanvasMenu side-by-side */}
-            <header className="bg-black text-gold py-4 fixed top-0 left-0 w-full z-30 transition transform shadow-md"> {/* Use z-30 */}
-                <div className="container mx-auto flex items-center justify-between w-11/12 max-w-[1200px]">
-                    {/* Logo */}
-                    <div className="flex items-center">
-                        <div className="bg-black rounded-full p-1 mr-6"> {/* Changed back to cream background for logo */}
-                            <Link href="/" className="inline-block hover:opacity-90">
-                                <Image
-                                    src="/images/jesus-light.png"
-                                    alt="Apostolic Faith Church SEAR Logo"
-                                    width={180}
-                                    height={90}
-                                    priority
-                                />
-                            </Link>
-                        </div>
+        <motion.header 
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+                scrolled 
+                ? 'py-4 bg-background/90 backdrop-blur-xl border-b border-foreground/5 shadow-premium' 
+                : 'py-8 bg-transparent'
+            }`}
+        >
+            <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
+                {/* Premium Round Logo Integration */}
+                <Link href="/" className="group relative flex items-center focus:outline-none">
+                    <div className={`transition-all duration-500 flex items-center justify-center ${scrolled ? 'w-20 h-20' : 'w-28 h-28'} -translate-y-2`}>
+                        <div className="absolute inset-0 bg-background/80 backdrop-blur-md rounded-full border border-foreground/5 shadow-premium opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <img 
+                            src="/images/jesus-light.png" 
+                            alt="Logo" 
+                            className="relative z-10 w-full h-full object-contain drop-shadow-2xl" 
+                        />
                     </div>
-
-                    {/* Desktop Navigation & Off-Canvas Trigger */}
-                    <div className="flex items-center">
-                        {/* Desktop Navigation (Hidden on mobile) */}
-                        <nav className="hidden md:block mr-4"> {/* Add margin-right */}
-                            <ul className="flex flex-row gap-6 items-center">
-                                {topNavLinks.map((link) => (
-                                  <NavLink key={link.href} href={link.href}>
-                                    {link.label}
-                                  </NavLink>
-                                ))}
-                            </ul>
-                        </nav>
-
-                        {/* Off-Canvas Trigger Button */}
-                        <button
-                            ref={offCanvasButtonRef}
-                            className="relative p-2 text-gold hover:text-opacity-80 focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 focus:ring-offset-black rounded" // Added focus styles
-                            onClick={toggleOffCanvas}
-                            aria-haspopup="dialog" // Use dialog role for the target panel
-                            aria-expanded={isOffCanvasOpen}
-                            aria-label={isOffCanvasOpen ? 'Close Menu' : 'Open Menu'}
-                            aria-controls="offcanvas-menu"
-                        >
-                           <MenuIcon aria-hidden="true"/>
-                        </button>
+                    <div className={`flex flex-col ml-4 transition-all duration-500 ${scrolled ? 'translate-x-0' : 'translate-x-2'}`}>
+                        <span className={`text-lg font-black tracking-tighter uppercase leading-none transition-colors duration-500 ${scrolled ? 'text-foreground' : 'text-white'}`}>
+                            APOSTOLIC FAITH MISSION
+                        </span>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent/80">Southern & Eastern Africa Region</span>
                     </div>
+                </Link>
+
+                <div className="flex items-center gap-8">
+                    {/* Desktop Navigation */}
+                    <nav className="hidden lg:block">
+                        <ul className="flex items-center gap-10" suppressHydrationWarning>
+                            {topNavLinks.map((link) => (
+                                <li key={link.href}>
+                                    <Link 
+                                        href={link.href}
+                                        className={`text-sm font-bold uppercase tracking-[0.2em] transition-all relative group py-2 ${
+                                            scrolled 
+                                            ? 'text-foreground/80 hover:text-foreground' 
+                                            : 'text-white/70 hover:text-white'
+                                        }`}
+                                    >
+                                        {link.label}
+                                        <motion.span 
+                                            className="absolute bottom-0 left-0 w-0 h-0.5 bg-accent transition-all group-hover:w-full" 
+                                        />
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+
+                    {/* Theme Toggle Button */}
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={toggleTheme}
+                        className={`w-12 h-12 flex items-center justify-center rounded-xl border transition-all duration-300 ${
+                            scrolled
+                            ? 'bg-foreground/5 border-foreground/10 text-foreground hover:bg-accent hover:text-accent-foreground'
+                            : 'bg-white/5 border-white/10 text-white hover:bg-white/20'
+                        }`}
+                        aria-label="Toggle Theme"
+                    >
+                        {theme === 'dark' ? (
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 16.243l.707.707M7.757 7.757l.707.707M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        ) : (
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                            </svg>
+                        )}
+                    </motion.button>
+
+                    {/* Minimalist Menu Toggle */}
+                    <motion.button
+                        ref={offCanvasButtonRef}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={toggleOffCanvas}
+                        className={`relative w-12 h-12 flex flex-col items-center justify-center gap-1.5 rounded-xl border transition-all duration-300 ${
+                            scrolled
+                            ? 'bg-foreground/5 border-foreground/10 text-foreground hover:bg-accent hover:text-accent-foreground hover:border-accent'
+                            : 'bg-white/5 border-white/10 text-white hover:bg-white/20'
+                        }`}
+                        aria-label="Toggle Menu"
+                    >
+                        <span className={`w-6 h-0.5 bg-current rounded-full transition-transform ${isOffCanvasOpen ? 'rotate-45 translate-y-2' : ''}`} />
+                        <span className={`w-6 h-0.5 bg-current rounded-full transition-opacity ${isOffCanvasOpen ? 'opacity-0' : ''}`} />
+                        <span className={`w-6 h-0.5 bg-current rounded-full transition-transform ${isOffCanvasOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+                    </motion.button>
                 </div>
-            </header>
+            </div>
 
-            {/* Render the OffCanvasMenu - Ensure its z-index is higher (e.g., z-40, z-50) */}
-            {/* NOTE: You might also want to remove/change "Ministries" inside OffCanvasMenu.js */}
-            <OffCanvasMenu
-                isOpen={isOffCanvasOpen}
-                onClose={closeOffCanvas}
-                triggerRef={offCanvasButtonRef}
-            />
-        </>
+            <AnimatePresence>
+                {isOffCanvasOpen && (
+                    <OffCanvasMenu
+                        isOpen={isOffCanvasOpen}
+                        onClose={closeOffCanvas}
+                        triggerRef={offCanvasButtonRef}
+                    />
+                )}
+            </AnimatePresence>
+        </motion.header>
     );
 };
 

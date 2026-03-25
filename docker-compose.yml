@@ -15,15 +15,20 @@ services:
       test: ["CMD-SHELL", "pg_isready -U postgres -d afc_sear_platform"]
       interval: 5s
       timeout: 5s
-  keycloak:
-    image: quay.io/keycloak/keycloak:24.0.4
-    container_name: afc-sear-keycloak
-    command: start-dev
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+  
+  redis:
+    image: redis:7-alpine
+    container_name: afc-sear-redis
+    restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "6379:6379"
+    volumes:
+      - afc-sear-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
 
 volumes:
   afc-sear-postgres-data:
+  afc-sear-redis-data:

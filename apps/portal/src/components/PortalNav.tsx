@@ -2,9 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { clearStoredToken } from '@/lib/api';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 const navLinks = [
   { href: '/dashboard', label: 'Home' },
@@ -15,13 +13,23 @@ const navLinks = [
   { href: '/announcements', label: 'Announcements' },
 ];
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+
 export function PortalNav() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleSignOut = () => {
-    clearStoredToken();
+  const handleSignOut = async () => {
+    try {
+      await fetch(`${API_URL}/auth/sign-out`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch (err) {
+      console.error('Sign out error:', err);
+    }
     router.push('/login');
+    router.refresh();
   };
 
   return (
@@ -55,7 +63,7 @@ export function PortalNav() {
         </nav>
         <button
           onClick={handleSignOut}
-          style={{ background: 'rgba(255,255,255,0.15)', border: 'none', color: '#fff', padding: '8px 16px', borderRadius: 6, fontSize: 13, fontWeight: 500 }}
+          style={{ background: 'rgba(255,255,255,0.15)', border: 'none', color: '#fff', padding: '8px 16px', borderRadius: 6, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}
         >
           Sign Out
         </button>

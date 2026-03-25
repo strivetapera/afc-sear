@@ -6,5 +6,9 @@
   "scripts": {
     "dev": "echo \"Worker scaffold not initialized yet\"",
     "build": "echo \"Worker scaffold not initialized yet\""
+  },
+  "dependencies": {
+    "bullmq": "^5.71.0",
+    "ioredis": "^5.10.1"
   }
 }

@@ -25,8 +25,8 @@ const mockEvent = {
   ]
 };
 
-export default async function EventDetailPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function EventDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
   
   const response = await fetch(`${apiUrl}/api/v1/public/events/${slug}`, {

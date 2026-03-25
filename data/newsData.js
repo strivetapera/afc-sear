@@ -1,8 +1,8 @@
 export const newsPage = {
-  eyebrow: 'Updates',
+  eyebrow: 'Stay Informed',
   title: 'Latest News',
   lead:
-    'Recent announcements, ministry milestones, and verified public-site updates are published here so the website has a single trustworthy news stream while broader coverage is still being rebuilt carefully.',
+    'Bringing you the latest announcements, ministry milestones, and verified reports from across the Southern and Eastern Africa Region.',
 };
 
 export const newsItems = [

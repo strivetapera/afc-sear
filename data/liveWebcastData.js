@@ -1,44 +1,44 @@
 import {
-  legacyPrayerContacts,
-  legacyZimbabweWebcast,
-} from './legacyZimbabweSiteData';
+  regionalPrayerContacts,
+  regionalWebcastDetails,
+} from './regionalMinistryData';
 
 export const webcastPage = {
-  eyebrow: 'Join Online',
+  eyebrow: 'Worship With Us',
   title: 'Live Webcast',
   lead:
-    'Gather online for worship, prayer, Bible teaching, and special services. This page now restores the verified Zoom, YouTube, and Facebook access details that were published on the older Zimbabwe website.',
+    'Join our global community for live worship, inspired Bible teaching, and unified prayer services broadcast directly from our regional centers.',
 };
 
 export const featuredStream = {
-  title: 'Zimbabwe Online Service Room',
+  title: 'Main Service Sanctuary',
   provider: 'Zoom',
-  streamUrl: legacyZimbabweWebcast.zoomUrl,
-  accessLabel: 'Open Live Meeting',
-  meetingId: legacyZimbabweWebcast.zoomMeetingId,
-  passcode: legacyZimbabweWebcast.zoomPasscode,
-  status: 'Legacy verified webcast access restored',
+  streamUrl: regionalWebcastDetails.zoomUrl,
+  accessLabel: 'Enter Live Sanctuary',
+  meetingId: regionalWebcastDetails.zoomMeetingId,
+  passcode: regionalWebcastDetails.zoomPasscode,
+  status: 'Live Broadcast Active',
   note:
-    'This Zoom room comes directly from the legacy Zimbabwe schedule page and is the clearest verified meeting room carried over into the new webapp.',
+    'Our primary digital sanctuary is open for all scheduled services. Join us as we seek God together through the Word and prayer.',
 };
 
 export const webcastSteps = [
-  'Open the Zoom meeting link a few minutes before service starts, or use the meeting ID and passcode if your device does not open the link directly.',
-  'For services streamed through social media, use the YouTube or Facebook channel links below and look for the current live broadcast.',
-  'Keep your Bible and notebook ready so you can participate fully during the service.',
-  'If a special service uses a different link, check the Events page first because the older site noted that some camp-meeting details were only added closer to the dates.',
+  'Access the Zoom sanctuary a few minutes before the service begins using the direct link or meeting details provided.',
+  'For services broadcast on YouTube or Facebook, follow our official regional channels to participate in the live stream.',
+  'Prepare your heart with prayer and keep your Bible ready for an impactful encounter with the Word of God.',
+  'Special conference and camp meeting broadcasts will be announced on the Events page with dedicated access links.',
 ];
 
 export const webcastSupport = [
-  {
-    id: legacyPrayerContacts[0].id,
-    label: legacyPrayerContacts[0].label,
-    value: legacyPrayerContacts[0].value,
-    href: legacyPrayerContacts[0].href,
-  },
+  ...regionalPrayerContacts.map(contact => ({
+    id: contact.id,
+    label: contact.label,
+    value: contact.value,
+    href: contact.href
+  })),
   {
     id: 'regional-email',
-    label: 'Regional Email',
+    label: 'Regional Office',
     value: 'contact@apostolicfaith-sear.org',
     href: 'mailto:contact@apostolicfaith-sear.org',
   },
@@ -48,27 +48,27 @@ export const webcastPlatforms = [
   {
     id: 'zoom',
     label: 'Zoom',
-    name: 'Online Service Room',
-    href: legacyZimbabweWebcast.zoomUrl,
-    detail: `Meeting ID ${legacyZimbabweWebcast.zoomMeetingId} | Passcode ${legacyZimbabweWebcast.zoomPasscode}`,
+    name: 'Digital Sanctuary',
+    href: regionalWebcastDetails.zoomUrl,
+    detail: `Meeting ID ${regionalWebcastDetails.zoomMeetingId} | Passcode ${regionalWebcastDetails.zoomPasscode}`,
   },
   {
     id: 'youtube',
     label: 'YouTube',
-    name: legacyZimbabweWebcast.youtubeLabel,
-    href: legacyZimbabweWebcast.youtubeUrl,
-    detail: 'Use this channel for livestreams and replayed services.',
+    name: 'APOSTOLIC FAITH MISSION Official',
+    href: regionalWebcastDetails.youtubeUrl,
+    detail: 'Live service broadcasts and sermon archives for seasonal reflection.',
   },
   {
     id: 'facebook',
     label: 'Facebook',
-    name: legacyZimbabweWebcast.facebookLabel,
-    href: legacyZimbabweWebcast.facebookUrl,
-    detail: 'The previous site linked this page for live and follow-up streaming access.',
+    name: 'Apostolic Faith Church SEAR',
+    href: regionalWebcastDetails.facebookUrl,
+    detail: 'Stay connected through live updates and unified prayer streaming.',
   },
 ];
 
 export const webcastNotes = [
-  'The platform links above come from the archived Zimbabwe schedule page, while the regular schedule below is generated from the shared event data used elsewhere in the new site.',
-  legacyZimbabweWebcast.calendarNote,
+  'Worship times align with our regional schedule. We invite you to join us regularly for spiritual nourishment and fellowship.',
+  'All digital services are coordinated to support our local branches and global family in unified worship.',
 ];

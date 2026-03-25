@@ -13,77 +13,73 @@ export default function DoctrinalResourcesPage({ studyGroups }) {
         { href: '/library/this-weeks-lessons', label: 'Pair With Weekly Lessons', variant: 'secondary' },
       ]}
     >
-      <h2>How to use this page</h2>
-      <p>
-        These notes are best used as a study pathway, not as a replacement for Scripture. Each
-        topic keeps the major headings and Bible references restored from the older site while
-        presenting them in a clearer, easier-to-scan library format.
-      </p>
+      <div className="max-w-5xl space-y-24">
+        <section>
+          <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Sacred Instruction</h2>
+          <p className="text-muted-foreground text-lg font-medium leading-relaxed mb-10 max-w-3xl">
+            Our collective regional teaching is best studied alongside Scripture. We have preserved the original doctrine outlines recovered from our regional archives, presenting them for unified study.
+          </p>
 
-      {studyGroups.map((group) => (
-        <section key={group.id} className="not-prose mt-10">
-          <div className="mb-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold/70">
-              {group.label}
-            </p>
-            <h2 className="mt-2 text-3xl font-semibold text-gold">{group.label}</h2>
-            <p className="mt-3 max-w-3xl text-sm leading-6 text-cream/75">{group.description}</p>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            {group.topics.map((topic) => (
-              <article key={topic.title} className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-                <h3 className="text-xl font-semibold text-cream">{topic.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-cream/80">{topic.summary}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {topic.references.map((reference) => (
-                    <span
-                      key={reference}
-                      className="rounded-full border border-gold/25 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-gold/80"
-                    >
-                      {reference}
-                    </span>
-                  ))}
-                </div>
-              </article>
-            ))}
+          {studyGroups.map((group) => (
+            <div key={group.id} className="mb-16">
+              <div className="mb-8 p-8 md:p-10 rounded-3xl bg-foreground/5 border border-foreground/5 backdrop-blur-sm">
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-accent mb-4">
+                  {group.label}
+                </p>
+                <h2 className="text-3xl font-bold text-foreground heading-premium italic mb-6">{group.label}</h2>
+                <p className="text-muted-foreground font-medium leading-relaxed">{group.description}</p>
+              </div>
+              <div className="grid gap-8 md:grid-cols-2">
+                {group.topics.map((topic) => (
+                  <article key={topic.title} className="flex flex-col rounded-3xl border border-foreground/5 bg-card/30 p-8 backdrop-blur-md hover:bg-card/50 transition-all">
+                    <h3 className="text-2xl font-bold text-foreground mb-4 heading-premium">{topic.title}</h3>
+                    <p className="text-muted-foreground text-sm font-medium leading-relaxed mb-10 flex-grow">{topic.summary}</p>
+                    <div className="flex flex-wrap gap-3 pt-6 border-t border-foreground/5">
+                      {topic.references.map((reference) => (
+                        <span
+                          key={reference}
+                          className="rounded-full border border-accent/20 bg-accent/5 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-accent"
+                        >
+                          {reference}
+                        </span>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          ))}
+        </section>
+
+        <section className="pt-24 border-t border-foreground/5">
+          <h2 className="text-3xl font-bold tracking-tighter mb-8 italic heading-premium italic">Integrated Study Paths</h2>
+          <p className="text-muted-foreground text-lg font-medium leading-relaxed mb-10 max-w-3xl">
+            Doctrine is strongest when connected to our unified regional teaching rhythm. Continue your study through these primary channels.
+          </p>
+          <div className="grid gap-8 md:grid-cols-2">
+            <article className="rounded-3xl border border-foreground/5 bg-foreground/5 p-8 backdrop-blur-sm shadow-sm transition-all hover:bg-foreground/[0.08]">
+              <h3 className="text-2xl font-bold text-foreground mb-4 italic heading-premium">Our Faith Summary</h3>
+              <p className="text-muted-foreground font-medium leading-relaxed mb-8">
+                Explore the foundational fellowship-wide summary that introduces the core beliefs of our Southern & Eastern Africa Region.
+              </p>
+              <Link href="/our-faith" className="inline-flex text-[10px] font-black uppercase tracking-widest text-accent hover:tracking-[0.2em] transition-all">
+                Enter Summary →
+              </Link>
+            </article>
+            <article className="rounded-3xl border border-foreground/5 bg-foreground/5 p-8 backdrop-blur-sm shadow-sm transition-all hover:bg-foreground/[0.08]">
+              <h3 className="text-2xl font-bold text-foreground mb-4 italic heading-premium">Weekly Curriculum</h3>
+              <p className="text-muted-foreground font-medium leading-relaxed mb-8">
+                Connect doctrinal study to the active regional teaching rhythm already maintained within the sanctuary library.
+              </p>
+              <Link
+                href="/library/this-weeks-lessons"
+                className="inline-flex text-[10px] font-black uppercase tracking-widest text-accent hover:tracking-[0.2em] transition-all"
+              >
+                Access Curriculum →
+              </Link>
+            </article>
           </div>
         </section>
-      ))}
-
-      <h2>Keep the study connected</h2>
-      <p>
-        Doctrine is strongest when it remains connected to worship, teaching, and holy living. Use
-        the faith summary for a shorter overview, then continue into the weekly lessons if you want
-        a more active reading flow through the current site.
-      </p>
-      <div className="not-prose mt-4 grid gap-4 md:grid-cols-2">
-        <article className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-          <h3 className="text-xl font-semibold text-cream">Our Faith</h3>
-          <p className="mt-3 text-sm leading-6 text-cream/75">
-            Read the shorter fellowship-wide summary page that introduces the beliefs behind this
-            doctrinal library.
-          </p>
-          <p className="mt-4">
-            <Link href="/our-faith" className="text-sm font-semibold text-gold no-underline hover:underline">
-              Open Our Faith
-            </Link>
-          </p>
-        </article>
-        <article className="rounded-2xl border border-gold/20 bg-white/5 p-5">
-          <h3 className="text-xl font-semibold text-cream">This Week&apos;s Lessons</h3>
-          <p className="mt-3 text-sm leading-6 text-cream/75">
-            Use the current lessons flow to keep doctrine connected to the church&apos;s active
-            teaching rhythm instead of treating it as a stand-alone archive.
-          </p>
-          <p className="mt-4">
-            <Link
-              href="/library/this-weeks-lessons"
-              className="text-sm font-semibold text-gold no-underline hover:underline"
-            >
-              Open lessons
-            </Link>
-          </p>
-        </article>
       </div>
     </PageShell>
   );

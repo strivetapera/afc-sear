@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Card, 
   CardHeader, 
@@ -10,7 +10,7 @@ import {
   Input
 } from '@afc-sear/ui';
 import { useRouter } from 'next/navigation';
-import { signIn } from '@/lib/auth-client';
+import { signIn, useSession } from '@/lib/auth-client';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -18,6 +18,13 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { data: session, isPending } = useSession();
+
+  useEffect(() => {
+    if (session && !isPending) {
+      router.push('/dashboard');
+    }
+  }, [session, isPending, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,19 +32,28 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const { data, error: authError } = await signIn.email({
+      console.log('Attempting login for:', email);
+      
+      const result = await signIn.email({
         email,
         password,
-        callbackURL: '/dashboard',
+      }, {
+        onSuccess: () => {
+          console.log('Login successful');
+          router.push('/dashboard');
+          router.refresh();
+        },
+        onError: (ctx) => {
+          console.error('Login error:', ctx);
+          setError(ctx.error.message || 'Login failed. Please check your credentials.');
+        },
       });
 
-      if (authError) {
-        throw new Error(authError.message || 'Verification failed. Please check your credentials.');
-      }
+      console.log('Sign in result:', result);
 
-      router.push('/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Login failed');
+      console.error('Login exception:', err);
+      setError(err.message || 'An unexpected error occurred');
     } finally {
       setIsLoading(false);
     }
@@ -64,6 +80,7 @@ export default function LoginPage() {
                 placeholder="admin@afc-sear.org"
                 required
                 className="h-12"
+                disabled={isLoading}
               />
               <Input 
                 id="password"
@@ -73,6 +90,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 className="h-12"
+                disabled={isLoading}
               />
             </div>
             {error && (
@@ -83,9 +101,9 @@ export default function LoginPage() {
             <Button 
                 type="submit" 
                 className="w-full h-12 text-base font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]" 
-                isLoading={isLoading}
+                disabled={isLoading || isPending}
             >
-              Sign In
+              {isLoading ? 'Signing in...' : isPending ? 'Loading...' : 'Sign In'}
             </Button>
             
             <div className="pt-2 text-center">
