@@ -1,11 +1,17 @@
 import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
-import { verifyToken, type VerifiedUser } from '@afc-sear/auth';
+import { type Auth } from '@afc-sear/auth';
 import { getPrismaClient } from '../repositories/prisma';
+
+export interface AuthenticatedUser {
+  id: string;
+  email: string;
+  roles: string[];
+}
 
 declare module 'fastify' {
   interface FastifyRequest {
-    user?: VerifiedUser;
+    user?: AuthenticatedUser;
   }
   interface FastifyInstance {
     authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
@@ -14,64 +20,46 @@ declare module 'fastify' {
 }
 
 interface AuthPluginOptions {
-  issuerUrl: string;
-  clientId: string;
+  auth: Auth;
 }
 
 const authPlugin: FastifyPluginAsync<AuthPluginOptions> = async (fastify, options) => {
+  const { auth } = options;
+
   fastify.decorateRequest('user', undefined);
 
   fastify.decorate('authenticate', async (request: FastifyRequest, reply: FastifyReply) => {
-    const authHeader = request.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      reply.code(401).send({ error: 'unauthorized', message: 'Missing or invalid Authorization header' });
+    // Better Auth can check the session from the request headers/cookies
+    const session = await auth.api.getSession({
+        headers: request.headers as Record<string, string>,
+    });
+
+    if (!session) {
+      reply.code(401).send({ error: 'unauthorized', message: 'Missing or invalid session' });
       return;
     }
 
-    const token = authHeader.substring(7);
-    
-    // Check if it's a UUID (local session)
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token);
-    
-    let user: VerifiedUser | null = null;
-
-    if (isUuid) {
-      // Local development fallback: Verify session in database
-      const prisma = getPrismaClient();
-      const session = await prisma.session.findUnique({
-        where: { id: token },
-        include: {
-          user: {
-            include: {
-              userRoles: {
-                include: { role: { select: { key: true } } }
-              }
-            }
-          }
+    // Get the user's roles from the database
+    const prisma = getPrismaClient();
+    const userWithRoles = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      include: {
+        userRoles: {
+          include: { role: { select: { key: true } } }
         }
-      });
-
-      if (session && session.expiresAt > new Date()) {
-        user = {
-          id: session.user.id,
-          email: session.user.email,
-          roles: session.user.userRoles.map(ur => ur.role.key),
-        } as VerifiedUser;
       }
-    } else {
-      // Standard JWT verify via Keycloak/Auth service
-      user = await verifyToken(token, {
-        issuerUrl: options.issuerUrl,
-        clientId: options.clientId,
-      }).catch(() => null);
-    }
+    });
 
-    if (!user) {
-      reply.code(401).send({ error: 'unauthorized', message: 'Invalid or expired token' });
+    if (!userWithRoles) {
+      reply.code(401).send({ error: 'unauthorized', message: 'User not found' });
       return;
     }
 
-    request.user = user;
+    request.user = {
+      id: userWithRoles.id,
+      email: userWithRoles.email,
+      roles: userWithRoles.userRoles.map(ur => ur.role.key),
+    };
   });
 
   fastify.decorate('requireRole', (role: string) => {

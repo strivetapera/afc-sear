@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTheme } from '@/components/ThemeProvider';
 import {
   LayoutDashboard,
   Users,
@@ -15,7 +16,11 @@ import {
   Megaphone,
   DollarSign,
   UserSearch,
+  Sun,
+  Moon,
 } from 'lucide-react';
+import { signOut } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
 
 const navItems = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
@@ -32,17 +37,32 @@ const navItems = [
 
 export function SideNav() {
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push('/auth/login');
+        },
+      },
+    });
+  };
 
   return (
-    <div className="flex h-full w-64 flex-col border-r bg-gray-50/40">
-      <div className="flex h-14 items-center border-b px-6">
-        <Link href="/" className="flex items-center gap-2 font-semibold text-blue-600">
-          <span className="h-6 w-6 rounded bg-blue-600" />
-          <span>AFC Admin</span>
+    <div className="flex h-full w-64 flex-col border-r border-sidebar-border bg-sidebar-bg">
+      {/* Logo */}
+      <div className="flex h-14 items-center border-b border-sidebar-border px-6">
+        <Link href="/" className="flex items-center gap-2 font-semibold text-primary">
+          <span className="h-6 w-6 rounded bg-primary" />
+          <span className="text-foreground">AFC Admin</span>
         </Link>
       </div>
+
+      {/* Nav links */}
       <div className="flex-1 overflow-auto py-4">
-        <nav className="grid items-start px-4 text-sm font-medium">
+        <nav className="grid items-start px-4 text-sm font-medium gap-0.5">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -50,20 +70,42 @@ export function SideNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-blue-600 ${
-                  isActive ? 'bg-blue-100 text-blue-600' : 'text-gray-500'
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${
+                  isActive
+                    ? 'bg-sidebar-active-bg text-sidebar-active-text font-semibold'
+                    : 'text-muted-foreground hover:bg-sidebar-hover hover:text-foreground'
                 }`}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-4 w-4 shrink-0" />
                 {item.name}
               </Link>
             );
           })}
         </nav>
       </div>
-      <div className="mt-auto border-t p-4">
-        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 transition-all hover:text-red-600">
-          <LogOut className="h-4 w-4" />
+
+      {/* Footer actions */}
+      <div className="border-t border-sidebar-border p-4 space-y-1">
+        {/* Theme toggle */}
+        <button
+          onClick={toggleTheme}
+          aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-hover hover:text-foreground"
+        >
+          {theme === 'light' ? (
+            <Moon className="h-4 w-4 shrink-0" aria-hidden="true" />
+          ) : (
+            <Sun className="h-4 w-4 shrink-0" aria-hidden="true" />
+          )}
+          {theme === 'light' ? 'Dark mode' : 'Light mode'}
+        </button>
+
+        {/* Sign out */}
+        <button 
+          onClick={handleSignOut}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-hover hover:text-destructive"
+        >
+          <LogOut className="h-4 w-4 shrink-0" aria-hidden="true" />
           Sign Out
         </button>
       </div>

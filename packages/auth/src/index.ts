@@ -1,1 +1,1 @@
-export * from './keycloak.js';
+export * from './auth.js';

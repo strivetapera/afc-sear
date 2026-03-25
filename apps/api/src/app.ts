@@ -2,7 +2,9 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import { auth as createAuth } from '@afc-sear/auth';
 import authPlugin from './plugins/auth';
+import { getPrismaClient } from './repositories/prisma';
 import type {
   AssignRoleRequest,
   CheckInRequest,
@@ -23,7 +25,7 @@ import {
   updateContentItem,
   publishContentItem,
 } from './repositories/content-repository';
-import { assignRole, getCurrentUserProfile, signIn } from './repositories/identity-repository';
+import { assignRole, getCurrentUserProfile } from './repositories/identity-repository';
 import { createBranch, getLocationsDirectory, listMinistries, listPublicBranches } from './repositories/organization-repository';
 import { getCurrentHousehold, listPeopleRecords, upsertPersonRecord, updateMemberProfile, getMemberRegistrations, getMemberGiving, getMemberAnnouncements, createPrayerRequest } from './repositories/people-repository';
 import {
@@ -78,13 +80,19 @@ export function createApp() {
   });
 
   app.register(cors, {
-    origin: '*', // For development; refine for production if needed
+    origin: [
+        process.env.ADMIN_URL || 'http://localhost:3001',
+        process.env.WEB_URL || 'http://localhost:3000',
+    ],
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
 
+  const prisma = getPrismaClient();
+  const auth = createAuth(prisma);
+
   app.register(authPlugin, {
-    issuerUrl: process.env.KEYCLOAK_ISSUER_URL || 'http://localhost:8080/realms/afc',
-    clientId: process.env.KEYCLOAK_CLIENT_ID || 'afc-api',
+    auth,
   });
 
   app.after(() => {
@@ -103,23 +111,49 @@ export function createApp() {
     });
 
     // ─── Identity ────────────────────────────────────────────────────────────
-    app.post<{ Body: SignInRequest }>(
-      '/api/v1/auth/sign-in',
-      { schema: { body: schemas.SignInSchema } },
-      async (request, reply) => {
-      const result = await signIn(request.body);
-      if (!result.data) {
-        reply.code(401);
-        return {
-          error: 'invalid_credentials',
-          message: 'The provided login details were not accepted by the current authentication source.',
-        };
+    // ─── Identity (Better Auth) ─────────────────────────────────────────────
+    app.all('/api/v1/auth/*', async (request, reply) => {
+      // Create a full URL for the Web Request
+      const protocol = request.protocol;
+      const host = request.hostname;
+      const url = `${protocol}://${host}${request.url}`;
+
+      const webRequest = new Request(url, {
+        method: request.method,
+        headers: new Headers(request.headers as Record<string, string>),
+        // Fastify already parsed the body, so we re-stringify it for the Web Request
+        body: request.body ? JSON.stringify(request.body) : undefined,
+      });
+
+      try {
+        const res = await auth.handler(webRequest);
+
+        // Map Web Response headers back to Fastify
+        // Specific handling for set-cookie to support multiple cookies
+        for (const [key, value] of res.headers.entries()) {
+          if (key.toLowerCase() === 'set-cookie') {
+            const cookies = (res.headers as any).getSetCookie?.() || [value];
+            for (const cookie of cookies) {
+              reply.header('set-cookie', cookie);
+            }
+          } else {
+            reply.header(key, value);
+          }
+        }
+
+        reply.status(res.status);
+
+        // Return the response body as a buffer to handle any content type safely
+        const buffer = await res.arrayBuffer();
+        return reply.send(Buffer.from(buffer));
+      } catch (error) {
+        request.log.error({ err: error }, 'Better Auth handler error');
+        reply.status(500).send({ error: 'internal_error', message: 'Auth handler failed' });
       }
-      return { data: result.data, meta: { source: result.source } };
     });
 
     app.get('/api/v1/me', { preHandler: [app.authenticate] }, async (request) => {
-      const result = await getCurrentUserProfile();
+      const result = await getCurrentUserProfile(request.user?.id ?? '');
       return { data: result.data, meta: { source: result.source } };
     });
 

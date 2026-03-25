@@ -10,9 +10,10 @@ import {
   Input
 } from '@afc-sear/ui';
 import { useRouter } from 'next/navigation';
+import { signIn } from '@/lib/auth-client';
 
 export default function LoginPage() {
-  const [login, setLogin] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -24,31 +25,17 @@ export default function LoginPage() {
     setError('');
 
     try {
-      // Local API sign-in endpoint
-      const response = await fetch('http://localhost:4000/api/v1/auth/sign-in', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          login,
-          password,
-        }),
+      const { data, error: authError } = await signIn.email({
+        email,
+        password,
+        callbackURL: '/dashboard',
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'Invalid credentials' }));
-        throw new Error(errorData.message || 'Login failed');
+      if (authError) {
+        throw new Error(authError.message || 'Verification failed. Please check your credentials.');
       }
 
-      const { data } = await response.json();
-      
-      // Store the session ID as the access token for local development
-      if (data?.session?.id) {
-        localStorage.setItem('afc_access_token', data.session.id);
-      }
-      
-      router.push('/');
+      router.push('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Login failed');
     } finally {
@@ -57,34 +44,55 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <Card className="w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+      <Card className="w-full max-w-md shadow-xl border-t-4 border-t-primary">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl text-center">Admin Login</CardTitle>
-          <p className="text-sm text-center text-gray-500">
+          <CardTitle className="text-2xl text-center font-bold tracking-tight">Admin Portal</CardTitle>
+          <p className="text-sm text-center text-muted-foreground">
             Enter your church credentials to access the portal
           </p>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <Input 
-              label="Login / Email" 
-              value={login} 
-              onChange={(e) => setLogin(e.target.value)}
-              placeholder="admin@afc.local"
-              required
-            />
-            <Input 
-              label="Password" 
-              type="password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            {error && <p className="text-sm text-red-500">{error}</p>}
-            <Button type="submit" className="w-full" isLoading={isLoading}>
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div className="space-y-4">
+              <Input 
+                id="email"
+                type="email"
+                label="Email Address" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@afc-sear.org"
+                required
+                className="h-12"
+              />
+              <Input 
+                id="password"
+                label="Password" 
+                type="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="h-12"
+              />
+            </div>
+            {error && (
+              <div className="p-3 rounded-md bg-destructive/10 border border-destructive/20 text-destructive text-sm text-center">
+                {error}
+              </div>
+            )}
+            <Button 
+                type="submit" 
+                className="w-full h-12 text-base font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]" 
+                isLoading={isLoading}
+            >
               Sign In
             </Button>
+            
+            <div className="pt-2 text-center">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium opacity-70">
+                Default: admin@afc-sear.org / changeme-admin
+              </p>
+            </div>
           </form>
         </CardContent>
       </Card>

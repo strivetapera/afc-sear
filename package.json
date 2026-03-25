@@ -25,6 +25,8 @@
     "db:seed": "npm run --workspace @afc-sear/db seed"
   },
   "dependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "bcryptjs": "^3.0.3",
     "date-fns": "^4.1.0",
     "lottie-web": "^5.12.2",
     "next": "^15.5.14",

@@ -1,26 +1,147 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   Design Tokens — Light Mode (default)
+   ========================================================================== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Core surfaces */
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+
+  /* Card */
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+
+  /* Popover */
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+
+  /* Brand / Primary */
+  --primary: 221 83% 53%;
+  --primary-foreground: 0 0% 100%;
+
+  /* Secondary */
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222 47% 11%;
+
+  /* Muted (used by tabs, placeholders) */
+  --muted: 210 40% 93%;
+  --muted-foreground: 215 16% 47%;
+
+  /* Accent */
+  --accent: 210 40% 90%;
+  --accent-foreground: 222 47% 11%;
+
+  /* Destructive */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* Border & Input */
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 221 83% 53%;
+
+  /* Sidebar */
+  --sidebar-bg: 210 40% 98%;
+  --sidebar-border: 214 32% 91%;
+  --sidebar-hover: 210 40% 93%;
+  --sidebar-active-bg: 221 90% 93%;
+  --sidebar-active-text: 221 83% 53%;
 }
 
+/* ==========================================================================
+   Design Tokens — Dark Mode (applied via .dark on <html>)
+   ========================================================================== */
+.dark {
+  --background: 222 47% 6%;
+  --foreground: 210 40% 95%;
+
+  --card: 222 47% 10%;
+  --card-foreground: 210 40% 95%;
+
+  --popover: 222 47% 10%;
+  --popover-foreground: 210 40% 95%;
+
+  --primary: 217 91% 60%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 217 33% 17%;
+  --secondary-foreground: 210 40% 95%;
+
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+
+  --accent: 217 33% 20%;
+  --accent-foreground: 210 40% 95%;
+
+  --destructive: 0 62% 50%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 217 33% 20%;
+  --input: 217 33% 20%;
+  --ring: 217 91% 60%;
+
+  --sidebar-bg: 222 47% 8%;
+  --sidebar-border: 217 33% 17%;
+  --sidebar-hover: 217 33% 14%;
+  --sidebar-active-bg: 221 50% 18%;
+  --sidebar-active-text: 217 91% 65%;
+}
+
+/* ==========================================================================
+   Tailwind v4 theme bridge — expose tokens as Tailwind utilities
+   ========================================================================== */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-sidebar-bg: hsl(var(--sidebar-bg));
+  --color-sidebar-hover: hsl(var(--sidebar-hover));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-active-bg: hsl(var(--sidebar-active-bg));
+  --color-sidebar-active-text: hsl(var(--sidebar-active-text));
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ==========================================================================
+   Base styles
+   ========================================================================== */
+*, *::before, *::after {
+  border-color: hsl(var(--border));
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans, Arial, Helvetica, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth theme transitions */
+body,
+.theme-transition {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Prevent flash of wrong theme */
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
 }
