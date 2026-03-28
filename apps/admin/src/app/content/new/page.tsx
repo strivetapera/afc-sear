@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api-client';
 import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
+import { contentTemplateOptions, type ContentTemplateKey } from '@/lib/content-templates';
 
 export default function NewContentPage() {
   const [formData, setFormData] = useState({
@@ -20,7 +21,8 @@ export default function NewContentPage() {
     slug: '',
     summary: '',
     contentTypeKey: 'page', // Default
-    visibility: 'PUBLIC'
+    visibility: 'PUBLIC',
+    templateKey: 'standard_page' as ContentTemplateKey,
   });
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -29,11 +31,17 @@ export default function NewContentPage() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await fetchApi('/admin/content-items', {
+      const result = await fetchApi('/admin/content-items', {
         method: 'POST',
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          title: formData.title,
+          slug: formData.slug,
+          summary: formData.summary,
+          contentTypeKey: formData.contentTypeKey,
+          visibility: formData.visibility,
+        }),
       });
-      router.push('/content');
+      router.push(`/content/${result.data.id}?template=${formData.templateKey}`);
     } catch (error) {
       console.error('Failed to create content:', error);
       alert('Failed to create content item');
@@ -59,6 +67,38 @@ export default function NewContentPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSave} className="space-y-6">
+            <div className="space-y-3">
+              <label className="text-sm font-medium">Editing Template</label>
+              <div className="grid gap-3 md:grid-cols-2">
+                {contentTemplateOptions.map((option) => {
+                  const selected = formData.templateKey === option.key;
+                  return (
+                    <button
+                      key={option.key}
+                      type="button"
+                      className={`rounded-2xl border p-4 text-left transition-colors ${
+                        selected
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border bg-background hover:border-primary/30'
+                      }`}
+                      onClick={() =>
+                        setFormData((current) => ({
+                          ...current,
+                          templateKey: option.key,
+                          ...(option.key === 'home_page' && !current.slug
+                            ? { slug: 'home', title: current.title || 'Home' }
+                            : {}),
+                        }))
+                      }
+                    >
+                      <p className="font-semibold">{option.label}</p>
+                      <p className="mt-2 text-sm text-muted-foreground">{option.description}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="grid gap-4">
               <Input 
                 label="Public Title" 

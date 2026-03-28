@@ -1,4 +1,5 @@
-const API_BASE = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/v1`;
+const API_ORIGIN = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000').replace(/\/api\/v1\/?$/, '');
+const API_BASE = `${API_ORIGIN}/api/v1`;
 
 export async function portalApi(path: string, options: RequestInit = {}): Promise<any> {
   const headers: Record<string, string> = {

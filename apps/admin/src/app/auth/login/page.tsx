@@ -61,7 +61,7 @@ export default function LoginPage() {
                 label="Email Address" 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@afc-sear.org"
+                placeholder="admin@apostolicfaith.example"
                 required
                 className="h-12"
                 disabled={isLoading}
@@ -92,7 +92,7 @@ export default function LoginPage() {
             
             <div className="pt-2 text-center">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium opacity-70">
-                Default: admin@afc-sear.org / changeme-admin
+                Default: admin@apostolicfaith.example / changeme-admin
               </p>
             </div>
           </form>

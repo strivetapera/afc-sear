@@ -1,11 +1,11 @@
 {
-  "name": "Apostolic Faith Mission",
-  "short_name": "APM SEAR",
-  "description": "The official digital platform of the Apostolic Faith Mission Southern & Eastern Africa Region.",
+  "name": "APOSTOLIC FAITH MISSION Southern & Eastern Africa",
+  "short_name": "AFM SEA",
+  "description": "The official digital platform of the Apostolic Faith Mission Southern & Eastern Africa.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2563eb",
+  "background_color": "#f7f1e8",
+  "theme_color": "#8f1d2f",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",

@@ -1,0 +1,12 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/announcements/page": "/announcements",
+  "/dashboard/page": "/dashboard",
+  "/giving/page": "/giving",
+  "/household/page": "/household",
+  "/login/page": "/login",
+  "/page": "/",
+  "/profile/page": "/profile",
+  "/registrations/page": "/registrations"
+}

@@ -20,13 +20,15 @@ import {
   getPublicNewsFeed,
   getPublishedContentBySlug,
   getStructuredPageBySlug,
+  listPublishedLessons,
   listContentItemRecords,
   getContentItemById,
   updateContentItem,
   publishContentItem,
+  deleteContentItem,
 } from './repositories/content-repository';
 import { assignRole, getCurrentUserProfile, listAdminUsers } from './repositories/identity-repository';
-import { createBranch, getLocationsDirectory, listMinistries, listPublicBranches } from './repositories/organization-repository';
+import { createBranch, getLocationsDirectory, listAdminBranches, listMinistries, listPublicBranches } from './repositories/organization-repository';
 import { SearchRepository } from './repositories/search-repository';
 import { Queue } from 'bullmq';
 import IORedis from 'ioredis';
@@ -101,11 +103,41 @@ export function createApp() {
   const prisma = getPrismaClient();
   const auth = createAuth(prisma);
   const searchRepository = new SearchRepository(prisma);
+  const redisUrl = process.env.REDIS_URL;
+  let queueConnection: IORedis | null = null;
+  let jobQueue: Queue | null = null;
 
-  const jobQueue = new Queue('platform-job-queue', {
-    connection: new IORedis(process.env.REDIS_URL || 'redis://localhost:6379', {
+  if (redisUrl) {
+    queueConnection = new IORedis(redisUrl, {
       maxRetriesPerRequest: null,
-    }) as any,
+      lazyConnect: true,
+      enableOfflineQueue: false,
+    });
+
+    queueConnection.on('error', (error) => {
+      app.log.warn({ err: error }, 'Redis queue connection error');
+    });
+
+    jobQueue = new Queue('platform-job-queue', {
+      connection: queueConnection as any,
+    });
+
+    void queueConnection.connect().then(() => {
+      app.log.info('Redis-backed job queue connected');
+    }).catch(async (error) => {
+      app.log.warn({ err: error }, 'Redis unavailable; background jobs disabled');
+      await jobQueue?.close().catch(() => undefined);
+      queueConnection?.disconnect();
+      jobQueue = null;
+      queueConnection = null;
+    });
+  } else {
+    app.log.warn('REDIS_URL not set; background jobs are disabled');
+  }
+
+  app.addHook('onClose', async () => {
+    await jobQueue?.close().catch(() => undefined);
+    queueConnection?.disconnect();
   });
 
   app.register(authPlugin, {
@@ -271,6 +303,15 @@ export function createApp() {
       return { data: result.data, meta: { source: result.source } };
     });
 
+    app.get(
+      '/api/v1/admin/branches',
+      { preHandler: [app.authenticate, app.requireRole(ADMIN_ROLE)] },
+      async () => {
+        const result = await listAdminBranches();
+        return { data: result.data, meta: { source: result.source, count: result.data.length } };
+      }
+    );
+
     app.post<{ Body: CreateBranchRequest }>(
       '/api/v1/admin/branches',
       { preHandler: [app.authenticate, app.requireRole(ADMIN_ROLE)] },
@@ -369,6 +410,11 @@ export function createApp() {
       return { data: result.data, meta: { source: result.source, count: result.data.schedule.length } };
     });
 
+    app.get('/api/v1/public/lessons', async () => {
+      const result = await listPublishedLessons();
+      return { data: result.data, meta: { source: result.source, count: result.data.length } };
+    });
+
     app.get(
       '/api/v1/admin/content-items',
       { preHandler: [app.authenticate, app.requireRole(ADMIN_ROLE)] },
@@ -449,6 +495,25 @@ export function createApp() {
           domain: 'content',
           entityType: 'content_item',
           entityId: request.params.id,
+          ipAddress: request.ip,
+        });
+        return result;
+      }
+    );
+
+    app.delete<{ Params: { id: string } }>(
+      '/api/v1/admin/content-items/:id',
+      { preHandler: [app.authenticate, app.requireRole(ADMIN_ROLE)] },
+      async (request) => {
+        const before = await getContentItemById(request.params.id);
+        const result = await deleteContentItem(request.params.id);
+        await writeAuditLog({
+          actorUserId: request.user?.id,
+          action: 'DELETE_CONTENT_ITEM',
+          domain: 'content',
+          entityType: 'content_item',
+          entityId: request.params.id,
+          before: (before.data as any) ?? null,
           ipAddress: request.ip,
         });
         return result;
@@ -827,10 +892,26 @@ export function createApp() {
     app.post<{ Params: { id: string } }>(
       '/api/v1/admin/campaigns/:id/send',
       { preHandler: [app.authenticate, app.requireRole(ADMIN_ROLE)] },
-      async (request) => {
+      async (request, reply) => {
         const { id } = request.params;
+        if (!jobQueue) {
+          return reply.status(503).send({
+            error: 'service_unavailable',
+            message: 'Background delivery queue is not configured.',
+          });
+        }
+
         const { db: prisma } = await import('./repositories/prisma').then((m) => ({ db: m.getPrismaClient() }));
-        const campaign = await prisma.campaign.update({
+        const campaign = await prisma.campaign.findUniqueOrThrow({
+          where: { id },
+        });
+
+        await (jobQueue as any).add('SEND_CAMPAIGN', {
+          type: 'SEND_CAMPAIGN',
+          payload: { id: campaign.id }
+        });
+
+        const sentCampaign = await prisma.campaign.update({
           where: { id },
           data: { status: 'SENT' },
         });
@@ -840,17 +921,11 @@ export function createApp() {
           domain: 'communications',
           entityType: 'campaign',
           entityId: id,
-          after: campaign as any,
+          after: sentCampaign as any,
           ipAddress: request.ip,
         });
-        
-        // Enqueue actual delivery job via worker
-        await (jobQueue as any).add('SEND_CAMPAIGN', {
-            type: 'SEND_CAMPAIGN',
-            payload: { id: campaign.id }
-        });
 
-        return { data: campaign };
+        return { data: sentCampaign };
       }
     );
   });

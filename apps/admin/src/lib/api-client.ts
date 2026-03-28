@@ -1,5 +1,6 @@
 export async function fetchApi(endpoint: string, options: RequestInit = {}) {
-  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/v1`;
+  const apiOrigin = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000').replace(/\/api\/v1\/?$/, '');
+  const baseUrl = `${apiOrigin}/api/v1`;
   
   const headers: HeadersInit = { ...options.headers };
   const headersObj = new Headers(headers);

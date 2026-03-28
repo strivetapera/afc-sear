@@ -210,7 +210,7 @@ export default function Dashboard() {
             <div className="space-y-3">
               {[
                 { label: 'Update Webcast Link', desc: 'Sync live stream URL', href: '/communications' },
-                { label: 'Push Notification', desc: 'Notify via mobile app', href: '/communications/announcements' },
+                { label: 'Push Notification', desc: 'Notify via mobile app', href: '/communications?tab=announcements' },
                 { label: 'Verify Registrations', desc: 'Process pending events', href: '/events' },
               ].map((action) => (
                 <Link 

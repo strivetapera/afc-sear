@@ -1,68 +1,59 @@
 @import "tailwindcss";
 
 :root {
-  /* Core surfaces - Warm & Sophisticated */
-  --background: 210 20% 98%;
-  --foreground: 224 71% 4%;
+  --background: 40 40% 96%;
+  --foreground: 219 33% 19%;
  
-  /* Card - Deep & Clean */
   --card: 0 0% 100%;
-  --card-foreground: 224 71% 4%;
+  --card-foreground: 219 33% 19%;
  
-  /* Brand / Primary - Deep Indigo Hub */
-  --primary: 243 75% 59%;
-  --primary-foreground: 210 20% 98%;
+  --primary: 351 66% 34%;
+  --primary-foreground: 39 45% 98%;
  
-  /* Secondary - Soft Neutral */
-  --secondary: 220 14% 90%;
-  --secondary-foreground: 224 71% 4%;
+  --secondary: 214 35% 90%;
+  --secondary-foreground: 219 33% 19%;
  
-  /* Muted */
-  --muted: 220 14% 96%;
-  --muted-foreground: 220 9% 46%;
+  --muted: 35 34% 91%;
+  --muted-foreground: 220 13% 40%;
  
-  /* Accent - Sacred Gold */
-  --accent: 38 92% 50%;
-  --accent-foreground: 224 71% 4%;
+  --accent: 44 96% 48%;
+  --accent-foreground: 219 33% 19%;
  
-  /* Border & Input */
-  --border: 220 13% 91%;
-  --input: 220 13% 91%;
-  --ring: 243 75% 59%;
+  --border: 35 25% 82%;
+  --input: 35 25% 82%;
+  --ring: 351 66% 34%;
  
-  /* Premium WOW Tokens */
-  --glass-bg: 0 0% 100% / 0.6;
-  --glass-border: 220 13% 91% / 0.5;
-  --shadow-premium: 0 30px 60px -12px rgba(0, 0, 0, 0.15), 0 18px 36px -18px rgba(0, 0, 0, 0.1);
+  --glass-bg: 40 50% 98% / 0.72;
+  --glass-border: 351 44% 44% / 0.14;
+  --shadow-premium: 0 30px 60px -16px rgba(64, 39, 14, 0.2), 0 18px 36px -22px rgba(143, 29, 47, 0.18);
 }
 
 .dark {
-  --background: 224 71% 2%;
-  --foreground: 210 20% 98%;
+  --background: 221 33% 12%;
+  --foreground: 40 40% 96%;
  
-  --card: 224 71% 4%;
-  --card-foreground: 210 20% 98%;
+  --card: 221 31% 16%;
+  --card-foreground: 40 40% 96%;
  
-  --primary: 243 75% 70%;
-  --primary-foreground: 224 71% 4%;
+  --primary: 351 75% 58%;
+  --primary-foreground: 40 40% 96%;
  
-  --secondary: 224 71% 10%;
-  --secondary-foreground: 210 20% 98%;
+  --secondary: 215 24% 22%;
+  --secondary-foreground: 40 40% 96%;
  
-  --muted: 224 71% 10%;
-  --muted-foreground: 224 10% 60%;
+  --muted: 221 25% 19%;
+  --muted-foreground: 38 20% 70%;
  
-  --accent: 38 92% 50%;
-  --accent-foreground: 224 71% 4%;
+  --accent: 44 95% 56%;
+  --accent-foreground: 221 33% 12%;
  
-  --border: 224 71% 10%;
-  --input: 224 71% 10%;
-  --ring: 243 75% 70%;
+  --border: 218 22% 24%;
+  --input: 218 22% 24%;
+  --ring: 44 95% 56%;
  
-  /* Premium WOW Tokens (Dark) */
-  --glass-bg: 224 71% 4% / 0.8;
-  --glass-border: 243 75% 70% / 0.1;
-  --shadow-premium: 0 30px 60px -12px rgba(0, 0, 0, 0.4), 0 18px 36px -18px rgba(0, 0, 0, 0.3);
+  --glass-bg: 221 33% 16% / 0.82;
+  --glass-border: 44 95% 56% / 0.16;
+  --shadow-premium: 0 30px 60px -12px rgba(0, 0, 0, 0.45), 0 18px 36px -18px rgba(143, 29, 47, 0.24);
 }
 
 @theme inline {
@@ -92,14 +83,98 @@
 }
 
 body {
+  background:
+    radial-gradient(circle at top, hsl(var(--accent) / 0.12), transparent 28%),
+    radial-gradient(circle at top right, hsl(var(--primary) / 0.14), transparent 24%),
+    hsl(var(--background));
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 .heading-premium {
   font-family: var(--font-serif);
   letter-spacing: -0.02em;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(24px);
+  opacity: 0.8;
+  animation: heroFloat 12s ease-in-out infinite;
+}
+
+.hero-orb-primary {
+  top: 12%;
+  right: 8%;
+  height: 15rem;
+  width: 15rem;
+  background: radial-gradient(circle, hsl(var(--primary) / 0.45), transparent 70%);
+}
+
+.hero-orb-accent {
+  bottom: 14%;
+  left: 6%;
+  height: 11rem;
+  width: 11rem;
+  background: radial-gradient(circle, hsl(var(--accent) / 0.3), transparent 68%);
+  animation-delay: -4s;
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), transparent 92%);
+}
+
+.hero-image-drift {
+  animation: heroDrift 24s ease-in-out infinite alternate;
+}
+
+.hero-float-slow {
+  animation: heroFloat 9s ease-in-out infinite;
+}
+
+.hero-float-delayed {
+  animation: heroFloat 11s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+@keyframes heroFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+@keyframes heroDrift {
+  0% {
+    transform: scale(1.08) translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: scale(1.14) translate3d(-1%, -1.5%, 0);
+  }
+
+  100% {
+    transform: scale(1.1) translate3d(1%, 1%, 0);
+  }
 }

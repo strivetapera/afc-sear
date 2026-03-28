@@ -30,6 +30,38 @@ export async function listPublicBranches() {
   );
 }
 
+export async function listAdminBranches() {
+  return withRepositoryFallback(
+    async () => {
+      const prisma = getPrismaClient();
+      const branches = await prisma.branch.findMany({
+        orderBy: {
+          name: 'asc',
+        },
+        include: {
+          country: {
+            select: {
+              name: true,
+            },
+          },
+          _count: {
+            select: {
+              ministries: true,
+            },
+          },
+        },
+      });
+
+      return branches.map((branch) => ({
+        ...toBranchView(branch),
+        countryName: branch.country.name,
+        ministryCount: branch._count.ministries,
+      }));
+    },
+    () => listSeedBranches()
+  );
+}
+
 export async function createBranch(input: CreateBranchRequest) {
   return withRepositoryFallback(
     async () => {

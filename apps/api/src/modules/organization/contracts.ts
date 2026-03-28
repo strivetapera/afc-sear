@@ -9,6 +9,8 @@ export interface BranchView {
   email?: string | null;
   phone?: string | null;
   city?: string | null;
+  countryName?: string | null;
+  ministryCount?: number;
   isPublic: boolean;
 }
 
@@ -97,6 +99,13 @@ export const organizationRoutes: ApiRouteContract[] = [
     summary: 'Return the public locations directory payload shaped for the website',
     auth: 'public',
     responseType: 'LocationsDirectoryView',
+  },
+  {
+    method: 'GET',
+    path: '/api/v1/admin/branches',
+    summary: 'List branches for administrative operations',
+    auth: 'admin',
+    responseType: 'BranchView[]',
   },
   {
     method: 'POST',

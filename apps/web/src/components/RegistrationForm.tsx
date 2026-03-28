@@ -33,7 +33,7 @@ export function RegistrationForm({ eventSlug, ticketTypes }: RegistrationFormPro
     setError(null);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const apiUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000').replace(/\/api\/v1\/?$/, '');
       const response = await fetch(`${apiUrl}/api/v1/public/events/${eventSlug}/register`, {
         method: 'POST',
         headers: {

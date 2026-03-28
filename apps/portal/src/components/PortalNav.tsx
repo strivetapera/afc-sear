@@ -13,7 +13,7 @@ const navLinks = [
   { href: '/announcements', label: 'Announcements' },
 ];
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000').replace(/\/api\/v1\/?$/, '');
 
 export function PortalNav() {
   const pathname = usePathname();
@@ -21,7 +21,7 @@ export function PortalNav() {
 
   const handleSignOut = async () => {
     try {
-      await fetch(`${API_URL}/auth/sign-out`, {
+      await fetch(`${API_URL}/api/v1/auth/sign-out`, {
         method: 'POST',
         credentials: 'include',
       });

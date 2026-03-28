@@ -68,7 +68,7 @@ const authPlugin: FastifyPluginAsync<AuthPluginOptions> = async (fastify, option
         reply.code(401).send({ error: 'unauthorized', message: 'Not authenticated' });
         return;
       }
-      if (!request.user.roles.includes(role)) {
+      if (!request.user.roles.includes(role) && !request.user.roles.includes('super_admin')) {
         reply.code(403).send({ error: 'forbidden', message: `Requires role: ${role}` });
         return;
       }

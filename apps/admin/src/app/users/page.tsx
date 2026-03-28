@@ -14,6 +14,8 @@ import { Search, UserPlus, MoreHorizontal, Shield, X, Check } from 'lucide-react
 import { fetchApi } from '@/lib/api-client';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const MotionDiv = motion.div as any;
+
 const ROLES = [
   { key: 'super_admin', name: 'Super Admin', description: 'Full platform access' },
   { key: 'branch_admin', name: 'Branch Admin', description: 'Branch-level management' },
@@ -214,14 +216,14 @@ export default function UsersPage() {
       <AnimatePresence>
         {isAssignModalOpen && selectedUser && (
           <>
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
               onClick={() => setIsAssignModalOpen(false)}
             />
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -290,7 +292,7 @@ export default function UsersPage() {
                   Save Roles
                 </Button>
               </div>
-            </motion.div>
+            </MotionDiv>
           </>
         )}
       </AnimatePresence>

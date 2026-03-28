@@ -1,6 +1,7 @@
 import { PrismaClient, ContentStatus, MinistryVisibility, UserStatus, VisibilityScope } from '@prisma/client';
 import { randomBytes, createHash } from 'crypto';
 import bcrypt from 'bcryptjs';
+import { corePageImports } from '../../../data/corePageImports.js';
 import { events } from '../../../data/eventsData.js';
 import {
   featuredStream,
@@ -434,45 +435,18 @@ async function main() {
     });
   }
 
-  const aboutPage = await prisma.contentItem.upsert({
-    where: { slug: 'about' },
-    update: {
-      contentTypeId: publicPageType.id,
+  for (const page of corePageImports) {
+    await upsertStructuredPageContent({
+      prisma,
       branchId: branch.id,
       authorUserId: adminUser.id,
-      status: ContentStatus.PUBLISHED,
-      visibility: VisibilityScope.PUBLIC,
-    },
-    create: {
       contentTypeId: publicPageType.id,
-      branchId: branch.id,
-      authorUserId: adminUser.id,
-      title: 'About Us',
-      slug: 'about',
-      summary: 'Platform-seeded public page record',
-      status: ContentStatus.PUBLISHED,
-      visibility: VisibilityScope.PUBLIC,
-      publishedAt: new Date(),
-    },
-  });
-
-  await prisma.contentVersion.upsert({
-    where: {
-      contentItemId_versionNumber: {
-        contentItemId: aboutPage.id,
-        versionNumber: 1,
-      },
-    },
-    update: {
-      body: structuredPages.about,
-    },
-    create: {
-      contentItemId: aboutPage.id,
-      versionNumber: 1,
-      createdById: adminUser.id,
-      body: structuredPages.about,
-    },
-  });
+      slug: page.slug,
+      title: page.title,
+      summary: page.summary,
+      body: page.body,
+    });
+  }
 
   const liveWebcastPage = await prisma.contentItem.upsert({
     where: { slug: 'live-webcast' },
@@ -795,4 +769,67 @@ function slugify(value: string) {
 
 async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 10);
+}
+
+async function upsertStructuredPageContent({
+  prisma,
+  branchId,
+  authorUserId,
+  contentTypeId,
+  slug,
+  title,
+  summary,
+  body,
+}: {
+  prisma: PrismaClient;
+  branchId: string;
+  authorUserId: string;
+  contentTypeId: string;
+  slug: string;
+  title: string;
+  summary: string;
+  body: Record<string, unknown>;
+}) {
+  const page = await prisma.contentItem.upsert({
+    where: { slug },
+    update: {
+      contentTypeId,
+      branchId,
+      authorUserId,
+      title,
+      summary,
+      status: ContentStatus.PUBLISHED,
+      visibility: VisibilityScope.PUBLIC,
+      publishedAt: new Date(),
+    },
+    create: {
+      contentTypeId,
+      branchId,
+      authorUserId,
+      title,
+      slug,
+      summary,
+      status: ContentStatus.PUBLISHED,
+      visibility: VisibilityScope.PUBLIC,
+      publishedAt: new Date(),
+    },
+  });
+
+  await prisma.contentVersion.upsert({
+    where: {
+      contentItemId_versionNumber: {
+        contentItemId: page.id,
+        versionNumber: 1,
+      },
+    },
+    update: {
+      body,
+    },
+    create: {
+      contentItemId: page.id,
+      versionNumber: 1,
+      createdById: authorUserId,
+      body,
+    },
+  });
 }

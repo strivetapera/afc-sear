@@ -6,11 +6,13 @@ import { ArrowLeft, Save } from 'lucide-react';
 import { fetchApi } from '@/lib/api-client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { eventTemplateOptions, type EventTemplateKey } from '@/lib/event-templates';
 
 export default function NewEventPage() {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [templateKey, setTemplateKey] = useState<EventTemplateKey>('service');
 
   const [form, setForm] = useState({
     title: '',
@@ -20,6 +22,22 @@ export default function NewEventPage() {
     visibility: 'PUBLIC',
     registrationMode: 'OPEN',
   });
+
+  const applyTemplate = (key: EventTemplateKey) => {
+    const template = eventTemplateOptions.find((option) => option.key === key);
+    if (!template) {
+      return;
+    }
+
+    setTemplateKey(key);
+    setForm((current) => ({
+      ...current,
+      eventType: template.defaults.eventType,
+      visibility: template.defaults.visibility,
+      registrationMode: template.defaults.registrationMode,
+      summary: current.summary || template.defaults.summary,
+    }));
+  };
 
   const handleChange = (field: string, value: string) => {
     setForm((prev) => ({
@@ -71,6 +89,30 @@ export default function NewEventPage() {
           <CardHeader><CardTitle>Event Details</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             {error && <p className="text-sm text-red-600">{error}</p>}
+
+            <div className="space-y-3">
+              <label className="text-sm font-medium">Event Template</label>
+              <div className="grid gap-3 md:grid-cols-2">
+                {eventTemplateOptions.map((option) => {
+                  const selected = templateKey === option.key;
+                  return (
+                    <button
+                      key={option.key}
+                      type="button"
+                      className={`rounded-2xl border p-4 text-left transition-colors ${
+                        selected
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border bg-background hover:border-primary/30'
+                      }`}
+                      onClick={() => applyTemplate(option.key)}
+                    >
+                      <p className="font-semibold">{option.label}</p>
+                      <p className="mt-2 text-sm text-muted-foreground">{option.description}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
             <div className="space-y-1">
               <label className="text-sm font-medium">Title *</label>

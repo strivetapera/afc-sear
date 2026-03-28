@@ -32,6 +32,9 @@ import { fetchApi } from '@/lib/api-client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { eventTemplateOptions, type EventTemplateKey } from '@/lib/event-templates';
+
+const MotionDiv = motion.div as any;
 
 interface PageProps { params: Promise<{ id: string }> }
 
@@ -45,6 +48,7 @@ export default function EventEditPage({ params }: PageProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'details' | 'schedules' | 'tickets' | 'registrants'>('details');
+  const [templateKey, setTemplateKey] = useState<EventTemplateKey>('service');
 
   const [form, setForm] = useState({
     title: '',
@@ -63,6 +67,22 @@ export default function EventEditPage({ params }: PageProps) {
   // Schedule form
   const [schedForm, setSchedForm] = useState({ startsAt: '', endsAt: '', timezone: 'Africa/Harare', virtualJoinUrl: '' });
   const [ticketForm, setTicketForm] = useState({ name: '', priceMinor: '0', currencyCode: 'USD', capacity: '' });
+
+  const applyTemplate = (key: EventTemplateKey) => {
+    const template = eventTemplateOptions.find((option) => option.key === key);
+    if (!template) {
+      return;
+    }
+
+    setTemplateKey(key);
+    setForm((current) => ({
+      ...current,
+      eventType: template.defaults.eventType,
+      visibility: template.defaults.visibility,
+      registrationMode: template.defaults.registrationMode,
+      summary: current.summary || template.defaults.summary,
+    }));
+  };
 
   // Convert datetime-local (YYYY-MM-DDTHH:mm) to ISO format
   const toISO = (localDateTime: string) => {
@@ -165,13 +185,13 @@ export default function EventEditPage({ params }: PageProps) {
       </div>
 
       {error && (
-        <motion.div 
+        <MotionDiv 
            initial={{ opacity: 0, scale: 0.95 }}
            animate={{ opacity: 1, scale: 1 }}
            className="bg-destructive/10 border border-destructive/20 text-destructive text-sm p-4 rounded-xl font-medium"
         >
           {error}
-        </motion.div>
+        </MotionDiv>
       )}
 
       <div className="grid grid-cols-12 gap-10">
@@ -193,7 +213,7 @@ export default function EventEditPage({ params }: PageProps) {
                 }`}
               >
                 {activeTab === tab.id && (
-                  <motion.div
+                  <MotionDiv
                     layoutId="active-tab-bg"
                     className="absolute inset-0 bg-primary rounded-xl shadow-lg shadow-primary/30"
                     transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
@@ -209,6 +229,35 @@ export default function EventEditPage({ params }: PageProps) {
             {activeTab === 'details' && (
               <div className="space-y-6">
                 <Card className="p-8 space-y-8 border-none shadow-premium">
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-sm font-semibold">Event Template</p>
+                      <p className="text-sm text-muted-foreground">
+                        Apply a simple template to help ordinary editors structure the event correctly.
+                      </p>
+                    </div>
+                    <div className="grid gap-3 md:grid-cols-2">
+                      {eventTemplateOptions.map((option) => {
+                        const selected = templateKey === option.key;
+                        return (
+                          <button
+                            key={option.key}
+                            type="button"
+                            className={`rounded-2xl border p-4 text-left transition-colors ${
+                              selected
+                                ? 'border-primary bg-primary/5'
+                                : 'border-border bg-background hover:border-primary/30'
+                            }`}
+                            onClick={() => applyTemplate(option.key)}
+                          >
+                            <p className="font-semibold">{option.label}</p>
+                            <p className="mt-2 text-sm text-muted-foreground">{option.description}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   <div className="grid gap-6">
                     <Input 
                       label="Event Title" 

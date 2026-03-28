@@ -41,6 +41,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Using motion("button") for more robust typing in strict environments
     const M = motion.button as any;
+    const MotionSpan = motion.span as any;
 
     return (
       <M
@@ -53,7 +54,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         <AnimatePresence mode="wait">
           {isLoading ? (
-            <motion.span 
+            <MotionSpan 
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
@@ -76,6 +77,8 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className = '', label, error, ...props }, ref) => {
+    const MotionParagraph = motion.p as any;
+
     return (
       <div className="w-full space-y-2">
         {label && (
@@ -92,13 +95,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <div className="absolute inset-0 rounded-xl border border-primary/0 group-focus-within:border-primary/20 pointer-events-none transition-all" />
         </div>
         {error && (
-            <motion.p 
+            <MotionParagraph 
               initial={{ opacity: 0, y: -5 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-xs font-medium text-destructive ml-1"
             >
                 {error}
-            </motion.p>
+            </MotionParagraph>
         )}
       </div>
     );
@@ -177,8 +180,10 @@ export const GradientText = ({ children, className = '' }: { children: React.Rea
 );
 
 export const DynamicContainer = ({ children, className = '' }: { children: React.ReactNode, className?: string }) => {
+  const MotionDiv = motion.div as any;
+
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -186,7 +191,7 @@ export const DynamicContainer = ({ children, className = '' }: { children: React
       className={className}
     >
       {children}
-    </motion.div>
+    </MotionDiv>
   );
 };
 

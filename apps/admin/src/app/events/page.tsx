@@ -27,6 +27,8 @@ import { fetchApi } from '@/lib/api-client';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
+const MotionRow = motion.tr as any;
+
 type EventStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED' | 'IN_REVIEW' | 'APPROVED';
 
 export default function EventsPage() {
@@ -121,7 +123,7 @@ export default function EventsPage() {
                 events.map((ev, i) => {
                   const nextSchedule = ev.schedules?.[0];
                   return (
-                    <motion.tr 
+                    <MotionRow 
                       key={ev.id}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -182,7 +184,7 @@ export default function EventsPage() {
                           </Link>
                         </div>
                       </td>
-                    </motion.tr>
+                    </MotionRow>
                   );
                 })
               )}

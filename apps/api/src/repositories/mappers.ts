@@ -187,6 +187,8 @@ export function toContentVersionView(version: ContentVersion): ContentVersionVie
 }
 
 export function toContentItemView(contentItem: ContentItemWithRelations): ContentItemView {
+  const latestBody = contentItem.versions?.[0]?.body;
+
   return {
     id: contentItem.id,
     contentTypeKey: contentItem.contentType.key,
@@ -194,10 +196,13 @@ export function toContentItemView(contentItem: ContentItemWithRelations): Conten
     title: contentItem.title,
     slug: contentItem.slug,
     summary: contentItem.summary ?? null,
+    createdAt: contentItem.createdAt.toISOString(),
+    updatedAt: contentItem.updatedAt.toISOString(),
     status: mapContentStatus(contentItem.status),
     visibility: mapVisibility(contentItem.visibility),
     publishedAt: contentItem.publishedAt?.toISOString() ?? null,
     versions: contentItem.versions?.map(toContentVersionView),
+    body: latestBody && typeof latestBody === 'object' ? (latestBody as Record<string, unknown>) : null,
     metadata:
       contentItem.metadata && typeof contentItem.metadata === 'object'
         ? (contentItem.metadata as Record<string, unknown>)

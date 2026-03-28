@@ -19,6 +19,42 @@ import type {
 import { toContentItemView } from './mappers';
 import { getPrismaClient, withRepositoryFallback } from './prisma';
 
+async function getPublishedPageBody(slug: string) {
+  return withRepositoryFallback<Record<string, unknown> | null>(
+    async () => {
+      const prisma = getPrismaClient();
+      const content = await prisma.contentItem.findFirst({
+        where: {
+          slug,
+          status: 'PUBLISHED',
+          contentType: {
+            key: 'page',
+          },
+        },
+        include: {
+          versions: {
+            orderBy: {
+              versionNumber: 'desc',
+            },
+            take: 1,
+          },
+        },
+      });
+
+      const latestBody = content?.versions[0]?.body;
+      return latestBody && typeof latestBody === 'object'
+        ? (latestBody as Record<string, unknown>)
+        : null;
+    },
+    () => {
+      const item = getSeedPublishedContentBySlug(slug);
+      return item?.contentTypeKey === 'page' && item.body && typeof item.body === 'object'
+        ? (item.body as Record<string, unknown>)
+        : null;
+    }
+  );
+}
+
 export async function getPublishedContentBySlug(slug: string) {
   return withRepositoryFallback(
     async () => {
@@ -167,7 +203,7 @@ export async function updateContentItem(id: string, input: {
         include: { versions: { orderBy: { versionNumber: 'desc' }, take: 1 } }
       });
 
-      const updated = await prisma.contentItem.update({
+      await prisma.contentItem.update({
         where: { id },
         data: {
           title: input.title ?? undefined,
@@ -176,14 +212,9 @@ export async function updateContentItem(id: string, input: {
           status: input.status ?? undefined,
           publishedAt: input.status === 'PUBLISHED' ? new Date() : undefined,
         },
-        include: { 
-          contentType: { select: { key: true } }, 
-          versions: { orderBy: { versionNumber: 'desc' }, take: 3 } 
-        }
       });
 
-      // If body is provided, create a new version
-      if (input.body) {
+      if (typeof input.body !== 'undefined') {
         const nextVersionNumber = (current.versions[0]?.versionNumber ?? 0) + 1;
         await prisma.contentVersion.create({
           data: {
@@ -194,7 +225,16 @@ export async function updateContentItem(id: string, input: {
         });
       }
 
-      return toContentItemView(updated as any);
+      const refreshed = await prisma.contentItem.findUniqueOrThrow({
+        where: { id },
+        include: {
+          contentType: { select: { key: true } },
+          versions: { orderBy: { versionNumber: 'desc' }, take: 3 },
+          tags: { include: { tag: true } },
+        },
+      });
+
+      return toContentItemView(refreshed as any);
     },
     async () => {
       throw new Error('updateContentItem not implemented in mock seed store');
@@ -204,6 +244,26 @@ export async function updateContentItem(id: string, input: {
 
 export async function publishContentItem(id: string) {
   return updateContentItem(id, { status: 'PUBLISHED' });
+}
+
+export async function deleteContentItem(id: string) {
+  return withRepositoryFallback(
+    async () => {
+      const prisma = getPrismaClient();
+      const deleted = await prisma.contentItem.delete({
+        where: { id },
+        include: {
+          contentType: { select: { key: true } },
+          versions: { orderBy: { versionNumber: 'desc' }, take: 3 },
+        },
+      });
+
+      return toContentItemView(deleted as any);
+    },
+    async () => {
+      throw new Error('deleteContentItem not implemented in mock seed store');
+    }
+  );
 }
 
 
@@ -249,10 +309,59 @@ export async function getStructuredPageBySlug(slug: string) {
   );
 }
 
+export async function listPublishedLessons() {
+  return withRepositoryFallback(
+    async () => {
+      const prisma = getPrismaClient();
+      const items = await prisma.contentItem.findMany({
+        where: {
+          status: 'PUBLISHED',
+          contentType: {
+            key: 'lesson',
+          },
+        },
+        orderBy: [
+          {
+            publishedAt: 'desc',
+          },
+          {
+            createdAt: 'desc',
+          },
+        ],
+        include: {
+          contentType: {
+            select: {
+              key: true,
+            },
+          },
+          versions: {
+            orderBy: {
+              versionNumber: 'desc',
+            },
+            take: 1,
+          },
+        },
+      });
+
+      return items.map(toContentItemView);
+    },
+    () =>
+      listSeedContentItems()
+        .filter((item) => item.contentTypeKey === 'lesson' && item.status === 'PUBLISHED')
+        .sort((left, right) => {
+          const leftTime = new Date(left.publishedAt ?? left.createdAt ?? 0).getTime();
+          const rightTime = new Date(right.publishedAt ?? right.createdAt ?? 0).getTime();
+          return rightTime - leftTime;
+        })
+  );
+}
+
 export async function getPublicNewsFeed() {
   return withRepositoryFallback<PublicNewsFeedView>(
     async () => {
       const prisma = getPrismaClient();
+      const pageBodyResult = await getPublishedPageBody('news');
+      const pageBody = pageBodyResult.data;
       const items = await prisma.contentItem.findMany({
         where: {
           status: 'PUBLISHED',
@@ -267,9 +376,10 @@ export async function getPublicNewsFeed() {
 
       return {
         metadata: {
-          eyebrow: 'Updates',
-          title: 'Latest News',
+          eyebrow: stringOrUndefined(pageBody?.eyebrow) ?? 'Updates',
+          title: stringOrUndefined(pageBody?.title) ?? 'Latest News',
           lead:
+            stringOrUndefined(pageBody?.lead) ??
             'Recent announcements, ministry milestones, and verified public-site updates are published here so the website has a single trustworthy news stream while broader coverage is still being rebuilt carefully.',
         },
         items: items.map((item) => {
@@ -298,6 +408,8 @@ export async function getPublicEventsFeed() {
   return withRepositoryFallback<PublicEventsFeedView>(
     async () => {
       const prisma = getPrismaClient();
+      const pageBodyResult = await getPublishedPageBody('events');
+      const pageBody = pageBodyResult.data;
       const items = await prisma.contentItem.findMany({
         where: {
           status: 'PUBLISHED',
@@ -314,9 +426,10 @@ export async function getPublicEventsFeed() {
 
       return {
         metadata: {
-          eyebrow: 'Events',
-          title: 'Upcoming Events',
+          eyebrow: stringOrUndefined(pageBody?.eyebrow) ?? 'Events',
+          title: stringOrUndefined(pageBody?.title) ?? 'Upcoming Events',
           lead:
+            stringOrUndefined(pageBody?.lead) ??
             'These recurring services and public gatherings are currently drawn from the restored Zimbabwe schedule while the wider regional events system is being built out on the platform.',
         },
         items: eventItems.sort(

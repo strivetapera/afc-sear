@@ -1,5 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type { VisibilityScope } from '@afc-sear/types';
+// @ts-expect-error shared seed/import data is authored in JavaScript for reuse across packages
+import { corePageImports } from '../../../../data/corePageImports.js';
 import type {
   AuthenticatedUserView,
   BranchView,
@@ -16,6 +18,13 @@ import type {
 } from '../modules';
 import { fallbackLocationsDirectory } from './locations-fallback';
 
+type CorePageImport = {
+  slug: string;
+  title: string;
+  summary: string;
+  body: Record<string, unknown>;
+};
+
 const branchId = 'branch-harare-001';
 const userId = 'user-admin-001';
 const personId = 'person-admin-001';
@@ -30,6 +39,8 @@ const branchDirectory: BranchView[] = [
     email: 'harare@apostolicfaith.example',
     phone: '+263771400856',
     city: 'Harare',
+    countryName: 'Zimbabwe',
+    ministryCount: 0,
     isPublic: true,
   },
 ];
@@ -74,26 +85,31 @@ const baseUser: AuthenticatedUserView = {
   branchScopeIds: [branchId],
 };
 
+const importedPages = corePageImports as CorePageImport[];
+
 const contentItems: ContentItemView[] = [
-  {
-    id: 'content-about-001',
+  ...importedPages.map((page: CorePageImport, index: number) => ({
+    id: `content-page-${index + 1}`,
     contentTypeKey: 'page',
     branchId,
-    title: 'About Us',
-    slug: 'about',
-    summary: 'Seeded platform page from the initial API store.',
-    status: 'PUBLISHED',
-    visibility: 'PUBLIC',
+    title: page.title,
+    slug: page.slug,
+    summary: page.summary,
+    body: page.body,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    status: 'PUBLISHED' as const,
+    visibility: 'PUBLIC' as const,
     publishedAt: new Date().toISOString(),
     versions: [
       {
-        id: 'content-about-version-1',
+        id: `content-page-version-${index + 1}`,
         versionNumber: 1,
         createdAt: new Date().toISOString(),
-        changeNote: 'Initial seeded version',
+        changeNote: 'Imported core content',
       },
     ],
-  },
+  })),
   {
     id: 'content-news-001',
     contentTypeKey: 'news',
@@ -101,35 +117,29 @@ const contentItems: ContentItemView[] = [
     title: 'Leadership Conference Planning Opens For 2026',
     slug: 'leadership-conference-2026',
     summary: 'Seeded news item from the API scaffold store.',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     status: 'PUBLISHED',
     visibility: 'PUBLIC',
     publishedAt: new Date().toISOString(),
   },
 ];
 
-const structuredPages: Record<string, StructuredPageView> = {
-  about: {
-    eyebrow: 'About',
-    title: 'About Us',
-    lead:
-      'The Apostolic Faith Church SEAR is committed to spreading the Gospel of Jesus Christ, fostering spiritual growth, and serving communities across the Southern and Eastern Africa Region. At this stage of the website rebuild, the clearest verified public directory and webcast history we have restored comes from Zimbabwe.',
-    sections: [
-      {
-        heading: 'Who we are',
-        paragraphs: [
-          'We are a Bible-centered Christian fellowship committed to prayer, holy living, and helping people develop a personal relationship with Jesus Christ.',
-          'Our vision is to be a welcoming and impactful church community where individuals and families can encounter God, find fellowship, and grow in practical Christian living.',
-        ],
-      },
-    ],
-  },
-};
+const structuredPages: Record<string, StructuredPageView> = Object.fromEntries(
+  importedPages
+    .filter((page: CorePageImport) => page.body?.title && page.body?.lead)
+    .map((page: CorePageImport) => [page.slug, page.body as unknown as StructuredPageView])
+);
+
+const newsPageBody = importedPages.find((page: CorePageImport) => page.slug === 'news')?.body as StructuredPageView | undefined;
+const eventsPageBody = importedPages.find((page: CorePageImport) => page.slug === 'events')?.body as StructuredPageView | undefined;
 
 const publicNewsFeed: PublicNewsFeedView = {
   metadata: {
-    eyebrow: 'Updates',
-    title: 'Latest News',
+    eyebrow: newsPageBody?.eyebrow ?? 'Updates',
+    title: newsPageBody?.title ?? 'Latest News',
     lead:
+      newsPageBody?.lead ??
       'Recent announcements, ministry milestones, and verified public-site updates are published here so the website has a single trustworthy news stream while broader coverage is still being rebuilt carefully.',
   },
   items: [
@@ -158,9 +168,10 @@ const publicNewsFeed: PublicNewsFeedView = {
 
 const publicEventsFeed: PublicEventsFeedView = {
   metadata: {
-    eyebrow: 'Events',
-    title: 'Upcoming Events',
+    eyebrow: eventsPageBody?.eyebrow ?? 'Events',
+    title: eventsPageBody?.title ?? 'Upcoming Events',
     lead:
+      eventsPageBody?.lead ??
       'These recurring services and public gatherings are currently drawn from the restored Zimbabwe schedule while the wider regional events system is being built out on the platform.',
   },
   items: [
@@ -390,6 +401,8 @@ export function createContentItem(input: {
     title: input.title,
     slug: input.slug,
     summary: input.summary ?? null,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     status: 'DRAFT',
     visibility: input.visibility ? input.visibility.toUpperCase() as ContentItemView['visibility'] : 'PUBLIC',
     publishedAt: null,

@@ -15,6 +15,26 @@ import { fetchApi } from '@/lib/api-client';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const MotionDiv = motion.div as any;
+const PUBLIC_WEB_URL = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:3000";
+
+function formatContentDate(value?: string | null) {
+  if (!value) {
+    return "—";
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return "—";
+  }
+
+  return date.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 export default function ContentPage() {
   const [items, setItems] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -190,13 +210,13 @@ export default function ContentPage() {
                       </div>
                     </td>
                     <td className="p-4 align-middle">
-                      <Badge variant="default">{item.contentType?.name || 'Page'}</Badge>
+                      <Badge variant="default">{item.contentTypeKey || 'page'}</Badge>
                     </td>
                     <td className="p-4 align-middle">
                       <Badge variant={getStatusVariant(item.status)}>{item.status?.replace('_', ' ')}</Badge>
                     </td>
                     <td className="p-4 align-middle text-muted-foreground">
-                      {new Date(item.updatedAt || item.createdAt).toLocaleDateString()}
+                      {formatContentDate(item.updatedAt || item.createdAt)}
                     </td>
                     <td className="p-4 align-middle text-right">
                       <div className="flex justify-end gap-1">
@@ -225,9 +245,11 @@ export default function ContentPage() {
                           </Button>
                         </Link>
                         {item.visibility === 'PUBLIC' && (
-                          <Button variant="ghost" size="sm" title="View">
-                            <Globe className="h-4 w-4" />
-                          </Button>
+                          <Link href={`${PUBLIC_WEB_URL}/${item.slug}`} target="_blank" rel="noreferrer">
+                            <Button variant="ghost" size="sm" title="View">
+                              <Globe className="h-4 w-4" />
+                            </Button>
+                          </Link>
                         )}
                         <Button 
                           variant="ghost" 
@@ -251,14 +273,14 @@ export default function ContentPage() {
       <AnimatePresence>
         {isActionModalOpen && selectedItem && getActionConfig() && (
           <>
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
               onClick={() => setIsActionModalOpen(false)}
             />
-            <motion.div
+            <MotionDiv
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -299,7 +321,7 @@ export default function ContentPage() {
                   {getActionConfig()?.confirmText}
                 </Button>
               </div>
-            </motion.div>
+            </MotionDiv>
           </>
         )}
       </AnimatePresence>

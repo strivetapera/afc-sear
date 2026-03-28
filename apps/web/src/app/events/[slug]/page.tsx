@@ -2,32 +2,9 @@ import { RegistrationForm } from '@/components/RegistrationForm';
 import { Calendar, MapPin, Clock, Share2, Info } from 'lucide-react';
 import { Badge } from '@afc-sear/ui';
 
-// Mock data for initial implementation
-const mockEvent = {
-  id: 'event-001',
-  title: 'Annual Youth Conference 2026',
-  slug: 'youth-conference-2026',
-  summary: 'Join young people from across the region for three days of worship, teaching, and fellowship.',
-  description: 'Our annual youth conference is back! This year\'s theme is "Rise and Shine". We have prepared inspiring sessions, practical workshops, and engaging activities to help you grow in your faith and connect with fellow believers.',
-  eventType: 'CONFERENCE',
-  registrationMode: 'OPEN',
-  venue: {
-    name: 'Harare Central Tabernacle',
-    city: 'Harare',
-    addressLine1: '123 Samora Machel Ave',
-  },
-  schedules: [
-    { startsAt: '2026-08-15T09:00:00Z', endsAt: '2026-08-17T17:00:00Z', timezone: 'CAT' }
-  ],
-  ticketTypes: [
-    { id: 't1', name: 'General Admission', priceMinor: 0, currencyCode: 'USD' },
-    { id: 't2', name: 'Premium (Includes Meals)', priceMinor: 2500, currencyCode: 'USD' }
-  ]
-};
-
 export default async function EventDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+  const apiUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000').replace(/\/api\/v1\/?$/, '');
   
   const response = await fetch(`${apiUrl}/api/v1/public/events/${slug}`, {
     cache: 'no-store'
@@ -54,9 +31,15 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
     day: 'numeric' 
   });
   
-  const descriptionText = typeof event.description === 'object' && event.description?.content 
-    ? event.description.content 
-    : event.description || 'No description provided.';
+  const descriptionText = typeof event.description === 'string'
+    ? event.description
+    : typeof event.description?.content === 'string'
+      ? event.description.content
+      : 'No description provided.';
+  const locationLabel = event.venue?.name
+    ? [event.venue.name, event.venue.city].filter(Boolean).join(', ')
+    : 'Venue to be announced';
+  const hasRegistrationOptions = Array.isArray(event.ticketTypes) && event.ticketTypes.length > 0;
 
   return (
     <div className="min-h-screen bg-zinc-50">
@@ -91,7 +74,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                 </div>
                 <div>
                   <div className="font-semibold text-zinc-900">Location</div>
-                  <div>{event.venue.name}, {event.venue.city}</div>
+                  <div>{locationLabel}</div>
                 </div>
               </div>
             </div>
@@ -133,10 +116,19 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
           {/* Registration Sidebar */}
           <div className="lg:col-span-1">
             <div className="sticky top-24">
-              <RegistrationForm 
-                eventSlug={event.slug} 
-                ticketTypes={event.ticketTypes} 
-              />
+              {hasRegistrationOptions ? (
+                <RegistrationForm 
+                  eventSlug={event.slug} 
+                  ticketTypes={event.ticketTypes} 
+                />
+              ) : (
+                <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+                  <h3 className="text-lg font-bold text-zinc-900">Registration details coming soon</h3>
+                  <p className="mt-3 text-sm leading-6 text-zinc-600">
+                    This event is listed publicly, but online registration options have not been published yet.
+                  </p>
+                </div>
+              )}
               
               <div className="mt-6 flex justify-center gap-4 text-zinc-500">
                 <button className="flex items-center gap-1 hover:text-zinc-900 transition-colors">

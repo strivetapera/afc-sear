@@ -58,7 +58,7 @@ export default function BranchesPage() {
               <CardTitle className="mt-2 text-xl">{branch.name}</CardTitle>
               <p className="text-sm text-gray-500 flex items-center gap-1">
                 <MapPin className="h-3 w-3" />
-                {branch.city}, {branch.country?.name}
+                {[branch.city, branch.countryName].filter(Boolean).join(', ') || 'Location details pending'}
               </p>
             </CardHeader>
             <CardContent className="pt-6 space-y-4">
@@ -67,7 +67,7 @@ export default function BranchesPage() {
                   <Building className="h-4 w-4" />
                   Ministries
                 </span>
-                <span className="font-medium">{branch._count?.ministries || 0}</span>
+                <span className="font-medium">{branch.ministryCount || 0}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-500 flex items-center gap-2">

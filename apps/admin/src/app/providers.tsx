@@ -2,17 +2,24 @@
 
 import { useSession } from "@/lib/auth-client";
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { SideNav } from "@/components/SideNav";
 import { DynamicContainer } from "@afc-sear/ui";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { data: session, isPending } = useSession();
+  const pathname = usePathname();
+  const isAuthRoute = pathname.startsWith("/auth");
 
   useEffect(() => {
-    if (!isPending && !session) {
+    if (!isPending && !session && !isAuthRoute) {
       window.location.href = "/auth/login";
     }
-  }, [isPending, session]);
+  }, [isAuthRoute, isPending, session]);
+
+  if (isAuthRoute) {
+    return <>{children}</>;
+  }
 
   if (isPending || !session) {
     return (

@@ -14,10 +14,13 @@ export interface ContentItemView {
   title: string;
   slug: string;
   summary?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
   status: 'DRAFT' | 'IN_REVIEW' | 'APPROVED' | 'PUBLISHED' | 'ARCHIVED';
   visibility: 'PUBLIC' | 'MEMBER' | 'BRANCH' | 'MINISTRY' | 'PRIVATE';
   publishedAt?: string | null;
   versions?: ContentVersionView[];
+  body?: Record<string, unknown> | null;
   metadata?: Record<string, unknown> | null;
 }
 
