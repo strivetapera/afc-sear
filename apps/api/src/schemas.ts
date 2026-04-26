@@ -30,23 +30,46 @@ export const UpsertPersonSchema = {
 
 export const RegisterForEventSchema = {
   type: 'object',
-  required: ['eventId', 'attendees'],
+  required: ['attendees'],
   properties: {
-    eventId: { type: 'string', format: 'uuid' },
+    channel: { type: 'string', enum: ['WEB', 'WHATSAPP', 'ADMIN', 'IMPORT'] },
+    contactEmail: { type: 'string', format: 'email' },
+    contactPhone: { type: 'string' },
     attendees: {
       type: 'array',
       minItems: 1,
       items: {
         type: 'object',
-        required: ['fullName', 'ticketTypeId'],
+        required: ['fullName'],
         properties: {
           fullName: { type: 'string', minLength: 1 },
           email: { type: 'string', format: 'email' },
           phone: { type: 'string' },
+          branchName: { type: 'string' },
+          ageGroup: { type: 'string' },
           ticketTypeId: { type: 'string', format: 'uuid' },
+          inventoryId: { type: 'string', format: 'uuid' },
+          metadata: { type: 'object' },
         },
       },
     },
+    metadata: { type: 'object' },
+  },
+};
+
+export const RegisterForEventWaitlistSchema = {
+  type: 'object',
+  required: ['firstName', 'lastName'],
+  properties: {
+    channel: { type: 'string', enum: ['WEB', 'WHATSAPP', 'ADMIN', 'IMPORT'] },
+    firstName: { type: 'string', minLength: 1 },
+    lastName: { type: 'string', minLength: 1 },
+    branchName: { type: 'string' },
+    ageGroup: { type: 'string' },
+    email: { type: 'string', format: 'email' },
+    phone: { type: 'string' },
+    inventoryId: { type: 'string', format: 'uuid' },
+    metadata: { type: 'object' },
   },
 };
 
@@ -163,6 +186,36 @@ export const CreateEventSchema = {
     registrationMode: { type: 'string' },
     branchId: { type: 'string', format: 'uuid' },
     venueId: { type: 'string', format: 'uuid' },
+    registrationFormSchema: { type: 'object' },
+    registrationPolicy: {
+      type: 'object',
+      properties: {
+        codePrefix: { type: 'string' },
+        paymentDeadline: { type: 'string', format: 'date-time' },
+        cancellationDeadline: { type: 'string', format: 'date-time' },
+        requireFullPaymentForCheckIn: { type: 'boolean' },
+        allowWaitlist: { type: 'boolean' },
+        allowSelfServiceLookup: { type: 'boolean' },
+        supportedChannels: { type: 'array', items: { type: 'string' } },
+        pricingRules: { type: 'array', items: { type: 'object' } },
+        confirmationConfig: { type: 'object' },
+      },
+    },
+    registrationInventory: {
+      type: 'array',
+      items: {
+        type: 'object',
+        required: ['category', 'name', 'capacity'],
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          category: { type: 'string' },
+          name: { type: 'string' },
+          capacity: { type: 'integer', minimum: 0 },
+          isActive: { type: 'boolean' },
+          metadata: { type: 'object' },
+        },
+      },
+    },
   },
 };
 
@@ -178,6 +231,36 @@ export const UpdateEventSchema = {
     registrationMode: { type: 'string' },
     status: { type: 'string' },
     venueId: { type: 'string', format: 'uuid' },
+    registrationFormSchema: { type: 'object' },
+    registrationPolicy: {
+      type: 'object',
+      properties: {
+        codePrefix: { type: 'string' },
+        paymentDeadline: { type: 'string', format: 'date-time' },
+        cancellationDeadline: { type: 'string', format: 'date-time' },
+        requireFullPaymentForCheckIn: { type: 'boolean' },
+        allowWaitlist: { type: 'boolean' },
+        allowSelfServiceLookup: { type: 'boolean' },
+        supportedChannels: { type: 'array', items: { type: 'string' } },
+        pricingRules: { type: 'array', items: { type: 'object' } },
+        confirmationConfig: { type: 'object' },
+      },
+    },
+    registrationInventory: {
+      type: 'array',
+      items: {
+        type: 'object',
+        required: ['category', 'name', 'capacity'],
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          category: { type: 'string' },
+          name: { type: 'string' },
+          capacity: { type: 'integer', minimum: 0 },
+          isActive: { type: 'boolean' },
+          metadata: { type: 'object' },
+        },
+      },
+    },
   },
 };
 
@@ -209,6 +292,20 @@ export const CheckInSchema = {
   required: ['attendeeId'],
   properties: {
     attendeeId: { type: 'string', format: 'uuid' },
+    overridePaymentBlock: { type: 'boolean' },
+  },
+};
+
+export const AddRegistrationReceiptSchema = {
+  type: 'object',
+  required: ['amountMinor', 'receiptNumber'],
+  properties: {
+    receiptNumber: { type: 'string', minLength: 1 },
+    amountMinor: { type: 'integer', minimum: 1 },
+    currencyCode: { type: 'string', minLength: 3, maxLength: 3 },
+    paymentMethod: { type: 'string' },
+    note: { type: 'string' },
+    receivedAt: { type: 'string', format: 'date-time' },
   },
 };
 

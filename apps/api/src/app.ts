@@ -34,7 +34,11 @@ import { Queue } from 'bullmq';
 import IORedis from 'ioredis';
 import { getCurrentHousehold, listPeopleRecords, upsertPersonRecord, updateMemberProfile, getMemberRegistrations, getMemberGiving, getMemberAnnouncements, createPrayerRequest } from './repositories/people-repository';
 import {
+  activateWaitlistEntry,
+  addRegistrationReceipt,
   getEventBySlug,
+  joinEventWaitlist,
+  listEventWaitlistEntries,
   listEventRegistrations,
   listPublicEvents,
   registerForEvent,
@@ -537,8 +541,31 @@ export function createApp() {
 
     app.post<{ Params: { slug: string }; Body: RegisterForEventRequest }>(
       '/api/v1/public/events/:slug/register',
-      async (request) => {
-        return registerForEvent(request.params.slug, request.body);
+      {
+        schema: { body: schemas.RegisterForEventSchema },
+      },
+      async (request, reply) => {
+        try {
+          return { data: await registerForEvent(request.params.slug, request.body) };
+        } catch (error: any) {
+          reply.code(400);
+          return { error: 'registration_failed', message: error?.message ?? 'Registration failed' };
+        }
+      }
+    );
+
+    app.post<{ Params: { slug: string }; Body: any }>(
+      '/api/v1/public/events/:slug/waitlist',
+      {
+        schema: { body: schemas.RegisterForEventWaitlistSchema },
+      },
+      async (request, reply) => {
+        try {
+          return { data: await joinEventWaitlist(request.params.slug, request.body as any) };
+        } catch (error: any) {
+          reply.code(400);
+          return { error: 'waitlist_failed', message: error?.message ?? 'Waitlist registration failed' };
+        }
       }
     );
 
@@ -632,15 +659,77 @@ export function createApp() {
       }
     );
 
+    app.get<{ Params: { id: string } }>(
+      '/api/v1/admin/events/:id/waitlist',
+      { preHandler: [app.authenticate, app.requireRole(ADMIN_ROLE)] },
+      async (request) => {
+        return { data: await listEventWaitlistEntries(request.params.id) };
+      }
+    );
+
+    app.post<{ Params: { id: string; registrationId: string }; Body: any }>(
+      '/api/v1/admin/events/:id/registrations/:registrationId/receipts',
+      {
+        preHandler: [app.authenticate, app.requireRole(ADMIN_ROLE)],
+        schema: { body: schemas.AddRegistrationReceiptSchema },
+      },
+      async (request) => {
+        const result = await addRegistrationReceipt(
+          request.params.id,
+          request.params.registrationId,
+          request.body as any,
+          request.user?.id
+        );
+        await writeAuditLog({
+          actorUserId: request.user?.id,
+          action: 'ADD_EVENT_REGISTRATION_RECEIPT',
+          domain: 'events',
+          entityType: 'registration',
+          entityId: request.params.registrationId,
+          after: result as any,
+          ipAddress: request.ip,
+        });
+        return { data: result };
+      }
+    );
+
+    app.post<{ Params: { id: string; waitlistId: string } }>(
+      '/api/v1/admin/events/:id/waitlist/:waitlistId/activate',
+      { preHandler: [app.authenticate, app.requireRole(ADMIN_ROLE)] },
+      async (request) => {
+        const result = await activateWaitlistEntry(request.params.id, request.params.waitlistId);
+        await writeAuditLog({
+          actorUserId: request.user?.id,
+          action: 'ACTIVATE_EVENT_WAITLIST_ENTRY',
+          domain: 'events',
+          entityType: 'registration_waitlist_entry',
+          entityId: request.params.waitlistId,
+          after: result as any,
+          ipAddress: request.ip,
+        });
+        return { data: result };
+      }
+    );
+
     app.post<{ Params: { id: string }; Body: CheckInRequest }>(
       '/api/v1/admin/events/:id/check-in',
       {
         preHandler: [app.authenticate, app.requireRole(ADMIN_ROLE)],
         schema: { body: schemas.CheckInSchema },
       },
-      async (request) => {
+      async (request, reply) => {
         const actorId = request.user?.id;
-        const result = await recordCheckIn(request.body.attendeeId, actorId);
+        let result;
+        try {
+          result = await recordCheckIn(
+            request.body.attendeeId,
+            actorId,
+            Boolean((request.body as any).overridePaymentBlock)
+          );
+        } catch (error: any) {
+          reply.code(400);
+          return { error: 'check_in_failed', message: error?.message ?? 'Check-in failed' };
+        }
         await writeAuditLog({
           actorUserId: actorId,
           action: 'CHECK_IN_ATTENDEE',

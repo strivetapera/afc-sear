@@ -649,6 +649,8 @@ async function main() {
   const scheduleId = '7d2e3f5a-4b9c-4d8e-a1b2-c3d4e5f6a7b8';
   const ticket1Id = '8e1a2b3c-4d5e-6f7a-8b9c-0d1e2f3a4b5c';
   const ticket2Id = '9f2a3b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c';
+  const inventoryDormId = 'a1f0b5c1-0f77-4209-a4c6-4bd2e1a92701';
+  const inventoryCottageId = 'b27b8ea6-66f0-4dfa-85bc-91a6b4615302';
 
   const venue = await prisma.venue.upsert({
     where: { id: venueId },
@@ -748,6 +750,112 @@ async function main() {
       priceMinor: 2500,
       currencyCode: 'USD',
       eventId: conference.id,
+    },
+  });
+
+  await prisma.registrationForm.upsert({
+    where: { eventId: conference.id },
+    update: {
+      status: 'ACTIVE',
+      schema: {
+        fields: [
+          { key: 'fullName', label: 'Full Name', type: 'text', required: true },
+          { key: 'email', label: 'Email Address', type: 'email', required: true },
+          { key: 'phone', label: 'Phone Number', type: 'tel', required: true },
+          { key: 'branchName', label: 'Branch', type: 'text', required: false },
+          { key: 'ageGroup', label: 'Age Group', type: 'text', required: false },
+        ],
+      },
+    },
+    create: {
+      eventId: conference.id,
+      status: 'ACTIVE',
+      schema: {
+        fields: [
+          { key: 'fullName', label: 'Full Name', type: 'text', required: true },
+          { key: 'email', label: 'Email Address', type: 'email', required: true },
+          { key: 'phone', label: 'Phone Number', type: 'tel', required: true },
+          { key: 'branchName', label: 'Branch', type: 'text', required: false },
+          { key: 'ageGroup', label: 'Age Group', type: 'text', required: false },
+        ],
+      },
+    },
+  });
+
+  await prisma.eventRegistrationPolicy.upsert({
+    where: { eventId: conference.id },
+    update: {
+      codePrefix: 'YTHCONF',
+      paymentDeadline: new Date('2026-08-10T23:59:59Z'),
+      cancellationDeadline: new Date('2026-08-12T23:59:59Z'),
+      requireFullPaymentForCheckIn: true,
+      allowWaitlist: true,
+      allowSelfServiceLookup: true,
+      supportedChannels: ['WEB', 'WHATSAPP', 'ADMIN'],
+      pricingRules: [
+        { inventoryCategory: 'Dormitory', amountMinor: 3000 },
+        { inventoryCategory: 'Cottage', amountMinor: 5000 },
+      ],
+      confirmationConfig: {
+        successHeading: 'Registration Received!',
+        successMessage: 'Your place has been reserved. Keep your registration code for future updates and check-in.',
+      },
+    },
+    create: {
+      eventId: conference.id,
+      codePrefix: 'YTHCONF',
+      paymentDeadline: new Date('2026-08-10T23:59:59Z'),
+      cancellationDeadline: new Date('2026-08-12T23:59:59Z'),
+      requireFullPaymentForCheckIn: true,
+      allowWaitlist: true,
+      allowSelfServiceLookup: true,
+      supportedChannels: ['WEB', 'WHATSAPP', 'ADMIN'],
+      pricingRules: [
+        { inventoryCategory: 'Dormitory', amountMinor: 3000 },
+        { inventoryCategory: 'Cottage', amountMinor: 5000 },
+      ],
+      confirmationConfig: {
+        successHeading: 'Registration Received!',
+        successMessage: 'Your place has been reserved. Keep your registration code for future updates and check-in.',
+      },
+    },
+  });
+
+  await prisma.eventRegistrationInventory.upsert({
+    where: { id: inventoryDormId },
+    update: {
+      eventId: conference.id,
+      category: 'Dormitory',
+      name: 'Youth Camp Dormitory',
+      capacity: 80,
+      isActive: true,
+    },
+    create: {
+      id: inventoryDormId,
+      eventId: conference.id,
+      category: 'Dormitory',
+      name: 'Youth Camp Dormitory',
+      capacity: 80,
+      isActive: true,
+    },
+  });
+
+  await prisma.eventRegistrationInventory.upsert({
+    where: { id: inventoryCottageId },
+    update: {
+      eventId: conference.id,
+      category: 'Cottage',
+      name: 'Southwind Cottage',
+      capacity: 12,
+      isActive: true,
+    },
+    create: {
+      id: inventoryCottageId,
+      eventId: conference.id,
+      category: 'Cottage',
+      name: 'Southwind Cottage',
+      capacity: 12,
+      isActive: true,
     },
   });
 }

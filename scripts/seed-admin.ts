@@ -38,7 +38,7 @@ async function main() {
       id: randomUUID(),
       userId: userId,
       providerId: "credential",
-      accountId: adminEmail,
+      accountId: userId,
       password: hashedPassword,
     },
   });

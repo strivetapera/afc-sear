@@ -30,6 +30,7 @@ model User {
   contentVersions    ContentVersion[]
   uploadedAssets     MediaAsset[]
   mfaMethods         MfaMethod[]
+  recordedRegistrationReceipts RegistrationReceipt[]
   sessions           Session[]
   accounts           Account[]
   userRoles          UserRole[]
@@ -549,10 +550,53 @@ model Event {
   branch           Branch?           @relation(fields: [branchId], references: [id])
   venue            Venue?            @relation(fields: [venueId], references: [id])
   registrationForm RegistrationForm?
+  registrationPolicy EventRegistrationPolicy?
+  registrationInventory EventRegistrationInventory[]
   registrations    Registration[]
   ticketTypes      TicketType[]
+  waitlistEntries  RegistrationWaitlistEntry[]
 
   @@map("events")
+}
+
+model EventRegistrationPolicy {
+  id                        String   @id @default(uuid()) @db.Uuid
+  eventId                   String   @unique @map("event_id") @db.Uuid
+  codePrefix                String   @map("code_prefix")
+  nextSequence              Int      @default(1) @map("next_sequence")
+  nextWaitlistSequence      Int      @default(1) @map("next_waitlist_sequence")
+  paymentDeadline           DateTime? @map("payment_deadline")
+  cancellationDeadline      DateTime? @map("cancellation_deadline")
+  requireFullPaymentForCheckIn Boolean @default(false) @map("require_full_payment_for_check_in")
+  allowWaitlist             Boolean  @default(false) @map("allow_waitlist")
+  allowSelfServiceLookup    Boolean  @default(true) @map("allow_self_service_lookup")
+  supportedChannels         Json?
+  pricingRules              Json?
+  confirmationConfig        Json?    @map("confirmation_config")
+  createdAt                 DateTime @default(now()) @map("created_at")
+  updatedAt                 DateTime @updatedAt @map("updated_at")
+  event                     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@map("event_registration_policies")
+}
+
+model EventRegistrationInventory {
+  id          String   @id @default(uuid()) @db.Uuid
+  eventId     String   @map("event_id") @db.Uuid
+  category    String
+  name        String
+  capacity    Int
+  isActive    Boolean  @default(true) @map("is_active")
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  attendees   RegistrationAttendee[]
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  waitlistEntries RegistrationWaitlistEntry[]
+
+  @@unique([eventId, category, name])
+  @@index([eventId])
+  @@map("event_registration_inventory")
 }
 
 model EventSchedule {
@@ -601,17 +645,25 @@ model TicketType {
 model Registration {
   id            String                 @id @default(uuid()) @db.Uuid
   eventId       String                 @map("event_id") @db.Uuid
+  registrationCode String              @unique @map("registration_code")
+  channel       RegistrationChannel    @default(WEB)
   personId      String?                @map("person_id") @db.Uuid
   householdId   String?                @map("household_id") @db.Uuid
+  contactEmail  String?                @map("contact_email")
+  contactPhone  String?                @map("contact_phone")
   status        RegistrationStatus     @default(PENDING)
   totalMinor    Int                    @default(0) @map("total_minor")
+  amountPaidMinor Int                  @default(0) @map("amount_paid_minor")
   currencyCode  String                 @default("USD") @map("currency_code")
   paymentStatus PaymentStatus          @default(NOT_APPLICABLE) @map("payment_status")
+  qrCodePayload String?                @map("qr_code_payload")
   metadata      Json?
   createdAt     DateTime               @default(now()) @map("created_at")
   updatedAt     DateTime               @updatedAt @map("updated_at")
   attendees     RegistrationAttendee[]
   event         Event                  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  receipts      RegistrationReceipt[]
+  convertedWaitlistEntry RegistrationWaitlistEntry?
 
   @@index([eventId])
   @@index([personId])
@@ -624,18 +676,67 @@ model RegistrationAttendee {
   registrationId String                @map("registration_id") @db.Uuid
   personId       String?               @map("person_id") @db.Uuid
   fullName       String                @map("full_name")
+  inventoryId    String?               @map("inventory_id") @db.Uuid
   ticketTypeId   String?               @map("ticket_type_id") @db.Uuid
   checkInStatus  AttendeeCheckInStatus @default(PENDING) @map("check_in_status")
   metadata       Json?
   createdAt      DateTime              @default(now()) @map("created_at")
   updatedAt      DateTime              @updatedAt @map("updated_at")
   checkIns       CheckIn[]
+  inventory      EventRegistrationInventory? @relation(fields: [inventoryId], references: [id])
   registration   Registration          @relation(fields: [registrationId], references: [id], onDelete: Cascade)
   ticketType     TicketType?           @relation(fields: [ticketTypeId], references: [id])
 
   @@index([registrationId])
   @@index([personId])
+  @@index([inventoryId])
   @@map("registration_attendees")
+}
+
+model RegistrationReceipt {
+  id             String   @id @default(uuid()) @db.Uuid
+  registrationId String   @map("registration_id") @db.Uuid
+  receiptNumber  String   @unique @map("receipt_number")
+  amountMinor    Int      @map("amount_minor")
+  currencyCode   String   @default("USD") @map("currency_code")
+  paymentMethod  String?  @map("payment_method")
+  note           String?
+  receivedAt     DateTime @map("received_at")
+  recordedById   String?  @map("recorded_by_id") @db.Uuid
+  createdAt      DateTime @default(now()) @map("created_at")
+  recordedBy     User?    @relation(fields: [recordedById], references: [id])
+  registration   Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+
+  @@index([registrationId])
+  @@index([recordedById])
+  @@map("registration_receipts")
+}
+
+model RegistrationWaitlistEntry {
+  id                     String             @id @default(uuid()) @db.Uuid
+  eventId                String             @map("event_id") @db.Uuid
+  inventoryId            String?            @map("inventory_id") @db.Uuid
+  convertedRegistrationId String?           @unique @map("converted_registration_id") @db.Uuid
+  waitlistCode           String             @unique @map("waitlist_code")
+  channel                RegistrationChannel @default(WEB)
+  firstName              String             @map("first_name")
+  lastName               String             @map("last_name")
+  branchName             String?            @map("branch_name")
+  ageGroup               String?            @map("age_group")
+  email                  String?
+  phone                  String?
+  metadata               Json?
+  status                 WaitlistEntryStatus @default(WAITING)
+  activatedAt            DateTime?          @map("activated_at")
+  createdAt              DateTime           @default(now()) @map("created_at")
+  updatedAt              DateTime           @updatedAt @map("updated_at")
+  convertedRegistration  Registration?      @relation(fields: [convertedRegistrationId], references: [id])
+  event                  Event              @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  inventory              EventRegistrationInventory? @relation(fields: [inventoryId], references: [id])
+
+  @@index([eventId])
+  @@index([inventoryId])
+  @@map("registration_waitlist_entries")
 }
 
 model CheckIn {
@@ -738,6 +839,13 @@ enum RegistrationMode {
   CLOSED
 }
 
+enum RegistrationChannel {
+  WEB
+  WHATSAPP
+  ADMIN
+  IMPORT
+}
+
 enum PaymentStatus {
   NOT_APPLICABLE
   PENDING
@@ -753,6 +861,14 @@ enum RegistrationStatus {
   CONFIRMED
   CANCELED
   WAITLISTED
+}
+
+enum WaitlistEntryStatus {
+  WAITING
+  ACTIVATED
+  CONVERTED
+  CANCELLED
+  EXPIRED
 }
 
 enum AttendeeCheckInStatus {

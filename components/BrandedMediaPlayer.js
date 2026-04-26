@@ -9,7 +9,7 @@ const BrandedMediaPlayer = ({
     title,
     type = 'video',
     playing = false,
-    onProgress = null,
+    _onProgress = null,
 }) => {
     const [hasMounted, setHasMounted] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -49,7 +49,7 @@ const BrandedMediaPlayer = ({
     
     // YouTube ID Extraction
     const getYouTubeId = (url) => {
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
         const match = url?.match(regExp);
         return (match && match[2].length === 11) ? match[2] : null;
     };

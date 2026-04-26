@@ -1,12 +1,24 @@
 import { Button, Card, Badge, Input } from '@afc-sear/ui';
 import { ArrowLeft, Search, Download } from 'lucide-react';
 import Link from 'next/link';
+import { cookies } from 'next/headers';
 import { RegistrantsTable } from '@/components/RegistrantsTable';
 
-async function getRegistrations(eventId: string) {
+async function getRegistrations(eventId: string, cookieHeader: string) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
   const response = await fetch(`${apiUrl}/api/v1/admin/events/${eventId}/registrations`, {
     cache: 'no-store',
+    headers: cookieHeader ? { cookie: cookieHeader } : undefined,
+  });
+  const json = await response.json();
+  return json.data || [];
+}
+
+async function getWaitlist(eventId: string, cookieHeader: string) {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+  const response = await fetch(`${apiUrl}/api/v1/admin/events/${eventId}/waitlist`, {
+    cache: 'no-store',
+    headers: cookieHeader ? { cookie: cookieHeader } : undefined,
   });
   const json = await response.json();
   return json.data || [];
@@ -23,19 +35,13 @@ async function getEvent(eventId: string) {
 
 export default async function RegistrantsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const registrations = await getRegistrations(id);
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.toString();
+  const [registrations, waitlist] = await Promise.all([
+    getRegistrations(id, cookieHeader),
+    getWaitlist(id, cookieHeader),
+  ]);
   const event = await getEvent(id);
-
-  // Flatten registrations to attendees for the table
-  const attendees = registrations.flatMap((reg: any) => 
-    reg.attendees.map((attendee: any) => ({
-      ...attendee,
-      registrationId: reg.id,
-      status: reg.status,
-      paid: reg.paymentStatus === 'PAID',
-      date: new Date(reg.createdAt).toLocaleDateString()
-    }))
-  );
 
   return (
     <div className="space-y-6">
@@ -47,7 +53,9 @@ export default async function RegistrantsPage({ params }: { params: Promise<{ id
         </Link>
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-zinc-900">{event?.title || 'Event Registrants'}</h1>
-          <p className="text-zinc-500">Manage {attendees.length} registered attendees and check-in status.</p>
+          <p className="text-zinc-500">
+            Manage {registrations.length} registrations, {waitlist.length} waitlist entries, receipts, and check-in status.
+          </p>
         </div>
       </div>
 
@@ -67,7 +75,7 @@ export default async function RegistrantsPage({ params }: { params: Promise<{ id
       </div>
 
       <Card className="overflow-hidden">
-        <RegistrantsTable initialAttendees={attendees} eventId={id} />
+        <RegistrantsTable initialRegistrations={registrations} initialWaitlist={waitlist} eventId={id} />
       </Card>
     </div>
   );

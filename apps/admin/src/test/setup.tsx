@@ -17,11 +17,13 @@ const originalUse = React.use;
 
 // Mock Next.js navigation
 vi.mock('next/navigation', () => ({
+  redirect: vi.fn(),
   useRouter: () => ({
     push: vi.fn(),
     replace: vi.fn(),
     prefetch: vi.fn(),
     back: vi.fn(),
+    refresh: vi.fn(),
   }),
   usePathname: () => '',
   useSearchParams: () => new URLSearchParams(),
@@ -29,16 +31,27 @@ vi.mock('next/navigation', () => ({
 
 // Mock API client
 vi.mock('@/lib/api-client', () => ({
-  fetchApi: vi.fn(),
+  fetchApi: vi.fn(() => Promise.resolve({ data: [] })),
 }));
 
 // Mock UI library
 vi.mock('@afc-sear/ui', () => ({
-  Button: ({ children, onClick, disabled }: any) => React.createElement('button', { onClick, disabled }, children),
-  Input: (props: any) => React.createElement('input', props),
+  Button: ({ children, onClick, disabled, type = 'button', ...props }: any) =>
+    React.createElement('button', { onClick, disabled, type, ...props }, children),
+  Input: ({ label, ...props }: any) =>
+    React.createElement(
+      'label',
+      null,
+      label ? React.createElement('span', null, label) : null,
+      React.createElement('input', props)
+    ),
   Card: ({ children }: any) => React.createElement('div', null, children),
   CardHeader: ({ children }: any) => React.createElement('div', null, children),
   CardTitle: ({ children }: any) => React.createElement('h2', null, children),
   CardContent: ({ children }: any) => React.createElement('div', null, children),
   Badge: ({ children }: any) => React.createElement('span', null, children),
+  GradientText: ({ children }: any) => React.createElement(React.Fragment, null, children),
+  GlassCard: ({ children }: any) => React.createElement('div', null, children),
+  DynamicContainer: ({ children }: any) => React.createElement('div', null, children),
+  Skeleton: () => React.createElement('div', null, 'Loading...'),
 }));

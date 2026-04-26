@@ -1,16 +1,24 @@
 import { PrismaClient } from '@prisma/client';
 
 let prismaClient: PrismaClient | null = null;
-const defaultDatabaseUrl =
-  'postgresql://postgres:postgres@localhost:5433/afc_sear_platform?schema=public';
 
-export function getPrismaClient() {
-  if (!process.env.DATABASE_URL) {
-    process.env.DATABASE_URL = defaultDatabaseUrl;
+function getDatabaseUrl() {
+  const databaseUrl = process.env.DATABASE_URL?.trim();
+
+  if (!databaseUrl) {
+    throw new Error(
+      'DATABASE_URL is not configured. Set it in the runtime environment or apps/api/.env before starting the API.'
+    );
   }
 
+  return databaseUrl;
+}
+
+export function getPrismaClient() {
   if (!prismaClient) {
-    prismaClient = new PrismaClient();
+    prismaClient = new PrismaClient({
+      datasourceUrl: getDatabaseUrl(),
+    });
   }
 
   return prismaClient;

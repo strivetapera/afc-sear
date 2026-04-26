@@ -3,12 +3,17 @@ import tseslint from "typescript-eslint";
 import globals from "globals";
 
 export default tseslint.config(
-  { ignores: ["**/node_modules/**", "**/.next/**", "**/dist/**", "**/out/**"] },
+  { ignores: ["**/node_modules/**", "**/.next/**", "**/dist/**", "**/out/**", "next-env.d.ts"] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ["**/*.{ts,tsx}"],
+    files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2020,
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
       globals: {
         ...globals.browser,
         ...globals.node,
@@ -17,6 +22,7 @@ export default tseslint.config(
     rules: {
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "@typescript-eslint/no-explicit-any": "off",
+      "no-undef": "off", // Next.js automatically imports React, but standard ESLint doesn't know, easier to turn off or rely on TS
     },
   }
 );

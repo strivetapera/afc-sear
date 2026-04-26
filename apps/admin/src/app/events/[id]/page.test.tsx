@@ -21,13 +21,27 @@ vi.mock('react', async () => {
 
 describe('EventEditPage', () => {
   test('renders immediately with mocked params', async () => {
+    (fetchApi as any).mockImplementation((path: string) => {
+      if (path === '/admin/events') {
+        return Promise.resolve({ data: [] });
+      }
+
+      if (path === '/admin/events/test-event-id/registrations') {
+        return Promise.resolve({ data: [] });
+      }
+
+      return Promise.resolve({ data: [] });
+    });
+
     const params = new Promise<{ id: string }>(() => {}); // Never resolves
     render(
       <React.Suspense fallback={<div>Loading...</div>}>
         <EventEditPage params={params} />
       </React.Suspense>
     );
-    expect(screen.getByText(/Edit Event/i)).toBeDefined();
+    await waitFor(() => {
+      expect(screen.getByText(/Untitled Event/i)).toBeDefined();
+    });
   });
 
   test('renders event data after loading', async () => {
@@ -40,7 +54,17 @@ describe('EventEditPage', () => {
         eventType: 'CONFERENCE'
     };
 
-    (fetchApi as any).mockResolvedValue({ data: [mockEvent] });
+    (fetchApi as any).mockImplementation((path: string) => {
+      if (path === '/admin/events') {
+        return Promise.resolve({ data: [mockEvent] });
+      }
+
+      if (path === '/admin/events/test-event-id/registrations') {
+        return Promise.resolve({ data: [] });
+      }
+
+      return Promise.resolve({ data: [] });
+    });
 
     const params = Promise.resolve({ id: 'test-event-id' });
     render(

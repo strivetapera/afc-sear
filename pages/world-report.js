@@ -1,5 +1,6 @@
 import PageShell from '../components/PageShell';
 import { newsItems } from '../data/newsData';
+import Link from 'next/link';
 import {
   legacyCampMeetingRecordings,
   legacyZimbabweBranches,

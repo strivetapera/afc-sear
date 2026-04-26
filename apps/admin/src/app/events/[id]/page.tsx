@@ -33,6 +33,21 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { eventTemplateOptions, type EventTemplateKey } from '@/lib/event-templates';
+import { EventRegistrationSettings } from '@/components/EventRegistrationSettings';
+import {
+  applyConferenceRegistrationDefaults,
+  createDefaultRegistrationFieldState,
+  createDefaultRegistrationPolicyState,
+  registrationFieldStateFromSchema,
+  registrationFieldStateToSchema,
+  registrationInventoryStateFromApi,
+  registrationInventoryStateToApi,
+  registrationPolicyStateFromApi,
+  registrationPolicyStateToApi,
+  type RegistrationFieldState,
+  type RegistrationInventoryState,
+  type RegistrationPolicyState,
+} from '@/lib/event-registration';
 
 const MotionDiv = motion.div as any;
 
@@ -49,6 +64,11 @@ export default function EventEditPage({ params }: PageProps) {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'details' | 'schedules' | 'tickets' | 'registrants'>('details');
   const [templateKey, setTemplateKey] = useState<EventTemplateKey>('service');
+  const [fieldState, setFieldState] = useState<RegistrationFieldState>(() => createDefaultRegistrationFieldState('SERVICE'));
+  const [policyState, setPolicyState] = useState<RegistrationPolicyState>(() =>
+    createDefaultRegistrationPolicyState({ eventType: 'SERVICE', title: '', slug: '' })
+  );
+  const [inventoryState, setInventoryState] = useState<RegistrationInventoryState[]>([]);
 
   const [form, setForm] = useState({
     title: '',
@@ -75,13 +95,35 @@ export default function EventEditPage({ params }: PageProps) {
     }
 
     setTemplateKey(key);
-    setForm((current) => ({
-      ...current,
-      eventType: template.defaults.eventType,
-      visibility: template.defaults.visibility,
-      registrationMode: template.defaults.registrationMode,
-      summary: current.summary || template.defaults.summary,
-    }));
+    setForm((current) => {
+      const nextForm = {
+        ...current,
+        eventType: template.defaults.eventType,
+        visibility: template.defaults.visibility,
+        registrationMode: template.defaults.registrationMode,
+        summary: current.summary || template.defaults.summary,
+      };
+
+      if (template.defaults.eventType === 'CONFERENCE') {
+        const defaults = applyConferenceRegistrationDefaults({
+          title: nextForm.title,
+          slug: nextForm.slug,
+        });
+        setFieldState(defaults.fields);
+        setPolicyState(defaults.policy);
+      } else {
+        setFieldState(createDefaultRegistrationFieldState(template.defaults.eventType));
+        setPolicyState(
+          createDefaultRegistrationPolicyState({
+            eventType: template.defaults.eventType,
+            title: nextForm.title,
+            slug: nextForm.slug,
+          })
+        );
+      }
+
+      return nextForm;
+    });
   };
 
   // Convert datetime-local (YYYY-MM-DDTHH:mm) to ISO format
@@ -109,6 +151,15 @@ export default function EventEditPage({ params }: PageProps) {
           });
           setSchedules(eventRes.schedules || []);
           setTicketTypes(eventRes.ticketTypes || []);
+          setFieldState(registrationFieldStateFromSchema(eventRes.registrationFormSchema, eventRes.eventType || 'SERVICE'));
+          setPolicyState(
+            registrationPolicyStateFromApi(eventRes.registrationPolicy, {
+              eventType: eventRes.eventType || 'SERVICE',
+              title: eventRes.title || '',
+              slug: eventRes.slug || '',
+            })
+          );
+          setInventoryState(registrationInventoryStateFromApi(eventRes.registrationInventory));
         }
         setRegistrants(regRes);
       } catch (err) {
@@ -124,7 +175,15 @@ export default function EventEditPage({ params }: PageProps) {
     setIsSaving(true);
     setError(null);
     try {
-      await fetchApi(`/admin/events/${id}`, { method: 'PATCH', body: JSON.stringify(form) });
+      await fetchApi(`/admin/events/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          ...form,
+          registrationFormSchema: registrationFieldStateToSchema(fieldState),
+          registrationPolicy: registrationPolicyStateToApi(policyState),
+          registrationInventory: registrationInventoryStateToApi(inventoryState),
+        }),
+      });
       router.refresh();
     } catch (err: any) {
       setError(err.message ?? 'Save failed');
@@ -343,6 +402,15 @@ export default function EventEditPage({ params }: PageProps) {
                     <div className="absolute -right-10 -bottom-10 h-40 w-40 bg-white/10 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700" />
                   </Card>
                 </div>
+
+                <EventRegistrationSettings
+                  fieldState={fieldState}
+                  policyState={policyState}
+                  inventoryState={inventoryState}
+                  onFieldStateChange={setFieldState}
+                  onPolicyStateChange={setPolicyState}
+                  onInventoryStateChange={setInventoryState}
+                />
               </div>
             )}
 

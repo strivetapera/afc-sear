@@ -20,9 +20,13 @@ import type {
   EventScheduleView,
   PersonView,
   RegistrationAttendeeView,
+  RegistrationInventoryView,
+  RegistrationPolicyView,
+  RegistrationReceiptView,
   RegistrationView,
   TicketTypeView,
   VenueView,
+  WaitlistEntryView,
 } from '../modules';
 
 // Existing types...
@@ -75,6 +79,37 @@ export function toTicketTypeView(ticket: any): TicketTypeView {
   };
 }
 
+export function toRegistrationInventoryView(inventory: any): RegistrationInventoryView {
+  return {
+    id: inventory.id,
+    category: inventory.category,
+    name: inventory.name,
+    capacity: inventory.capacity,
+    remainingCapacity: inventory.remainingCapacity ?? inventory.capacity,
+    isActive: inventory.isActive,
+    metadata: inventory.metadata ?? null,
+  };
+}
+
+export function toRegistrationPolicyView(policy: any): RegistrationPolicyView {
+  return {
+    codePrefix: policy.codePrefix,
+    nextSequence: policy.nextSequence,
+    paymentDeadline: policy.paymentDeadline?.toISOString?.() ?? policy.paymentDeadline ?? null,
+    cancellationDeadline: policy.cancellationDeadline?.toISOString?.() ?? policy.cancellationDeadline ?? null,
+    requireFullPaymentForCheckIn: policy.requireFullPaymentForCheckIn,
+    allowWaitlist: policy.allowWaitlist,
+    allowSelfServiceLookup: policy.allowSelfServiceLookup,
+    supportedChannels: Array.isArray(policy.supportedChannels)
+      ? policy.supportedChannels
+      : Array.isArray(policy.supportedChannels?.channels)
+        ? policy.supportedChannels.channels
+        : [],
+    pricingRules: Array.isArray(policy.pricingRules) ? policy.pricingRules : [],
+    confirmationConfig: policy.confirmationConfig ?? null,
+  };
+}
+
 export function toEventScheduleView(schedule: any): EventScheduleView {
   return {
     startsAt: schedule.startsAt.toISOString(),
@@ -93,21 +128,32 @@ export function toEventDetailView(event: any): EventDetailView {
     summary: event.summary,
     description: event.description,
     eventType: event.eventType,
+    visibility: event.visibility,
+    status: event.status,
     registrationMode: event.registrationMode,
     venue: event.venue ? toVenueView(event.venue) : null,
     schedules: event.schedules?.map(toEventScheduleView) ?? [],
     ticketTypes: event.ticketTypes?.map(toTicketTypeView) ?? [],
     registrationFormSchema: event.registrationForm?.schema ?? null,
+    registrationPolicy: event.registrationPolicy ? toRegistrationPolicyView(event.registrationPolicy) : null,
+    registrationInventory: event.registrationInventory?.map(toRegistrationInventoryView) ?? [],
   };
 }
 
 export function toRegistrationView(reg: any): RegistrationView {
   return {
     id: reg.id,
+    registrationCode: reg.registrationCode,
     status: reg.status,
     totalMinor: reg.totalMinor,
+    amountPaidMinor: reg.amountPaidMinor ?? 0,
+    amountOutstandingMinor: Math.max(0, (reg.totalMinor ?? 0) - (reg.amountPaidMinor ?? 0)),
     currencyCode: reg.currencyCode,
     paymentStatus: reg.paymentStatus,
+    channel: reg.channel,
+    contactEmail: reg.contactEmail ?? null,
+    contactPhone: reg.contactPhone ?? null,
+    qrCodePayload: reg.qrCodePayload ?? null,
     createdAt: reg.createdAt.toISOString(),
   };
 }
@@ -116,7 +162,8 @@ export function toRegistrationAttendeeView(attendee: any): RegistrationAttendeeV
   return {
     id: attendee.id,
     fullName: attendee.fullName,
-    ticketType: toTicketTypeView(attendee.ticketType),
+    inventory: attendee.inventory ? toRegistrationInventoryView(attendee.inventory) : null,
+    ticketType: attendee.ticketType ? toTicketTypeView(attendee.ticketType) : null,
     metadata: attendee.metadata,
   };
 }
@@ -125,6 +172,7 @@ export function toAdminRegistrationView(reg: any): AdminRegistrationView {
   return {
     ...toRegistrationView(reg),
     attendees: reg.attendees?.map(toRegistrationAttendeeView) ?? [],
+    receipts: reg.receipts?.map(toRegistrationReceiptView) ?? [],
   };
 }
 
@@ -133,6 +181,35 @@ export function toCheckInView(checkIn: any): CheckInView {
     id: checkIn.id,
     attendeeId: checkIn.registrationAttendeeId,
     checkedInAt: checkIn.checkedInAt.toISOString(),
+  };
+}
+
+export function toRegistrationReceiptView(receipt: any): RegistrationReceiptView {
+  return {
+    id: receipt.id,
+    receiptNumber: receipt.receiptNumber,
+    amountMinor: receipt.amountMinor,
+    currencyCode: receipt.currencyCode,
+    paymentMethod: receipt.paymentMethod ?? null,
+    note: receipt.note ?? null,
+    receivedAt: receipt.receivedAt.toISOString(),
+  };
+}
+
+export function toWaitlistEntryView(entry: any): WaitlistEntryView {
+  return {
+    id: entry.id,
+    waitlistCode: entry.waitlistCode,
+    firstName: entry.firstName,
+    lastName: entry.lastName,
+    branchName: entry.branchName ?? null,
+    ageGroup: entry.ageGroup ?? null,
+    email: entry.email ?? null,
+    phone: entry.phone ?? null,
+    status: entry.status,
+    inventory: entry.inventory ? toRegistrationInventoryView(entry.inventory) : null,
+    createdAt: entry.createdAt.toISOString(),
+    activatedAt: entry.activatedAt?.toISOString() ?? null,
   };
 }
 

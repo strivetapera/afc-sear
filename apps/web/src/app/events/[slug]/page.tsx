@@ -39,7 +39,11 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
   const locationLabel = event.venue?.name
     ? [event.venue.name, event.venue.city].filter(Boolean).join(', ')
     : 'Venue to be announced';
-  const hasRegistrationOptions = Array.isArray(event.ticketTypes) && event.ticketTypes.length > 0;
+  const hasRegistrationOptions =
+    (Array.isArray(event.ticketTypes) && event.ticketTypes.length > 0) ||
+    Array.isArray(event.registrationFormSchema?.fields) ||
+    (Array.isArray(event.registrationInventory) && event.registrationInventory.length > 0) ||
+    Boolean(event.registrationPolicy);
 
   return (
     <div className="min-h-screen bg-zinc-50">
@@ -117,10 +121,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
           <div className="lg:col-span-1">
             <div className="sticky top-24">
               {hasRegistrationOptions ? (
-                <RegistrationForm 
-                  eventSlug={event.slug} 
-                  ticketTypes={event.ticketTypes} 
-                />
+                <RegistrationForm event={event} />
               ) : (
                 <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
                   <h3 className="text-lg font-bold text-zinc-900">Registration details coming soon</h3>

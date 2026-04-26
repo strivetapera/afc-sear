@@ -7,12 +7,29 @@ import { fetchApi } from '@/lib/api-client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { eventTemplateOptions, type EventTemplateKey } from '@/lib/event-templates';
+import { EventRegistrationSettings } from '@/components/EventRegistrationSettings';
+import {
+  applyConferenceRegistrationDefaults,
+  createDefaultRegistrationFieldState,
+  createDefaultRegistrationPolicyState,
+  registrationFieldStateToSchema,
+  registrationInventoryStateToApi,
+  registrationPolicyStateToApi,
+  type RegistrationFieldState,
+  type RegistrationInventoryState,
+  type RegistrationPolicyState,
+} from '@/lib/event-registration';
 
 export default function NewEventPage() {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [templateKey, setTemplateKey] = useState<EventTemplateKey>('service');
+  const [fieldState, setFieldState] = useState<RegistrationFieldState>(() => createDefaultRegistrationFieldState('SERVICE'));
+  const [policyState, setPolicyState] = useState<RegistrationPolicyState>(() =>
+    createDefaultRegistrationPolicyState({ eventType: 'SERVICE', title: '', slug: '' })
+  );
+  const [inventoryState, setInventoryState] = useState<RegistrationInventoryState[]>([]);
 
   const [form, setForm] = useState({
     title: '',
@@ -30,13 +47,35 @@ export default function NewEventPage() {
     }
 
     setTemplateKey(key);
-    setForm((current) => ({
-      ...current,
-      eventType: template.defaults.eventType,
-      visibility: template.defaults.visibility,
-      registrationMode: template.defaults.registrationMode,
-      summary: current.summary || template.defaults.summary,
-    }));
+    setForm((current) => {
+      const nextForm = {
+        ...current,
+        eventType: template.defaults.eventType,
+        visibility: template.defaults.visibility,
+        registrationMode: template.defaults.registrationMode,
+        summary: current.summary || template.defaults.summary,
+      };
+
+      if (template.defaults.eventType === 'CONFERENCE') {
+        const defaults = applyConferenceRegistrationDefaults({
+          title: nextForm.title,
+          slug: nextForm.slug,
+        });
+        setFieldState(defaults.fields);
+        setPolicyState(defaults.policy);
+      } else {
+        setFieldState(createDefaultRegistrationFieldState(template.defaults.eventType));
+        setPolicyState(
+          createDefaultRegistrationPolicyState({
+            eventType: template.defaults.eventType,
+            title: nextForm.title,
+            slug: nextForm.slug,
+          })
+        );
+      }
+
+      return nextForm;
+    });
   };
 
   const handleChange = (field: string, value: string) => {
@@ -60,7 +99,12 @@ export default function NewEventPage() {
     try {
       const result = await fetchApi('/admin/events', {
         method: 'POST',
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          registrationFormSchema: registrationFieldStateToSchema(fieldState),
+          registrationPolicy: registrationPolicyStateToApi(policyState),
+          registrationInventory: registrationInventoryStateToApi(inventoryState),
+        }),
       });
       router.push(`/events/${result.data.id}`);
     } catch (err: any) {
@@ -188,6 +232,15 @@ export default function NewEventPage() {
             </div>
           </CardContent>
         </Card>
+
+        <EventRegistrationSettings
+          fieldState={fieldState}
+          policyState={policyState}
+          inventoryState={inventoryState}
+          onFieldStateChange={setFieldState}
+          onPolicyStateChange={setPolicyState}
+          onInventoryStateChange={setInventoryState}
+        />
 
         <div className="flex justify-end gap-3">
           <Link href="/events"><Button variant="outline" type="button">Cancel</Button></Link>

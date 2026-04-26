@@ -1,5 +1,6 @@
 import PageShell from '../components/PageShell';
 import { newsItems } from '../data/newsData';
+import Link from 'next/link';
 
 function formatPublishedAt(value) {
   return new Intl.DateTimeFormat('en-US', {

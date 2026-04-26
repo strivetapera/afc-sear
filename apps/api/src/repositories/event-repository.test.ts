@@ -1,13 +1,11 @@
 import { expect, test, describe, vi, beforeEach } from 'vitest';
 import * as EventRepository from './event-repository';
-import { getPrismaClient } from './prisma';
-
-// Helper to get mocked prisma
-const prisma = getPrismaClient() as any;
+import { prismaMock as prisma } from '../test/setup';
 
 describe('EventRepository', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    prisma.registration.findMany.mockResolvedValue([]);
   });
 
   describe('listPublicEvents', () => {
@@ -40,6 +38,9 @@ describe('EventRepository', () => {
         venue: { name: 'Venue', city: 'City' },
         schedules: [],
         ticketTypes: [],
+        registrationForm: null,
+        registrationPolicy: null,
+        registrationInventory: [],
         createdAt: new Date(),
         updatedAt: new Date(),
       };
